@@ -90,30 +90,15 @@
       }
       .stats-summary {
         margin: 24px clamp(24px, 5vw, 72px) 0;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 16px;
-      }
-      .stat-card {
-        background: #161b22;
-        border: 1px solid #30363d;
-        border-radius: 18px;
-        padding: 18px 20px;
         display: flex;
-        flex-direction: column;
-        gap: 8px;
-        box-shadow: 0 18px 36px rgba(13, 17, 23, 0.35);
-      }
-      .stat-card .stat-label {
-        font-size: 14px;
+        flex-wrap: wrap;
+        gap: 18px;
         font-weight: 600;
-        color: #8b949e;
-        letter-spacing: 0.02em;
-      }
-      .stat-card .stat-value {
-        font-size: clamp(26px, 4vw, 34px);
-        font-weight: 800;
         color: #f0f6fc;
+        font-size: clamp(16px, 2.4vw, 19px);
+      }
+      .stats-summary span {
+        margin-right: 12px;
       }
       .toolbar {
         display: flex;
@@ -652,12 +637,9 @@
         }
         .stats-summary {
           margin: 20px;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 12px;
-        }
-        .stat-card {
-          padding: 16px;
-          border-radius: 16px;
+          flex-direction: column;
+          gap: 10px;
+          font-size: 16px;
         }
         .bulk-action-bar {
           left: 12px;
@@ -694,22 +676,10 @@
       </div>
     </header>
     <section class="stats-summary" aria-label="상담 현황">
-      <div class="stat-card">
-        <span class="stat-label">총 상담 인원</span>
-        <span class="stat-value" id="statTotal">0명</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">월간 상담 인원</span>
-        <span class="stat-value" id="statMonthly">0명</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">주간 상담 인원</span>
-        <span class="stat-value" id="statWeekly">0명</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">오늘 상담 인원</span>
-        <span class="stat-value" id="statDaily">0명</span>
-      </div>
+      <span id="statTotal">총 상담 인원: 0명</span>
+      <span id="statMonthly">월간 상담 인원: 0명</span>
+      <span id="statWeekly">주간 상담 인원: 0명</span>
+      <span id="statDaily">오늘 상담 인원: 0명</span>
     </section>
     <section class="toolbar" aria-label="필터">
       <div class="toolbar-filters">
@@ -972,14 +942,14 @@
           if (created >= startOfWeek && created <= now) weekly += 1
           if (created >= startOfDay && created <= now) daily += 1
         }
-        statTotalEl.textContent = formatCount(total)
-        statMonthlyEl.textContent = formatCount(monthly)
-        statWeeklyEl.textContent = formatCount(weekly)
-        statDailyEl.textContent = formatCount(daily)
+        statTotalEl.textContent = formatLabeledCount('총 상담 인원', total)
+        statMonthlyEl.textContent = formatLabeledCount('월간 상담 인원', monthly)
+        statWeeklyEl.textContent = formatLabeledCount('주간 상담 인원', weekly)
+        statDailyEl.textContent = formatLabeledCount('오늘 상담 인원', daily)
       }
 
-      function formatCount(value) {
-        return `${Number(value || 0).toLocaleString('ko-KR')}명`
+      function formatLabeledCount(label, value) {
+        return `${label}: ${Number(value || 0).toLocaleString('ko-KR')}명`
       }
 
       function render() {
