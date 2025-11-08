@@ -88,6 +88,33 @@
       main {
         padding: 24px clamp(24px, 5vw, 72px) 64px;
       }
+      .stats-summary {
+        margin: 24px clamp(24px, 5vw, 72px) 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+      }
+      .stat-card {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 18px;
+        padding: 18px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        box-shadow: 0 18px 36px rgba(13, 17, 23, 0.35);
+      }
+      .stat-card .stat-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #8b949e;
+        letter-spacing: 0.02em;
+      }
+      .stat-card .stat-value {
+        font-size: clamp(26px, 4vw, 34px);
+        font-weight: 800;
+        color: #f0f6fc;
+      }
       .toolbar {
         display: flex;
         flex-direction: column;
@@ -623,6 +650,15 @@
         .toolbar-actions button {
           width: 100%;
         }
+        .stats-summary {
+          margin: 20px;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 12px;
+        }
+        .stat-card {
+          padding: 16px;
+          border-radius: 16px;
+        }
         .bulk-action-bar {
           left: 12px;
           right: 12px;
@@ -657,6 +693,24 @@
         <a href="https://www.notion.so/29ef5285ecb6807cb866c135f877c7a3?source=copy_link" target="_blank" rel="noopener noreferrer">연결사 Notion</a>
       </div>
     </header>
+    <section class="stats-summary" aria-label="상담 현황">
+      <div class="stat-card">
+        <span class="stat-label">총 상담 인원</span>
+        <span class="stat-value" id="statTotal">0명</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">월간 상담 인원</span>
+        <span class="stat-value" id="statMonthly">0명</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">주간 상담 인원</span>
+        <span class="stat-value" id="statWeekly">0명</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">오늘 상담 인원</span>
+        <span class="stat-value" id="statDaily">0명</span>
+      </div>
+    </section>
     <section class="toolbar" aria-label="필터">
       <div class="toolbar-filters">
         <input type="search" id="searchInput" placeholder="이름, 연락처, 지역 검색" aria-label="검색" />
@@ -774,6 +828,10 @@
       const selectionInfoEl = document.getElementById('selectionInfo')
       const bulkActionBar = document.getElementById('bulkActionBar')
       const toastEl = document.getElementById('toast')
+      const statTotalEl = document.getElementById('statTotal')
+      const statMonthlyEl = document.getElementById('statMonthly')
+      const statWeeklyEl = document.getElementById('statWeekly')
+      const statDailyEl = document.getElementById('statDaily')
       const searchInput = document.getElementById('searchInput')
       const genderFilter = document.getElementById('genderFilter')
       const regionFilter = document.getElementById('regionFilter')
@@ -883,6 +941,7 @@
           items = (body.data || []).map(normalizeRecord)
           syncSelectionWithItems()
           syncFilterOptions()
+          updateStats()
           render()
           if (!calendarModal.hidden) {
             refreshCalendar(true)
@@ -891,6 +950,36 @@
           console.error(error)
           showToast('데이터를 불러오는데 실패했습니다.')
         }
+      }
+
+      function updateStats() {
+        if (!statTotalEl || !statMonthlyEl || !statWeeklyEl || !statDailyEl) return
+        const now = new Date()
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+        const startOfWeek = new Date(startOfDay)
+        const weekDay = (startOfDay.getDay() + 6) % 7
+        startOfWeek.setDate(startOfDay.getDate() - weekDay)
+        const total = items.length
+        let monthly = 0
+        let weekly = 0
+        let daily = 0
+        for (const item of items) {
+          if (!item?.createdAt) continue
+          const created = new Date(item.createdAt)
+          if (Number.isNaN(created.getTime())) continue
+          if (created >= startOfMonth && created <= now) monthly += 1
+          if (created >= startOfWeek && created <= now) weekly += 1
+          if (created >= startOfDay && created <= now) daily += 1
+        }
+        statTotalEl.textContent = formatCount(total)
+        statMonthlyEl.textContent = formatCount(monthly)
+        statWeeklyEl.textContent = formatCount(weekly)
+        statDailyEl.textContent = formatCount(daily)
+      }
+
+      function formatCount(value) {
+        return `${Number(value || 0).toLocaleString('ko-KR')}명`
       }
 
       function render() {
@@ -1079,6 +1168,7 @@
           }
           syncFilterOptions()
           syncSelectionWithItems()
+          updateStats()
           render()
           if (!calendarModal.hidden) {
             refreshCalendar(true)
@@ -1609,6 +1699,7 @@
           unique.forEach((id) => selectedIds.delete(id))
           syncSelectionWithItems()
           syncFilterOptions()
+          updateStats()
           render()
           if (!calendarModal.hidden) {
             refreshCalendar(true)
@@ -1636,6 +1727,7 @@
               items.push(normalizeRecord(payload.payload))
               syncFilterOptions()
               syncSelectionWithItems()
+              updateStats()
               render()
               if (!calendarModal.hidden) refreshCalendar(true)
               showToast('새로운 상담 신청이 도착했습니다!')
@@ -1646,6 +1738,7 @@
               selectedIds.clear()
               syncSelectionWithItems()
               syncFilterOptions()
+              updateStats()
               render()
               if (!calendarModal.hidden) refreshCalendar(true)
               showToast('엑셀 데이터가 반영되었습니다.')
@@ -1661,6 +1754,7 @@
               }
               syncSelectionWithItems()
               syncFilterOptions()
+              updateStats()
               render()
               if (!calendarModal.hidden) refreshCalendar(true)
               if (suppressUpdateToast) {
@@ -1677,6 +1771,7 @@
               ids.forEach((id) => selectedIds.delete(id))
               syncSelectionWithItems()
               syncFilterOptions()
+              updateStats()
               render()
               if (!calendarModal.hidden) refreshCalendar(true)
               if (suppressDeleteToast) {
@@ -1784,7 +1879,7 @@
           excelInput.value = ''
         }
       }
-
+      updateStats()
       loadData()
       setupSSE()
     </script>
