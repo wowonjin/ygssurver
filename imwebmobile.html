@@ -1,0 +1,471 @@
+<!-- 아임웹 모바일 전용 상담 신청 폼 -->
+<link
+  rel="stylesheet"
+  as="style"
+  crossorigin
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+/>
+<style>
+  :root {
+    color-scheme: light;
+  }
+  .consult-form-mobile {
+    --bg: #f7faf9;
+    --card: #ffffff;
+    --line: #dce6e2;
+    --ink: #0f1c16;
+    --accent: #2f7a57;
+    --hint: #6f7f78;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      "Apple SD Gothic Neo", "Noto Sans KR", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    padding: 20px 16px 28px;
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.45;
+    border-radius: 18px;
+    box-shadow: 0 16px 36px rgba(15, 28, 22, 0.12);
+  }
+  .consult-form-mobile h1 {
+    margin: 0 0 18px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .consult-form-mobile .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .consult-form-mobile .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .consult-form-mobile .label {
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .consult-form-mobile .input,
+  .consult-form-mobile .select,
+  .consult-form-mobile .textarea {
+    appearance: none;
+    width: 100%;
+    padding: 14px 15px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--card);
+    font-size: 15px;
+    color: var(--ink);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .consult-form-mobile .input:focus,
+  .consult-form-mobile .select:focus,
+  .consult-form-mobile .textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(47, 122, 87, 0.18);
+    outline: none;
+  }
+  .consult-form-mobile .select {
+    padding-right: 42px;
+    background-image: linear-gradient(45deg, transparent 50%, var(--hint) 50%),
+      linear-gradient(135deg, var(--hint) 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(50% - 4px), calc(100% - 12px) calc(50% - 4px);
+    background-size: 8px 8px, 8px 8px;
+    background-repeat: no-repeat;
+  }
+  .consult-form-mobile .hint {
+    font-size: 13px;
+    color: var(--hint);
+  }
+  .consult-form-mobile .agree {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .consult-form-mobile .agree input[type='checkbox'] {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  .consult-form-mobile .textarea {
+    min-height: 120px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .consult-form-mobile .divider {
+    height: 1px;
+    background: var(--line);
+    margin: 4px 0;
+  }
+  .consult-form-mobile .btn {
+    border: none;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    padding: 16px;
+    width: 100%;
+    font-size: 17px;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.15s ease;
+  }
+  .consult-form-mobile .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(47, 122, 87, 0.25);
+  }
+  .consult-form-mobile .btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+  }
+  .consult-form-mobile .btn[disabled] {
+    filter: grayscale(40%) brightness(0.92);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  .consult-form-mobile .field-tooltip {
+    display: none;
+    font-size: 13px;
+    color: #ff4d4f;
+  }
+  .consult-form-mobile .field-tooltip.show {
+    display: block;
+  }
+  .consult-form-mobile .reveal-on-scroll {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    will-change: opacity, transform;
+  }
+  .consult-form-mobile .reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .consult-form-mobile .reveal-on-scroll {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+</style>
+
+<div class="consult-form-mobile">
+  <h1>무료 상담 신청</h1>
+  <form
+    id="contactFormMobile"
+    action="https://ygsa-backend.onrender.com/api/consult"
+    method="POST"
+    novalidate
+  >
+    <div class="grid">
+      <div class="field">
+        <label for="mName" class="label">성명</label>
+        <input
+          id="mName"
+          name="name"
+          class="input"
+          type="text"
+          placeholder="홍길동"
+          required
+          autocomplete="name"
+        />
+        <p class="field-tooltip" data-field="name">성명을 입력해주세요.</p>
+      </div>
+
+      <div class="field">
+        <label for="mGender" class="label">성별</label>
+        <select id="mGender" name="gender" class="select" required>
+          <option value="" selected disabled>(선택)</option>
+          <option value="남">남자</option>
+          <option value="여">여자</option>
+        </select>
+        <p class="field-tooltip" data-field="gender">성별을 선택해주세요.</p>
+      </div>
+
+      <div class="field">
+        <label for="mPhone" class="label">연락처</label>
+        <input
+          id="mPhone"
+          name="phone"
+          class="input"
+          type="tel"
+          inputmode="tel"
+          placeholder="010-1234-5678"
+          required
+          autocomplete="tel-national"
+        />
+        <p class="hint">숫자만 입력하면 자동으로 하이픈(-)이 들어갑니다.</p>
+        <p class="field-tooltip" data-field="phone">연락처를 입력해주세요.</p>
+      </div>
+
+      <div class="field">
+        <label for="mBirth" class="label">생년</label>
+        <input
+          id="mBirth"
+          name="birth"
+          class="input"
+          type="text"
+          inputmode="numeric"
+          maxlength="6"
+          placeholder="1998년"
+          required
+          autocomplete="bday-year"
+        />
+        <p class="field-tooltip" data-field="birth">예) 1998년</p>
+      </div>
+
+      <div class="field">
+        <label for="mEdu" class="label">최종학력</label>
+        <select id="mEdu" name="education" class="select" required>
+          <option value="" selected disabled>(선택)</option>
+          <option>고등학교 재학</option>
+          <option>고등학교 졸업(검정고시 포함)</option>
+          <option>전문대 재학</option>
+          <option>전문학사 졸업</option>
+          <option>대학교 재학(4년)</option>
+          <option>학사 졸업</option>
+          <option>석사 과정 재학</option>
+          <option>석사 졸업</option>
+          <option>박사 과정 재학</option>
+          <option>박사 졸업</option>
+          <option>해외 대학 재학/졸업</option>
+          <option>기타</option>
+        </select>
+        <p class="field-tooltip" data-field="education">최종학력을 선택해주세요.</p>
+      </div>
+
+      <div class="field">
+        <label for="mJob" class="label">직업</label>
+        <input
+          id="mJob"
+          name="job"
+          class="input"
+          type="text"
+          placeholder="삼성전자"
+          autocomplete="organization"
+        />
+        <p class="field-tooltip" data-field="job">현재 직업 또는 근무처를 입력해주세요.</p>
+      </div>
+
+      <div class="field">
+        <label for="mRegion" class="label">거주지역</label>
+        <select id="mRegion" name="region" class="select" required>
+          <option value="" selected disabled>(선택)</option>
+          <option>서울</option>
+          <option>경기</option>
+          <option>인천</option>
+          <option>부산</option>
+          <option>대구</option>
+          <option>광주</option>
+          <option>대전</option>
+          <option>울산</option>
+          <option>세종</option>
+          <option>강원</option>
+          <option>충북</option>
+          <option>충남</option>
+          <option>전북</option>
+          <option>전남</option>
+          <option>경북</option>
+          <option>경남</option>
+          <option>제주</option>
+        </select>
+        <p class="field-tooltip" data-field="region">거주지역을 선택해주세요.</p>
+      </div>
+
+      <div class="field">
+        <label for="mDistrict" class="label">거주 구</label>
+        <input id="mDistrict" name="district" class="input" type="text" placeholder="강남구" />
+        <p class="field-tooltip" data-field="district">거주하시는 구/군을 입력해주세요.</p>
+      </div>
+
+      <div class="field">
+        <label class="label">개인정보 수집 및 이용 동의</label>
+        <textarea class="textarea" readonly>
+본 투미프롬 주식회사(이하 "회사")는 이용자의 동의를 기반으로 개인정보를 수집·이용합니다. 수집 목적: 서비스 제공 및 상담, 본인 확인, 고객 문의 응대 등. 보유·이용 기간: 목적 달성 시까지 또는 관련 법령에 따른 기간. 동의를 거부할 권리가 있으나, 동의하지 않을 경우 상담 신청이 제한될 수 있습니다.
+        </textarea>
+        <div class="agree">
+          <input type="checkbox" id="mAgree" required />
+          <label for="mAgree">개인정보 수집 및 이용에 동의합니다.</label>
+        </div>
+        <p class="field-tooltip" data-field="agree">개인정보 수집 및 이용에 동의해주세요.</p>
+      </div>
+    </div>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <button id="mSubmitBtn" class="btn" type="submit" disabled>무료 상담 신청하기</button>
+  </form>
+</div>
+
+<script>
+  ;(function () {
+    const form = document.getElementById('contactFormMobile')
+    if (!form) return
+
+    const submitBtn = form.querySelector('#mSubmitBtn')
+    const agreeEl = form.querySelector('#mAgree')
+    const phoneEl = form.querySelector('#mPhone')
+    const birthEl = form.querySelector('#mBirth')
+
+    // reveal animation
+    const revealTargets = Array.from(form.querySelectorAll('.field, .btn, h1'))
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible')
+              observer.unobserve(entry.target)
+            }
+          })
+        },
+        { threshold: 0.2 },
+      )
+      revealTargets.forEach((el) => {
+        el.classList.add('reveal-on-scroll')
+        observer.observe(el)
+      })
+    } else {
+      revealTargets.forEach((el) => el.classList.add('reveal-on-scroll', 'is-visible'))
+    }
+
+    // input helpers
+    if (phoneEl) {
+      phoneEl.addEventListener('input', () => {
+        let digits = phoneEl.value.replace(/[^0-9]/g, '')
+        if (digits.length < 4) {
+          phoneEl.value = digits
+          return
+        }
+        if (digits.length < 8) {
+          phoneEl.value = digits.replace(/(\d{3})(\d+)/, '$1-$2')
+          return
+        }
+        phoneEl.value = digits.replace(/(\d{3})(\d{3,4})(\d{0,4}).*/, '$1-$2-$3')
+      })
+    }
+
+    if (birthEl) {
+      birthEl.addEventListener('input', () => {
+        birthEl.value = birthEl.value.replace(/[^0-9년]/g, '')
+      })
+    }
+
+    const showTooltip = (field, message) => {
+      const el = form.querySelector(`[data-field="${field}"]`)
+      if (el) {
+        if (message) el.textContent = message
+        el.classList.add('show')
+      }
+    }
+
+    const hideTooltip = (field) => {
+      const el = form.querySelector(`[data-field="${field}"]`)
+      if (el) el.classList.remove('show')
+    }
+
+    const requiredFields = form.querySelectorAll('[required]')
+    requiredFields.forEach((field) => {
+      const handler = () => {
+        const value =
+          field.type === 'checkbox'
+            ? field.checked
+            : field.tagName === 'SELECT'
+            ? field.value !== ''
+            : field.value.trim() !== ''
+        if (value) hideTooltip(field.id || field.name)
+      }
+      field.addEventListener('input', handler)
+      field.addEventListener('change', handler)
+    })
+
+    const syncSubmit = () => {
+      if (!submitBtn) return
+      submitBtn.disabled = !(agreeEl && agreeEl.checked)
+    }
+    syncSubmit()
+    if (agreeEl) agreeEl.addEventListener('change', syncSubmit)
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault()
+
+      form.querySelectorAll('.field-tooltip').forEach((el) => el.classList.remove('show'))
+
+      let isValid = true
+      requiredFields.forEach((field) => {
+        const valid =
+          field.type === 'checkbox'
+            ? field.checked
+            : field.tagName === 'SELECT'
+            ? field.value && field.value !== ''
+            : field.value && field.value.trim() !== ''
+        if (!valid) {
+          isValid = false
+          showTooltip(field.id || field.name)
+        }
+      })
+      if (!isValid) {
+        const firstInvalid = Array.from(requiredFields).find((field) => {
+          if (field.type === 'checkbox') return !field.checked
+          if (field.tagName === 'SELECT') return !field.value || field.value === ''
+          return !field.value || field.value.trim() === ''
+        })
+        if (firstInvalid && typeof firstInvalid.scrollIntoView === 'function') {
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+        return
+      }
+
+      const payload = {
+        name: (form.querySelector('#mName')?.value || '').trim(),
+        gender: form.querySelector('#mGender')?.value || '',
+        phone: form.querySelector('#mPhone')?.value || '',
+        birth: form.querySelector('#mBirth')?.value || '',
+        education: form.querySelector('#mEdu')?.value || '',
+        job: (form.querySelector('#mJob')?.value || '').trim(),
+        region: form.querySelector('#mRegion')?.value || '',
+        district: (form.querySelector('#mDistrict')?.value || '').trim(),
+        agree: form.querySelector('#mAgree')?.checked || false,
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true
+        submitBtn.textContent = '전송 중…'
+      }
+
+      try {
+        const backendOrigin = ((window.BACKEND_ORIGIN || '').trim() || 'https://ygsa-backend.onrender.com').replace(/\/$/, '')
+        const endpoint = form.getAttribute('action') || `${backendOrigin}/api/consult`
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(payload),
+        })
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`)
+        }
+
+        form.reset()
+        syncSubmit()
+        alert('신청이 접수되었습니다. 매칭 매니저가 곧 연락드립니다.')
+      } catch (error) {
+        console.error(error)
+        alert('전송에 실패했습니다. 잠시 후 다시 시도해 주세요.')
+      } finally {
+        if (submitBtn) {
+          submitBtn.textContent = '무료 상담 신청하기'
+          syncSubmit()
+        }
+      }
+    })
+  })()
+</script>
+

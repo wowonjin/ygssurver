@@ -280,7 +280,14 @@ async function readConsultations() {
     await fs.mkdir(DATA_DIR, { recursive: true })
     const raw = await fs.readFile(DATA_FILE, 'utf-8')
     const parsed = JSON.parse(raw)
-    return Array.isArray(parsed) ? parsed : []
+    if (Array.isArray(parsed)) {
+      return parsed.map(normalizeStoredRecord)
+    }
+    if (parsed && typeof parsed === 'object') {
+      return [normalizeStoredRecord(parsed)]
+    }
+    await fs.writeFile(DATA_FILE, '[]', 'utf-8')
+    return []
   } catch (error) {
     if (error.code === 'ENOENT') {
       await fs.writeFile(DATA_FILE, '[]', 'utf-8')
@@ -291,7 +298,12 @@ async function readConsultations() {
 }
 
 async function writeConsultations(data) {
-  await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8')
+  const normalized = Array.isArray(data)
+    ? data.map(normalizeStoredRecord)
+    : data && typeof data === 'object'
+    ? [normalizeStoredRecord(data)]
+    : []
+  await fs.writeFile(DATA_FILE, JSON.stringify(normalized, null, 2), 'utf-8')
 }
 
 function sanitizePayload(body) {
@@ -300,9 +312,49 @@ function sanitizePayload(body) {
     gender: sanitizeText(body?.gender),
     phone: sanitizeText(body?.phone),
     birth: sanitizeText(body?.birth),
+    job: sanitizeText(body?.job),
     region: sanitizeText(body?.region),
+    district: sanitizeText(body?.district),
     education: sanitizeText(body?.education),
   }
+}
+
+function normalizeStoredRecord(entry) {
+  if (!entry || typeof entry !== 'object') return {}
+  const record = { ...entry }
+  record.id = sanitizeText(record.id) || nanoid()
+  record.name = sanitizeText(record.name)
+  record.gender = sanitizeText(record.gender)
+  record.phone = sanitizeText(record.phone)
+  record.birth = sanitizeText(record.birth)
+  record.education = sanitizeText(record.education)
+  record.region = sanitizeText(record.region)
+  record.job = sanitizeText(
+    record.job ??
+      record.occupation ??
+      record.jobTitle ??
+      record.company ??
+      record.companyName ??
+      record.employer ??
+      record['직업'] ??
+      record['회사'] ??
+      '',
+  )
+  record.district = sanitizeText(
+    record.district ??
+      record.regionDetail ??
+      record.areaDetail ??
+      record.subRegion ??
+      record['거주구'] ??
+      record['거주 구'] ??
+      '',
+  )
+  record.meetingSchedule = sanitizeText(record.meetingSchedule)
+  record.notes = sanitizeNotes(record.notes)
+  record.createdAt = safeToISOString(record.createdAt, new Date().toISOString())
+  record.updatedAt = safeToISOString(record.updatedAt, record.createdAt)
+  record.phoneConsultStatus = normalizePhoneStatus(record.phoneConsultStatus, 'pending')
+  return record
 }
 
 function validatePayload(payload) {
@@ -414,6 +466,8 @@ function buildNotificationMessage(record, compact = false) {
       `이름: ${record.name || '-'}`,
       `연락처: ${record.phone || '-'}`,
       `거주지역: ${record.region || '-'}`,
+      `거주 구: ${record.district || '-'}`,
+      `직업: ${record.job || '-'}`,
       `최종학력: ${record.education || '-'}`,
     ].join('\n')
   }
@@ -425,6 +479,8 @@ function buildNotificationMessage(record, compact = false) {
     `성별: ${record.gender || '-'}`,
     `생년월일: ${record.birth || '-'}`,
     `거주지역: ${record.region || '-'}`,
+    `거주 구: ${record.district || '-'}`,
+    `직업: ${record.job || '-'}`,
     `최종학력: ${record.education || '-'}`,
     `신청시각: ${new Date(record.createdAt || Date.now()).toLocaleString('ko-KR')}`,
   ].join('\n')

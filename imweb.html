@@ -161,14 +161,24 @@
         <div class="field-tooltip" data-field="phone">연락처를 입력해주세요.</div>
       </div>
 
-      <!-- 생년월일 (연락처 오른쪽) -->
+      <!-- 생년 (연락처 오른쪽) -->
       <div class="field">
-        <label for="birth" class="label">생년월일</label>
-        <input id="birth" name="birth" class="input" type="date" required autocomplete="bday" />
-        <div class="field-tooltip" data-field="birth">생년월일을 선택해주세요.</div>
+        <label for="birth" class="label">생년</label>
+        <input
+          id="birth"
+          name="birth"
+          class="input"
+          type="text"
+          inputmode="numeric"
+          maxlength="6"
+          placeholder="1998년"
+          required
+          autocomplete="bday-year"
+        />
+        <div class="field-tooltip" data-field="birth">예) 1998년</div>
       </div>
 
-      <!-- 최종학력 (왼쪽) -->
+      <!-- 최종학력 -->
       <div class="field">
         <label for="edu" class="label">최종학력</label>
         <select id="edu" name="education" class="select" required>
@@ -199,7 +209,14 @@
         <div class="field-tooltip" data-field="edu">최종학력을 선택해주세요.</div>
       </div>
 
-      <!-- 거주지역 (최종학력 오른쪽) -->
+      <!-- 직업 -->
+      <div class="field">
+        <label for="job" class="label">직업</label>
+        <input id="job" name="job" class="input" type="text" placeholder="삼성전자" autocomplete="organization" />
+        <div class="field-tooltip" data-field="job">현재 직업 또는 근무처를 입력해주세요.</div>
+      </div>
+
+      <!-- 거주지역 -->
       <div class="field">
         <label for="region" class="label">거주지역</label>
         <select id="region" name="region" class="select" required>
@@ -212,6 +229,13 @@
           <option>경남</option><option>제주</option>
         </select>
         <div class="field-tooltip" data-field="region">거주지역을 선택해주세요.</div>
+      </div>
+
+      <!-- 거주 구 -->
+      <div class="field">
+        <label for="district" class="label">거주 구</label>
+        <input id="district" name="district" class="input" type="text" placeholder="강남구" />
+        <div class="field-tooltip" data-field="district">거주하시는 구/군을 입력해주세요.</div>
       </div>
 
       <!-- 개인정보 동의 (회사명: 투미프롬) -->
@@ -276,10 +300,11 @@
   const submitBtn = form.querySelector('#submitBtn');
   const birthEl   = form.querySelector('#birth');
 
-  // 생년월일: 오늘 이후 선택 불가
+  // 생년 입력 안내 (숫자와 '년'만 허용)
   if (birthEl) {
-    const today = new Date().toISOString().split('T')[0];
-    birthEl.max = today;
+    birthEl.addEventListener('input', () => {
+      birthEl.value = birthEl.value.replace(/[^0-9년]/g, '');
+    });
   }
 
   // 연락처 자동 하이픈(숫자만 입력 허용)
@@ -412,8 +437,10 @@
       gender:(form.querySelector('#gender') ?.value || ''),
       phone: (form.querySelector('#phone')  ?.value || ''),
       birth: (form.querySelector('#birth')  ?.value || ''),
-      region:(form.querySelector('#region') ?.value || ''),
       education:(form.querySelector('#edu') ?.value || ''),
+      job:   (form.querySelector('#job')    ?.value || '').trim(),
+      region:(form.querySelector('#region') ?.value || ''),
+      district:(form.querySelector('#district') ?.value || '').trim(),
       agree: (form.querySelector('#agree')  ?.checked || false)
     };
 

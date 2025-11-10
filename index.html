@@ -152,6 +152,33 @@
         align-items: flex-start;
         gap: 12px;
       }
+      .card-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .status-chip {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background: rgba(48, 54, 61, 0.6);
+        color: #9da4b0;
+      }
+      .status-chip.status-before {
+        background: rgba(248, 113, 113, 0.2);
+        color: #f87171;
+      }
+      .status-chip.status-scheduled {
+        background: rgba(234, 179, 8, 0.22);
+        color: #facc15;
+      }
+      .status-chip.status-complete {
+        background: rgba(34, 197, 94, 0.2);
+        color: #4ade80;
+      }
       .card-controls {
         display: flex;
         align-items: center;
@@ -161,7 +188,7 @@
         width: 18px;
         height: 18px;
         cursor: pointer;
-        accent-color: #1f6feb;
+        accent-color: #f87171;
       }
       .card-controls .detail-btn {
         border: 1px solid #30363d;
@@ -176,6 +203,12 @@
       .card-controls .detail-btn:hover {
         background: #30363d;
         transform: translateY(-1px);
+      }
+      .card-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 14px;
       }
       .bulk-action-bar {
         position: fixed;
@@ -459,6 +492,36 @@
         color: #8b949e;
         font-size: 14px;
       }
+      .detail-info {
+        border: 1px solid #30363d;
+        border-radius: 16px;
+        background: rgba(13, 17, 23, 0.78);
+        padding: 18px;
+        display: grid;
+        gap: 14px;
+      }
+      .detail-info dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+      }
+      .detail-info div {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .detail-info dt {
+        font-size: 13px;
+        color: #8b949e;
+        font-weight: 500;
+      }
+      .detail-info dd {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 600;
+        color: #f0f6fc;
+      }
       .modal-form {
         display: flex;
         flex-direction: column;
@@ -659,6 +722,14 @@
         dl {
           grid-template-columns: 1fr;
         }
+        .card-title {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+        }
+        .status-chip {
+          align-self: flex-start;
+        }
       }
     </style>
     <script src="backend-config.js"></script>
@@ -670,9 +741,10 @@
         <button type="button" id="calendarScrollBtn">캘린더 보기</button>
       </div>
       <div class="header-links">
-        <a href="https://yeongyeolsa.imweb.me/admin/?type=page&_gl=1*zufqzi*_gcl_au*MTY3OTEyMjExNS4xNzYwNDk3ODM3LjE1NzI0MTM0ODIuMTc2MjE1NjIzNC4xNzYyMTU2Mjc1*_ga*NTAyMzEzOC4xNzYwNjc3MTc0*_ga_HP37L08LP3*czE3NjIxNTYyMjckbzYkZzEkdDE3NjIxNTYyNzgkajkkbDAkaDA.&_ga=2.97118614.820021611.1762135185-5023138.1760677174" target="_blank" rel="noopener noreferrer">연결사 admin</a>
-        <a href="https://ygsa.co.kr/" target="_blank" rel="noopener noreferrer">연결사 Website</a>
-        <a href="https://www.notion.so/29ef5285ecb6807cb866c135f877c7a3?source=copy_link" target="_blank" rel="noopener noreferrer">연결사 Notion</a>
+        <a href="https://yeongyeolsa.imweb.me/admin/?type=page&_gl=1*zufqzi*_gcl_au*MTY3OTEyMjExNS4xNzYwNDk3ODM3LjE1NzI0MTM0ODIuMTc2MjE1NjIzNC4xNzYyMTU2Mjc1*_ga*NTAyMzEzOC4xNzYwNjc3MTc0*_ga_HP37L08LP3*czE3NjIxNTYyMjckbzYkZzEkdDE3NjIxNTYyNzgkajkkbDAkaDA.&_ga=2.97118614.820021611.1762135185-5023138.1760677174" target="_blank" rel="noopener noreferrer">Admin</a>
+        <a href="https://ygsa.co.kr/" target="_blank" rel="noopener noreferrer">Website</a>
+        <a href="https://www.notion.so/29ef5285ecb6807cb866c135f877c7a3?source=copy_link" target="_blank" rel="noopener noreferrer">Notion</a>
+        <a href="https://dashboard.render.com/web/srv-d47j4nshg0os73fnnhd0/deploys/dep-d48ish3e5dus73c7t7ng" target="_blank" rel="noopener noreferrer">Server</a>
       </div>
     </header>
     <section class="stats-summary" aria-label="상담 현황">
@@ -683,7 +755,7 @@
     </section>
     <section class="toolbar" aria-label="필터">
       <div class="toolbar-filters">
-        <input type="search" id="searchInput" placeholder="이름, 연락처, 지역 검색" aria-label="검색" />
+        <input type="search" id="searchInput" placeholder="이름, 연락처, 지역, 직업 검색" aria-label="검색" />
         <select id="genderFilter" aria-label="성별 필터">
           <option value="all">성별 전체</option>
         </select>
@@ -738,13 +810,16 @@
           <button type="button" id="detailCloseBtn" aria-label="닫기">×</button>
         </div>
         <p class="modal-subtitle" id="detailSubtitle"></p>
+        <div class="detail-info" aria-live="polite">
+          <dl id="detailInfoList"></dl>
+        </div>
         <form id="detailForm" class="modal-form">
           <div>
             <label for="detailPhoneStatus">전화 상담 상태</label>
             <select id="detailPhoneStatus">
-              <option value="pending">미진행</option>
-              <option value="scheduled">전화 예정</option>
-              <option value="done">전화 완료</option>
+              <option value="pending">상담 전</option>
+              <option value="scheduled">상담 예정</option>
+              <option value="done">상담 완료</option>
             </select>
           </div>
           <div>
@@ -818,6 +893,7 @@
       const detailClearScheduleBtn = document.getElementById('detailClearSchedule')
       const detailNotesInput = document.getElementById('detailNotes')
       const detailScheduleInfo = document.getElementById('detailScheduleInfo')
+      const detailInfoList = document.getElementById('detailInfoList')
       const calendarScrollBtn = document.getElementById('calendarScrollBtn')
       const calendarModal = document.getElementById('calendarModal')
       const calendarCloseBtn = document.getElementById('calendarCloseBtn')
@@ -844,6 +920,16 @@
         selectedDate: '',
       }
       const PHONE_STATUS_VALUES = ['pending', 'scheduled', 'done']
+      const PHONE_STATUS_LABELS = {
+        pending: '상담 전',
+        scheduled: '상담 예정',
+        done: '상담 완료',
+      }
+      const STATUS_CLASS_NAMES = {
+        pending: 'status-before',
+        scheduled: 'status-scheduled',
+        done: 'status-complete',
+      }
       const TIME_SLOT_START_HOUR = 9
       const TIME_SLOT_END_HOUR = 21
       const TIME_SLOT_INTERVAL_MINUTES = 15
@@ -970,7 +1056,12 @@
           card.innerHTML = `
               <div class="card-top">
                 <div>
-                  <h2>${escapeHtml(item.name || '익명')}</h2>
+                  <div class="card-title">
+                    <h2>${escapeHtml(item.name || '익명')}</h2>
+                    <span class="status-chip ${escapeHtml(getStatusClass(item.phoneConsultStatus))}">
+                      ${escapeHtml(formatPhoneStatus(item.phoneConsultStatus))}
+                    </span>
+                  </div>
                   <div class="meta">${formatDate(item.createdAt)} 접수</div>
                 </div>
                 <div class="card-controls">
@@ -986,9 +1077,11 @@
               <dl>
                 ${renderEntry('연락처', item.phone)}
                 ${renderEntry('성별', item.gender)}
-                ${renderEntry('생년월일', item.birth)}
-                ${renderEntry('거주지역', item.region)}
+                ${renderEntry('생년(생일)', item.birth)}
                 ${renderEntry('최종학력', item.education)}
+                ${renderEntry('직업', item.job)}
+                ${renderEntry('거주지역', item.region)}
+                ${renderEntry('거주 구', item.district)}
               </dl>
             `
           fragment.appendChild(card)
@@ -1005,9 +1098,15 @@
 
         detailRecordId = id
         detailTitleEl.textContent = record.name || '상담 신청'
+        const regionLine = record.region
+          ? `지역 ${record.region}${record.district ? ` ${record.district}` : ''}`
+          : record.district
+          ? `거주 구 ${record.district}`
+          : null
         detailSubtitleEl.textContent = [
           record.phone ? `연락처 ${record.phone}` : null,
-          record.region ? `지역 ${record.region}` : null,
+          record.job ? `직업 ${record.job}` : null,
+          regionLine,
           record.createdAt ? `신청 ${formatDate(record.createdAt)}` : null,
         ]
           .filter(Boolean)
@@ -1017,6 +1116,8 @@
           ? record.phoneConsultStatus
           : 'pending'
         detailPhoneStatusEl.value = status
+
+        setDetailInfo(record)
 
         const { date: scheduledDate, time: scheduledTime } = splitLocalDateTime(
           record.meetingSchedule,
@@ -1040,6 +1141,9 @@
         detailTimeSelect.innerHTML = '<option value="">시간 선택</option>'
         detailTimeSelect.disabled = true
         detailScheduleInfo.textContent = ''
+        if (detailInfoList) {
+          detailInfoList.innerHTML = ''
+        }
       }
 
       function renderEntry(label, value) {
@@ -1049,6 +1153,29 @@
             <dd>${escapeHtml(value || '-')}</dd>
           </div>
         `
+      }
+
+      function setDetailInfo(record) {
+        if (!detailInfoList) return
+        const infoItems = [
+          ['연락처', record.phone],
+          ['성별', record.gender],
+          ['생년', record.birth],
+          ['최종학력', record.education],
+          ['직업', record.job],
+          ['거주지역', record.region],
+          ['거주 구', record.district],
+          ['신청 시각', formatDate(record.createdAt)],
+        ]
+        detailInfoList.innerHTML = infoItems.map(([label, value]) => renderEntry(label, value)).join('')
+      }
+
+      function formatPhoneStatus(status) {
+        return PHONE_STATUS_LABELS[status] || PHONE_STATUS_LABELS.pending
+      }
+
+      function getStatusClass(status) {
+        return STATUS_CLASS_NAMES[status] || STATUS_CLASS_NAMES.pending
       }
 
       function handleDetailDateChange() {
@@ -1393,13 +1520,19 @@
             li.dataset.id = entry.id
 
             const phoneLine = escapeHtml(entry.record.phone || '-')
-            const regionLine = escapeHtml(entry.record.region || '-')
+            const regionLine = escapeHtml(
+              [entry.record.region, entry.record.district].filter(Boolean).join(' ') || '-',
+            )
+            const jobLine = entry.record.job
+              ? `<span class="meta-line">직업 ${escapeHtml(entry.record.job)}</span>`
+              : ''
 
             li.innerHTML = `
             <time>${entry.displaySchedule}</time>
             <span>${escapeHtml(entry.name || '익명')} · ${formatPhoneStatus(entry.record.phoneConsultStatus)}</span>
             <span class="meta-line">연락처 ${phoneLine}</span>
             <span class="meta-line">지역 ${regionLine}</span>
+            ${jobLine}
           `
             if (entry.record.notes) {
               const noteSpan = document.createElement('span')
@@ -1474,6 +1607,12 @@
         if (typeof normalized.notes !== 'string') {
           normalized.notes = ''
         }
+        if (typeof normalized.job !== 'string') {
+          normalized.job = normalized.job != null ? String(normalized.job) : ''
+        }
+        if (typeof normalized.district !== 'string') {
+          normalized.district = normalized.district != null ? String(normalized.district) : ''
+        }
         return normalized
       }
 
@@ -1497,7 +1636,7 @@
         if (viewState.search) {
           const term = viewState.search.toLowerCase()
           result = result.filter((item) =>
-            ['name', 'phone', 'region', 'education']
+            ['name', 'phone', 'region', 'district', 'education', 'job']
               .map((key) => String(item[key] || '').toLowerCase())
               .some((value) => value.includes(term))
           )
@@ -1775,8 +1914,10 @@
           성별: item.gender || '',
           연락처: item.phone || '',
           생년월일: item.birth || '',
-          거주지역: item.region || '',
           최종학력: item.education || '',
+          직업: item.job || '',
+          거주지역: item.region || '',
+          거주구: item.district || '',
           접수시간: formatDate(item.createdAt),
         }))
         const worksheet = XLSX.utils.json_to_sheet(rows)
@@ -1817,7 +1958,9 @@
             gender: row.성별 || row.gender || '',
             phone: row.연락처 || row.phone || '',
             birth: row.생년월일 || row.birth || '',
+            job: row.직업 || row.job || row.occupation || '',
             region: row.거주지역 || row.지역 || row.region || '',
+            district: row.거주구 || row['거주 구'] || row.구 || row.district || '',
             education: row.최종학력 || row.education || '',
             createdAt: row.접수시간
               ? new Date(row.접수시간).toISOString()
