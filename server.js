@@ -314,7 +314,7 @@ function sanitizePayload(body) {
     phone: sanitizeText(body?.phone),
     birth: sanitizeText(body?.birth),
     job: sanitizeText(body?.job),
-    region: sanitizeText(body?.region),
+    height: normalizeHeight(body?.height ?? body?.region),
     district: sanitizeText(body?.district),
     education: sanitizeText(body?.education),
   }
@@ -329,7 +329,14 @@ function normalizeStoredRecord(entry) {
   record.phone = sanitizeText(record.phone)
   record.birth = sanitizeText(record.birth)
   record.education = sanitizeText(record.education)
-  record.region = sanitizeText(record.region)
+  record.height = normalizeHeight(
+    record.height ??
+      record.heightCm ??
+      record['신장'] ??
+      record['신장(cm)'] ??
+      record.region ??
+      '',
+  )
   record.job = sanitizeText(
     record.job ??
       record.occupation ??
@@ -364,7 +371,7 @@ function validatePayload(payload) {
   if (!payload.gender) errors.push({ field: 'gender', message: '성별을 선택해주세요.' })
   if (!payload.phone) errors.push({ field: 'phone', message: '연락처를 입력해주세요.' })
   if (!payload.birth) errors.push({ field: 'birth', message: '생년월일을 입력해주세요.' })
-  if (!payload.region) errors.push({ field: 'region', message: '거주지역을 선택해주세요.' })
+  if (!payload.height) errors.push({ field: 'height', message: '신장을 입력해주세요.' })
   if (!payload.job) errors.push({ field: 'job', message: '직업을 입력해주세요.' })
   if (!payload.district) errors.push({ field: 'district', message: '거주 구를 입력해주세요.' })
   if (!payload.education) errors.push({ field: 'education', message: '최종학력을 선택해주세요.' })
@@ -468,7 +475,7 @@ function buildNotificationMessage(record, compact = false) {
       '새 상담 신청',
       `이름: ${record.name || '-'}`,
       `연락처: ${record.phone || '-'}`,
-      `거주지역: ${record.region || '-'}`,
+      `신장: ${record.height || '-'}`,
       `거주 구: ${record.district || '-'}`,
       `직업: ${record.job || '-'}`,
       `최종학력: ${record.education || '-'}`,
@@ -481,7 +488,7 @@ function buildNotificationMessage(record, compact = false) {
     `연락처: ${record.phone || '-'}`,
     `성별: ${record.gender || '-'}`,
     `생년월일: ${record.birth || '-'}`,
-    `거주지역: ${record.region || '-'}`,
+    `신장: ${record.height || '-'}`,
     `거주 구: ${record.district || '-'}`,
     `직업: ${record.job || '-'}`,
     `최종학력: ${record.education || '-'}`,
@@ -556,6 +563,14 @@ function sanitizeText(value) {
 
 function sanitizeNotes(value) {
   return sanitizeText(value)
+}
+
+function normalizeHeight(value) {
+  const raw = sanitizeText(value)
+  if (!raw) return ''
+  const digits = raw.replace(/\D/g, '').slice(0, 3)
+  if (!digits) return ''
+  return `${digits}cm`
 }
 
 function normalizePhoneStatus(value, fallback = 'pending') {

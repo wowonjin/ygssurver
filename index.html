@@ -759,18 +759,18 @@
     </section>
     <section class="toolbar" aria-label="필터">
       <div class="toolbar-filters">
-        <input type="search" id="searchInput" placeholder="이름, 연락처, 지역, 직업 검색" aria-label="검색" />
+        <input type="search" id="searchInput" placeholder="이름, 연락처, 신장, 직업 검색" aria-label="검색" />
         <select id="genderFilter" aria-label="성별 필터">
           <option value="all">성별 전체</option>
         </select>
-        <select id="regionFilter" aria-label="지역 필터">
-          <option value="all">지역 전체</option>
+        <select id="heightFilter" aria-label="신장 필터">
+          <option value="all">신장 전체</option>
         </select>
         <select id="sortSelect" aria-label="정렬">
           <option value="latest">최신 순</option>
           <option value="oldest">오래된 순</option>
           <option value="name">이름 순</option>
-          <option value="region">지역 순</option>
+          <option value="height">신장 순</option>
         </select>
       </div>
       <div class="toolbar-actions">
@@ -883,7 +883,7 @@
       const statDailyEl = document.getElementById('statDaily')
       const searchInput = document.getElementById('searchInput')
       const genderFilter = document.getElementById('genderFilter')
-      const regionFilter = document.getElementById('regionFilter')
+      const heightFilter = document.getElementById('heightFilter')
       const sortSelect = document.getElementById('sortSelect')
       const detailModal = document.getElementById('detailModal')
       const detailForm = document.getElementById('detailForm')
@@ -916,7 +916,7 @@
       const viewState = {
         search: '',
         gender: 'all',
-        region: 'all',
+        height: 'all',
         sort: 'latest',
       }
       const calendarState = {
@@ -983,8 +983,8 @@
         viewState.gender = event.target.value
         render()
       })
-      regionFilter.addEventListener('change', (event) => {
-        viewState.region = event.target.value
+      heightFilter.addEventListener('change', (event) => {
+        viewState.height = event.target.value
         render()
       })
       sortSelect.addEventListener('change', (event) => {
@@ -1084,7 +1084,7 @@
                 ${renderEntry('생년(생일)', item.birth)}
                 ${renderEntry('최종학력', item.education)}
                 ${renderEntry('직업', item.job)}
-                ${renderEntry('거주지역', item.region)}
+                ${renderEntry('신장', item.height)}
                 ${renderEntry('거주 구', item.district)}
               </dl>
             `
@@ -1102,15 +1102,13 @@
 
         detailRecordId = id
         detailTitleEl.textContent = record.name || '상담 신청'
-        const regionLine = record.region
-          ? `지역 ${record.region}${record.district ? ` ${record.district}` : ''}`
-          : record.district
-          ? `거주 구 ${record.district}`
-          : null
+        const heightLine = record.height ? `신장 ${record.height}` : null
+        const districtLine = record.district ? `거주 구 ${record.district}` : null
         detailSubtitleEl.textContent = [
           record.phone ? `연락처 ${record.phone}` : null,
           record.job ? `직업 ${record.job}` : null,
-          regionLine,
+          heightLine,
+          districtLine,
           record.createdAt ? `신청 ${formatDate(record.createdAt)}` : null,
         ]
           .filter(Boolean)
@@ -1167,7 +1165,7 @@
           ['생년', record.birth],
           ['최종학력', record.education],
           ['직업', record.job],
-          ['거주지역', record.region],
+          ['신장', record.height],
           ['거주 구', record.district],
           ['신청 시각', formatDate(record.createdAt)],
         ]
@@ -1524,9 +1522,12 @@
             li.dataset.id = entry.id
 
             const phoneLine = escapeHtml(entry.record.phone || '-')
-            const regionLine = escapeHtml(
-              [entry.record.region, entry.record.district].filter(Boolean).join(' ') || '-',
-            )
+            const heightLine = entry.record.height
+              ? `<span class="meta-line">신장 ${escapeHtml(entry.record.height)}</span>`
+              : ''
+            const districtLine = entry.record.district
+              ? `<span class="meta-line">거주 구 ${escapeHtml(entry.record.district)}</span>`
+              : ''
             const jobLine = entry.record.job
               ? `<span class="meta-line">직업 ${escapeHtml(entry.record.job)}</span>`
               : ''
@@ -1535,7 +1536,8 @@
             <time>${entry.displaySchedule}</time>
             <span>${escapeHtml(entry.name || '익명')} · ${formatPhoneStatus(entry.record.phoneConsultStatus)}</span>
             <span class="meta-line">연락처 ${phoneLine}</span>
-            <span class="meta-line">지역 ${regionLine}</span>
+            ${heightLine}
+            ${districtLine}
             ${jobLine}
           `
             if (entry.record.notes) {
@@ -1614,6 +1616,9 @@
         if (typeof normalized.job !== 'string') {
           normalized.job = normalized.job != null ? String(normalized.job) : ''
         }
+        if (typeof normalized.height !== 'string') {
+          normalized.height = normalized.height != null ? String(normalized.height) : ''
+        }
         if (typeof normalized.district !== 'string') {
           normalized.district = normalized.district != null ? String(normalized.district) : ''
         }
@@ -1640,7 +1645,7 @@
         if (viewState.search) {
           const term = viewState.search.toLowerCase()
           result = result.filter((item) =>
-            ['name', 'phone', 'region', 'district', 'education', 'job']
+            ['name', 'phone', 'height', 'district', 'education', 'job']
               .map((key) => String(item[key] || '').toLowerCase())
               .some((value) => value.includes(term))
           )
@@ -1648,8 +1653,8 @@
         if (viewState.gender !== 'all') {
           result = result.filter((item) => (item.gender || '') === viewState.gender)
         }
-        if (viewState.region !== 'all') {
-          result = result.filter((item) => (item.region || '') === viewState.region)
+        if (viewState.height !== 'all') {
+          result = result.filter((item) => (item.height || '') === viewState.height)
         }
 
         switch (viewState.sort) {
@@ -1661,9 +1666,9 @@
               String(a.name || '').localeCompare(String(b.name || ''), 'ko-KR')
             )
             break
-          case 'region':
+          case 'height':
             result.sort((a, b) =>
-              String(a.region || '').localeCompare(String(b.region || ''), 'ko-KR')
+              String(a.height || '').localeCompare(String(b.height || ''), 'ko-KR')
             )
             break
           case 'latest':
@@ -1682,9 +1687,9 @@
           '성별 전체'
         )
         populateSelect(
-          regionFilter,
-          uniqueSorted(items.map((item) => item.region)),
-          '지역 전체'
+          heightFilter,
+          uniqueSorted(items.map((item) => item.height)),
+          '신장 전체'
         )
       }
 
@@ -1713,8 +1718,8 @@
         if (selectEl === genderFilter) {
           viewState.gender = selectEl.value
         }
-        if (selectEl === regionFilter) {
-          viewState.region = selectEl.value
+        if (selectEl === heightFilter) {
+          viewState.height = selectEl.value
         }
       }
 
@@ -1920,7 +1925,7 @@
           생년월일: item.birth || '',
           최종학력: item.education || '',
           직업: item.job || '',
-          거주지역: item.region || '',
+          신장: item.height || '',
           거주구: item.district || '',
           접수시간: formatDate(item.createdAt),
         }))
@@ -1963,7 +1968,14 @@
             phone: row.연락처 || row.phone || '',
             birth: row.생년월일 || row.birth || '',
             job: row.직업 || row.job || row.occupation || '',
-            region: row.거주지역 || row.지역 || row.region || '',
+            height:
+              row.신장 ||
+              row['신장(cm)'] ||
+              row.height ||
+              row.거주지역 ||
+              row.지역 ||
+              row.region ||
+              '',
             district: row.거주구 || row['거주 구'] || row.구 || row.district || '',
             education: row.최종학력 || row.education || '',
             createdAt: row.접수시간

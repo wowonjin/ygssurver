@@ -247,19 +247,21 @@
         <div class="field-tooltip" data-field="job">현재 직업 또는 근무처를 입력해주세요.</div>
       </div>
 
-      <!-- 거주지역 -->
+      <!-- 신장 -->
       <div class="field">
-        <label for="region" class="label">거주지역</label>
-        <select id="region" name="region" class="select" required>
-          <option value="" selected disabled>(선택)</option>
-          <option>서울</option><option>경기</option><option>인천</option>
-          <option>부산</option><option>대구</option><option>광주</option>
-          <option>대전</option><option>울산</option><option>세종</option>
-          <option>강원</option><option>충북</option><option>충남</option>
-          <option>전북</option><option>전남</option><option>경북</option>
-          <option>경남</option><option>제주</option>
-        </select>
-        <div class="field-tooltip" data-field="region">거주지역을 선택해주세요.</div>
+        <label for="height" class="label">신장</label>
+        <input
+          id="height"
+          name="height"
+          class="input"
+          type="text"
+          inputmode="numeric"
+          maxlength="5"
+          placeholder="170cm"
+          required
+          autocomplete="off"
+        />
+        <div class="field-tooltip" data-field="height">신장을 입력해주세요. (예: 170cm)</div>
       </div>
 
       <!-- 거주 구 -->
@@ -330,12 +332,44 @@
   const agree     = form.querySelector('#agree');
   const submitBtn = form.querySelector('#submitBtn');
   const birthEl   = form.querySelector('#birth');
+  const heightEl  = form.querySelector('#height');
 
   // 생년 입력 안내 (숫자와 '년'만 허용)
   if (birthEl) {
     birthEl.addEventListener('input', () => {
       birthEl.value = birthEl.value.replace(/[^0-9년]/g, '');
     });
+  }
+
+  // 신장 입력: 숫자만 허용하고 항상 cm 접미사를 유지
+  if (heightEl) {
+    const formatHeight = () => {
+      const digits = heightEl.value.replace(/[^0-9]/g, '').slice(0, 3);
+      if (!digits) {
+        heightEl.value = '';
+        return;
+      }
+      const formatted = `${digits}cm`;
+      heightEl.value = formatted;
+      if (document.activeElement === heightEl) {
+        const caretPos = digits.length;
+        requestAnimationFrame(() => {
+          heightEl.setSelectionRange(caretPos, caretPos);
+        });
+      }
+    };
+
+    heightEl.addEventListener('focus', () => {
+      const digits = heightEl.value.replace(/[^0-9]/g, '').slice(0, 3);
+      heightEl.value = digits;
+      requestAnimationFrame(() => {
+        const pos = heightEl.value.length;
+        heightEl.setSelectionRange(pos, pos);
+      });
+    });
+
+    heightEl.addEventListener('input', formatHeight);
+    heightEl.addEventListener('blur', formatHeight);
   }
 
   // 연락처 자동 하이픈(숫자만 입력 허용)
@@ -463,6 +497,11 @@
       return;
     }
 
+    if (heightEl) {
+      const digits = heightEl.value.replace(/[^0-9]/g, '').slice(0, 3);
+      heightEl.value = digits ? `${digits}cm` : '';
+    }
+
     const data = {
       name:  (form.querySelector('#name')   ?.value || '').trim(),
       gender:(form.querySelector('#gender') ?.value || ''),
@@ -470,7 +509,7 @@
       birth: (form.querySelector('#birth')  ?.value || ''),
       education:(form.querySelector('#edu') ?.value || ''),
       job:   (form.querySelector('#job')    ?.value || '').trim(),
-      region:(form.querySelector('#region') ?.value || ''),
+      height:(form.querySelector('#height') ?.value || ''),
       district:(form.querySelector('#district') ?.value || '').trim(),
       agree: (form.querySelector('#agree')  ?.checked || false)
     };
