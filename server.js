@@ -365,6 +365,8 @@ function validatePayload(payload) {
   if (!payload.phone) errors.push({ field: 'phone', message: '연락처를 입력해주세요.' })
   if (!payload.birth) errors.push({ field: 'birth', message: '생년월일을 입력해주세요.' })
   if (!payload.region) errors.push({ field: 'region', message: '거주지역을 선택해주세요.' })
+  if (!payload.job) errors.push({ field: 'job', message: '직업을 입력해주세요.' })
+  if (!payload.district) errors.push({ field: 'district', message: '거주 구를 입력해주세요.' })
   if (!payload.education) errors.push({ field: 'education', message: '최종학력을 선택해주세요.' })
   return errors
 }
