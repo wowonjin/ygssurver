@@ -631,6 +631,14 @@
       .detail-secondary-grid .span-2 {
         grid-column: span 2;
       }
+      .detail-preferences-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+      }
+      .detail-preferences-grid select[multiple] {
+        min-height: 160px;
+      }
       .full-width {
         grid-column: 1 / -1;
       }
@@ -766,7 +774,8 @@
       }
       @media (max-width: 1200px) {
         .detail-fields .field-grid,
-        .detail-secondary-grid {
+        .detail-secondary-grid,
+        .detail-preferences-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
         .detail-secondary-grid .span-2,
@@ -826,9 +835,7 @@
         .status-chip {
           align-self: flex-start;
         }
-        .sticky-note {
-          display: none;
-        }
+        .detail-preferences-grid,
         .detail-fields .field-grid,
         .detail-secondary-grid {
           grid-template-columns: 1fr;
@@ -836,6 +843,9 @@
         .detail-secondary-grid .span-2,
         .full-width {
           grid-column: span 1;
+        }
+        .sticky-note {
+          display: none;
         }
       }
     </style>
@@ -960,6 +970,10 @@
                 />
               </div>
               <div class="field">
+                <label for="detailMbti">MBTI</label>
+                <input id="detailMbti" type="text" placeholder="예: ENFP" />
+              </div>
+              <div class="field">
                 <label for="detailGender">성별</label>
                 <select id="detailGender" required>
                   <option value="">선택</option>
@@ -1018,11 +1032,29 @@
                 </select>
               </div>
               <div class="field">
+                <label for="detailUniversity">대학교</label>
+                <input id="detailUniversity" type="text" placeholder="예: 서울대학교 (관악캠퍼스)" />
+              </div>
+              <div class="field">
+                <label for="detailSalaryRange">연봉 (세전 기준)</label>
+                <select id="detailSalaryRange">
+                  <option value="">선택</option>
+                  <option value="1">1) 3000만원 미만</option>
+                  <option value="2">2) 3000-4000</option>
+                  <option value="3">3) 4000-6000</option>
+                  <option value="4">4) 6000-8000</option>
+                  <option value="5">5) 8000-1억</option>
+                  <option value="6">6) 1억-2억</option>
+                  <option value="7">7) 2억-3억</option>
+                  <option value="8">8) 3억 이상</option>
+                </select>
+              </div>
+              <div class="field">
                 <label for="detailJob">직업</label>
                 <input
                   id="detailJob"
                   type="text"
-                  placeholder="삼성전자"
+                  placeholder="예: 중견 무역회사 해외영업"
                   autocomplete="organization"
                   required
                 />
@@ -1030,6 +1062,40 @@
               <div class="field">
                 <label for="detailDistrict">거주 구</label>
                 <input id="detailDistrict" type="text" placeholder="서울특별시 강남구" required />
+              </div>
+              <div class="field full-width">
+                <label for="detailJobDetail">직업/직무 상세</label>
+                <textarea
+                  id="detailJobDetail"
+                  placeholder="예: 중견 무역회사 해외영업팀에서 북미 시장 담당"
+                ></textarea>
+              </div>
+              <div class="field full-width">
+                <label for="detailProfileAppeal">추가 어필</label>
+                <textarea
+                  id="detailProfileAppeal"
+                  placeholder="연봉, 자산, 학력 등 프로필에 강조하고 싶은 내용을 적어주세요."
+                ></textarea>
+              </div>
+              <div class="field">
+                <label for="detailSmoking">흡연</label>
+                <select id="detailSmoking">
+                  <option value="">선택</option>
+                  <option value="비흡연">비흡연</option>
+                  <option value="사회적 흡연">사회적 흡연</option>
+                  <option value="흡연">흡연</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="detailReligion">종교</label>
+                <select id="detailReligion">
+                  <option value="">선택</option>
+                  <option value="무교">무교</option>
+                  <option value="기독교">기독교</option>
+                  <option value="천주교">천주교</option>
+                  <option value="불교">불교</option>
+                  <option value="기타">기타</option>
+                </select>
               </div>
             </div>
           </div>
@@ -1054,9 +1120,76 @@
               <p class="modal-subtitle" id="detailScheduleInfo"></p>
             </div>
           </div>
-          <div class="field full-width detail-notes">
-            <label for="detailNotes">특이사항 메모</label>
-            <textarea id="detailNotes" placeholder="상담 기록을 입력하세요."></textarea>
+          <div class="detail-preferences-grid">
+            <div class="field">
+              <label for="detailPreferredHeights">선호하는 키 (중복 선택 가능)</label>
+              <select id="detailPreferredHeights" multiple size="6">
+                <option value="160cm 이하">160cm 이하</option>
+                <option value="161-165cm">161-165cm</option>
+                <option value="166-170cm">166-170cm</option>
+                <option value="171-175cm">171-175cm</option>
+                <option value="176-180cm">176-180cm</option>
+                <option value="181cm 이상">181cm 이상</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="detailPreferredAges">선호 나이 (중복 선택 가능)</label>
+              <select id="detailPreferredAges" multiple size="6">
+                <option value="20대 초반">20대 초반</option>
+                <option value="20대 중반">20대 중반</option>
+                <option value="20대 후반">20대 후반</option>
+                <option value="30대 초반">30대 초반</option>
+                <option value="30대 중반">30대 중반</option>
+                <option value="30대 후반 이상">30대 후반 이상</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="detailValues">인생의 주요 가치관 (최대 2개)</label>
+              <select id="detailValues" multiple size="6">
+                <option value="하루하루 최선을 다하는">하루하루 최선을 다하는</option>
+                <option value="화목한 가족이 중심이 되는">화목한 가족이 중심이 되는</option>
+                <option value="건강관리에 철저한">건강관리에 철저한</option>
+                <option value="일과 사랑 모두 성공하는">일과 사랑 모두 성공하는</option>
+                <option value="사랑하면 맞춰주는(이해하는)">사랑하면 맞춰주는(이해하는)</option>
+              </select>
+              <input
+                id="detailValuesCustom"
+                type="text"
+                placeholder="기타 가치관 (직접 입력)"
+              />
+            </div>
+            <div class="field full-width">
+              <label for="detailSufficientCondition">충분조건</label>
+              <textarea
+                id="detailSufficientCondition"
+                placeholder="충분조건을 입력해주세요."
+              ></textarea>
+            </div>
+            <div class="field full-width">
+              <label for="detailNecessaryCondition">필요조건</label>
+              <textarea
+                id="detailNecessaryCondition"
+                placeholder="필요조건을 입력해주세요."
+              ></textarea>
+            </div>
+            <div class="field full-width">
+              <label for="detailLikesDislikes">좋아하는 것 / 싫어하는 것</label>
+              <textarea
+                id="detailLikesDislikes"
+                placeholder="좋아하는 것과 싫어하는 것을 적어주세요."
+              ></textarea>
+            </div>
+            <div class="field full-width">
+              <label for="detailAboutMe">'저는 이런 사람입니다'</label>
+              <textarea
+                id="detailAboutMe"
+                placeholder="어필할 수 있는 매력포인트나 성격을 적어주세요."
+              ></textarea>
+            </div>
+            <div class="field full-width detail-notes">
+              <label for="detailNotes">관리자 메모</label>
+              <textarea id="detailNotes" placeholder="상담 기록이나 참고 사항을 입력하세요."></textarea>
+            </div>
           </div>
           <div class="modal-actions">
             <button type="button" class="secondary" id="detailCancelBtn">취소</button>
@@ -1168,6 +1301,21 @@
       const detailEducationSelect = document.getElementById('detailEducation')
       const detailJobInput = document.getElementById('detailJob')
       const detailDistrictInput = document.getElementById('detailDistrict')
+      const detailMbtiInput = document.getElementById('detailMbti')
+      const detailUniversityInput = document.getElementById('detailUniversity')
+      const detailSalaryRangeSelect = document.getElementById('detailSalaryRange')
+      const detailJobDetailInput = document.getElementById('detailJobDetail')
+      const detailProfileAppealInput = document.getElementById('detailProfileAppeal')
+      const detailSmokingSelect = document.getElementById('detailSmoking')
+      const detailReligionSelect = document.getElementById('detailReligion')
+      const detailPreferredHeightsSelect = document.getElementById('detailPreferredHeights')
+      const detailPreferredAgesSelect = document.getElementById('detailPreferredAges')
+      const detailSufficientConditionInput = document.getElementById('detailSufficientCondition')
+      const detailNecessaryConditionInput = document.getElementById('detailNecessaryCondition')
+      const detailLikesDislikesInput = document.getElementById('detailLikesDislikes')
+      const detailValuesSelect = document.getElementById('detailValues')
+      const detailValuesCustomInput = document.getElementById('detailValuesCustom')
+      const detailAboutMeInput = document.getElementById('detailAboutMe')
       const detailPhoneStatusEl = document.getElementById('detailPhoneStatus')
       const detailDateInput = document.getElementById('detailDate')
       const detailTimeSelect = document.getElementById('detailTime')
@@ -1213,6 +1361,17 @@
       const TIME_SLOT_START_HOUR = 9
       const TIME_SLOT_END_HOUR = 21
       const TIME_SLOT_INTERVAL_MINUTES = 15
+      const SALARY_RANGE_LABELS = {
+        '1': '3000만원 미만',
+        '2': '3000-4000만원',
+        '3': '4000-6000만원',
+        '4': '6000-8000만원',
+        '5': '8000-1억원',
+        '6': '1억-2억원',
+        '7': '2억-3억원',
+        '8': '3억원 이상',
+      }
+      let detailValuesSelection = []
 
       exportBtn.addEventListener('click', exportToExcel)
       importBtn.addEventListener('click', () => excelInput.click())
@@ -1234,6 +1393,11 @@
       detailDateInput.addEventListener('change', handleDetailDateChange)
       detailTimeSelect.addEventListener('change', handleDetailTimeChange)
       detailClearScheduleBtn.addEventListener('click', handleClearSchedule)
+      if (detailValuesSelect) {
+        detailValuesSelect.addEventListener('change', () =>
+          enforceMultiSelectLimit(detailValuesSelect, 2),
+        )
+      }
       document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && !detailModal.hidden) {
           closeDetailModal()
@@ -1407,6 +1571,8 @@
                 ${renderEntry('최종학력', item.education)}
                 ${renderEntry('직업', item.job)}
                 ${renderEntry('신장', item.height)}
+                ${renderEntry('MBTI', item.mbti)}
+                ${renderEntry('연봉', formatSalaryRange(item.salaryRange))}
                 ${renderEntry('거주 구', item.district)}
               </dl>
             `
@@ -1426,9 +1592,11 @@
         detailTitleEl.textContent = record.name || '상담 신청'
         const heightLine = record.height ? `신장 ${record.height}` : null
         const districtLine = record.district ? `거주 구 ${record.district}` : null
+        const mbtiLine = record.mbti ? `MBTI ${record.mbti}` : null
         detailSubtitleEl.textContent = [
           record.phone ? `연락처 ${record.phone}` : null,
           record.job ? `직업 ${record.job}` : null,
+          mbtiLine,
           heightLine,
           districtLine,
           record.createdAt ? `신청 ${formatDate(record.createdAt)}` : null,
@@ -1445,10 +1613,31 @@
         if (detailPhoneInput) detailPhoneInput.value = formatPhoneNumber(record.phone)
         setSelectValue(detailGenderSelect, record.gender || '')
         if (detailBirthInput) detailBirthInput.value = record.birth || ''
-        if (detailHeightInput) detailHeightInput.value = normalizeHeightValue(record.height || record.region)
+        if (detailHeightInput) detailHeightInput.value = normalizeHeightValue(
+          record.height || record.region,
+        )
         setSelectValue(detailEducationSelect, record.education || '')
         if (detailJobInput) detailJobInput.value = record.job || ''
         if (detailDistrictInput) detailDistrictInput.value = record.district || ''
+        if (detailMbtiInput) detailMbtiInput.value = record.mbti || ''
+        if (detailUniversityInput) detailUniversityInput.value = record.university || ''
+        setSelectValue(detailSalaryRangeSelect, record.salaryRange || '')
+        if (detailJobDetailInput) detailJobDetailInput.value = record.jobDetail || ''
+        if (detailProfileAppealInput) detailProfileAppealInput.value = record.profileAppeal || ''
+        setSelectValue(detailSmokingSelect, record.smoking || '')
+        setSelectValue(detailReligionSelect, record.religion || '')
+        setMultiSelectValues(detailPreferredHeightsSelect, record.preferredHeights || [])
+        setMultiSelectValues(detailPreferredAgesSelect, record.preferredAges || [])
+        detailValuesSelection = Array.isArray(record.values) ? record.values.slice() : []
+        setMultiSelectValues(detailValuesSelect, detailValuesSelection)
+        if (detailValuesCustomInput) detailValuesCustomInput.value = record.valuesCustom || ''
+        if (detailSufficientConditionInput)
+          detailSufficientConditionInput.value = record.sufficientCondition || ''
+        if (detailNecessaryConditionInput)
+          detailNecessaryConditionInput.value = record.necessaryCondition || ''
+        if (detailLikesDislikesInput) detailLikesDislikesInput.value = record.likesDislikes || ''
+        if (detailAboutMeInput) detailAboutMeInput.value = record.aboutMe || ''
+        if (detailNotesInput) detailNotesInput.value = record.notes || ''
 
         const { date: scheduledDate, time: scheduledTime } = splitLocalDateTime(
           record.meetingSchedule,
@@ -1474,6 +1663,22 @@
         detailScheduleInfo.textContent = ''
         if (detailHeightInput) detailHeightInput.value = ''
         if (detailPhoneInput) detailPhoneInput.value = ''
+        if (detailMbtiInput) detailMbtiInput.value = ''
+        if (detailUniversityInput) detailUniversityInput.value = ''
+        setSelectValue(detailSalaryRangeSelect, '')
+        if (detailJobDetailInput) detailJobDetailInput.value = ''
+        if (detailProfileAppealInput) detailProfileAppealInput.value = ''
+        setSelectValue(detailSmokingSelect, '')
+        setSelectValue(detailReligionSelect, '')
+        setMultiSelectValues(detailPreferredHeightsSelect, [])
+        setMultiSelectValues(detailPreferredAgesSelect, [])
+        setMultiSelectValues(detailValuesSelect, [])
+        detailValuesSelection = []
+        if (detailValuesCustomInput) detailValuesCustomInput.value = ''
+        if (detailSufficientConditionInput) detailSufficientConditionInput.value = ''
+        if (detailNecessaryConditionInput) detailNecessaryConditionInput.value = ''
+        if (detailLikesDislikesInput) detailLikesDislikesInput.value = ''
+        if (detailAboutMeInput) detailAboutMeInput.value = ''
       }
 
       function renderEntry(label, value) {
@@ -1502,6 +1707,36 @@
         if (!selectEl) return
         const options = Array.from(selectEl.options || []).map((opt) => opt.value)
         selectEl.value = options.includes(value) ? value : ''
+      }
+
+      function setMultiSelectValues(selectEl, values) {
+        if (!selectEl) return
+        const valueSet = new Set((values || []).map((value) => String(value)))
+        Array.from(selectEl.options || []).forEach((option) => {
+          option.selected = valueSet.has(option.value)
+        })
+      }
+
+      function getMultiSelectValues(selectEl) {
+        if (!selectEl) return []
+        return Array.from(selectEl.selectedOptions || [])
+          .map((option) => option.value)
+          .filter(Boolean)
+      }
+
+      function enforceMultiSelectLimit(selectEl, limit) {
+        if (!selectEl) return
+        const selected = getMultiSelectValues(selectEl)
+        if (selected.length > limit) {
+          setMultiSelectValues(selectEl, detailValuesSelection)
+          showToast(`가치관은 최대 ${limit}개까지 선택할 수 있습니다.`)
+        } else {
+          detailValuesSelection = selected
+        }
+      }
+
+      function formatSalaryRange(value) {
+        return SALARY_RANGE_LABELS[value] || ''
       }
 
       function formatPhoneStatus(status) {
@@ -1566,6 +1801,40 @@
         if (detailDistrictInput) detailDistrictInput.value = districtValue
         const heightValue = normalizeHeightValue(detailHeightInput?.value)
         if (detailHeightInput) detailHeightInput.value = heightValue
+        const mbtiValue = (detailMbtiInput?.value || '').trim()
+        if (detailMbtiInput) detailMbtiInput.value = mbtiValue
+        const universityValue = (detailUniversityInput?.value || '').trim()
+        if (detailUniversityInput) detailUniversityInput.value = universityValue
+        const salaryRangeValue = detailSalaryRangeSelect?.value || ''
+        setSelectValue(detailSalaryRangeSelect, salaryRangeValue)
+        const jobDetailValue = (detailJobDetailInput?.value || '').trim()
+        if (detailJobDetailInput) detailJobDetailInput.value = jobDetailValue
+        const profileAppealValue = (detailProfileAppealInput?.value || '').trim()
+        if (detailProfileAppealInput) detailProfileAppealInput.value = profileAppealValue
+        const smokingValue = detailSmokingSelect?.value || ''
+        setSelectValue(detailSmokingSelect, smokingValue)
+        const religionValue = detailReligionSelect?.value || ''
+        setSelectValue(detailReligionSelect, religionValue)
+        const preferredHeights = getMultiSelectValues(detailPreferredHeightsSelect)
+        const preferredAges = getMultiSelectValues(detailPreferredAgesSelect)
+        const valuesSelected = getMultiSelectValues(detailValuesSelect)
+        if (valuesSelected.length > 2) {
+          showToast('가치관은 최대 2개까지 선택할 수 있습니다.')
+          return
+        }
+        detailValuesSelection = valuesSelected
+        const valuesCustomValue = (detailValuesCustomInput?.value || '').trim()
+        if (detailValuesCustomInput) detailValuesCustomInput.value = valuesCustomValue
+        const sufficientConditionValue = (detailSufficientConditionInput?.value || '').trim()
+        if (detailSufficientConditionInput)
+          detailSufficientConditionInput.value = sufficientConditionValue
+        const necessaryConditionValue = (detailNecessaryConditionInput?.value || '').trim()
+        if (detailNecessaryConditionInput)
+          detailNecessaryConditionInput.value = necessaryConditionValue
+        const likesDislikesValue = (detailLikesDislikesInput?.value || '').trim()
+        if (detailLikesDislikesInput) detailLikesDislikesInput.value = likesDislikesValue
+        const aboutMeValue = (detailAboutMeInput?.value || '').trim()
+        if (detailAboutMeInput) detailAboutMeInput.value = aboutMeValue
 
         const dateValue = detailDateInput.value
         const timeValue = detailTimeSelect.disabled ? '' : detailTimeSelect.value
@@ -1598,6 +1867,21 @@
           job: jobValue,
           height: heightValue,
           district: districtValue,
+          mbti: mbtiValue,
+          university: universityValue,
+          salaryRange: salaryRangeValue,
+          jobDetail: jobDetailValue,
+          profileAppeal: profileAppealValue,
+          smoking: smokingValue,
+          religion: religionValue,
+          preferredHeights,
+          preferredAges,
+          sufficientCondition: sufficientConditionValue,
+          necessaryCondition: necessaryConditionValue,
+          likesDislikes: likesDislikesValue,
+          values: valuesSelected,
+          valuesCustom: valuesCustomValue,
+          aboutMe: aboutMeValue,
           phoneConsultStatus: phoneStatus,
           meetingSchedule,
           notes: detailNotesInput.value?.trim() || '',
@@ -1982,6 +2266,38 @@
         if (typeof normalized.district !== 'string') {
           normalized.district = normalized.district != null ? String(normalized.district) : ''
         }
+        normalized.mbti = normalized.mbti != null ? String(normalized.mbti) : ''
+        normalized.university = normalized.university != null ? String(normalized.university) : ''
+        normalized.salaryRange = normalized.salaryRange != null ? String(normalized.salaryRange) : ''
+        normalized.jobDetail = normalized.jobDetail != null ? String(normalized.jobDetail) : ''
+        normalized.profileAppeal =
+          normalized.profileAppeal != null ? String(normalized.profileAppeal) : ''
+        normalized.smoking = normalized.smoking != null ? String(normalized.smoking) : ''
+        normalized.religion = normalized.religion != null ? String(normalized.religion) : ''
+        normalized.sufficientCondition =
+          normalized.sufficientCondition != null ? String(normalized.sufficientCondition) : ''
+        normalized.necessaryCondition =
+          normalized.necessaryCondition != null ? String(normalized.necessaryCondition) : ''
+        normalized.likesDislikes =
+          normalized.likesDislikes != null ? String(normalized.likesDislikes) : ''
+        normalized.valuesCustom = normalized.valuesCustom != null ? String(normalized.valuesCustom) : ''
+        normalized.aboutMe = normalized.aboutMe != null ? String(normalized.aboutMe) : ''
+        normalized.preferredHeights = Array.isArray(normalized.preferredHeights)
+          ? normalized.preferredHeights.map((value) => String(value))
+          : []
+        normalized.preferredAges = Array.isArray(normalized.preferredAges)
+          ? normalized.preferredAges.map((value) => String(value))
+          : []
+        normalized.values = Array.isArray(normalized.values)
+          ? normalized.values.map((value) => String(value))
+          : []
+        normalized.agreements =
+          normalized.agreements && typeof normalized.agreements === 'object'
+            ? {
+                info: Boolean(normalized.agreements.info),
+                manners: Boolean(normalized.agreements.manners),
+              }
+            : { info: false, manners: false }
         return normalized
       }
 
@@ -2005,7 +2321,24 @@
         if (viewState.search) {
           const term = viewState.search.toLowerCase()
           result = result.filter((item) =>
-            ['name', 'phone', 'height', 'district', 'education', 'job']
+            [
+              'name',
+              'phone',
+              'height',
+              'district',
+              'education',
+              'job',
+              'mbti',
+              'university',
+              'salaryRange',
+              'jobDetail',
+              'profileAppeal',
+              'likesDislikes',
+              'aboutMe',
+              'valuesCustom',
+              'sufficientCondition',
+              'necessaryCondition',
+            ]
               .map((key) => String(item[key] || '').toLowerCase())
               .some((value) => value.includes(term))
           )
@@ -2286,7 +2619,22 @@
           최종학력: item.education || '',
           직업: item.job || '',
           신장: item.height || '',
+          MBTI: item.mbti || '',
+          대학교: item.university || '',
+          연봉구간: formatSalaryRange(item.salaryRange) || '',
+          흡연: item.smoking || '',
+          종교: item.religion || '',
+          선호키: (item.preferredHeights || []).join(', '),
+          선호나이: (item.preferredAges || []).join(', '),
           거주구: item.district || '',
+          직무상세: item.jobDetail || '',
+          추가어필: item.profileAppeal || '',
+          충분조건: item.sufficientCondition || '',
+          필요조건: item.necessaryCondition || '',
+          좋아하는것싫어하는것: item.likesDislikes || '',
+          가치관: (item.values || []).join(', '),
+          가치관기타: item.valuesCustom || '',
+          자기소개: item.aboutMe || '',
           접수시간: formatDate(item.createdAt),
         }))
         const worksheet = XLSX.utils.json_to_sheet(rows)

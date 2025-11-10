@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>연결사 프라이빗 매칭 프로필 입력</title>
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        background: #f4f6fb;
+        color: #1f2933;
+        line-height: 1.6;
+      }
+      .page {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 48px 20px 80px;
+      }
+      h1 {
+        margin: 0 0 16px;
+        font-size: clamp(26px, 4vw, 34px);
+        font-weight: 800;
+        color: #1b2653;
+      }
+      .lead {
+        margin: 0 0 32px;
+        color: #52606d;
+        font-size: 16px;
+      }
+      form {
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+        display: grid;
+        gap: 28px;
+      }
+      fieldset {
+        margin: 0;
+        padding: 0;
+        border: none;
+        display: grid;
+        gap: 20px;
+      }
+      legend {
+        font-weight: 700;
+        font-size: 18px;
+        margin-bottom: 8px;
+        color: #27364b;
+      }
+      .field-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      label {
+        font-weight: 600;
+        color: #27364b;
+        font-size: 15px;
+      }
+      label span.helper {
+        display: block;
+        margin-top: 4px;
+        font-size: 13px;
+        color: #6b7a90;
+      }
+      input,
+      textarea,
+      select {
+        border: 1px solid #d5dbea;
+        background: #f9fbff;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 15px;
+        font-family: inherit;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: #5a67d8;
+        box-shadow: 0 0 0 2px rgba(90, 103, 216, 0.25);
+        background: #ffffff;
+      }
+      textarea {
+        min-height: 140px;
+        resize: vertical;
+      }
+      select[multiple] {
+        min-height: 160px;
+      }
+      .agreements {
+        display: grid;
+        gap: 16px;
+        background: #f7f9ff;
+        border: 1px solid #d5dbea;
+        border-radius: 16px;
+        padding: 18px 20px;
+      }
+      .agreements label {
+        font-weight: 600;
+        color: #1f2a44;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .agreements input[type='checkbox'] {
+        width: 18px;
+        height: 18px;
+        margin-top: 3px;
+      }
+      .textarea-small {
+        min-height: 100px;
+      }
+      .submit-row {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      button[type='submit'] {
+        border: none;
+        border-radius: 12px;
+        background: #4959f5;
+        color: #ffffff;
+        font-weight: 700;
+        padding: 14px 24px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: transform 0.15s ease, box-shadow 0.2s ease;
+      }
+      button[type='submit']:hover:not([disabled]) {
+        transform: translateY(-1px);
+        box-shadow: 0 18px 40px rgba(73, 89, 245, 0.35);
+      }
+      button[type='submit'][disabled] {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+      .form-message {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .form-message.success {
+        color: #1b7f44;
+      }
+      .form-message.error {
+        color: #d64545;
+      }
+      .notice {
+        background: #fdf7e3;
+        border: 1px solid #f6e3b2;
+        border-radius: 16px;
+        padding: 18px 20px;
+        color: #6b5d2f;
+        font-size: 14px;
+      }
+      @media (max-width: 780px) {
+        form {
+          padding: 24px;
+        }
+        .field-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <h1>연결사 프라이빗 매칭 프로필 입력</h1>
+      <p class="lead">
+        이미 무료 상담을 신청하신 분들을 위해 세부 프로필 정보를 보완하는 페이지입니다. 아래 항목을
+        모두 입력해주시면 매칭 매니저가 프로필을 업데이트해드립니다.
+      </p>
+      <form id="profileForm" novalidate>
+        <fieldset>
+          <legend>기본 정보</legend>
+          <div class="field-grid">
+            <div class="field">
+              <label for="profilePhone"
+                >연락처
+                <span class="helper">처음 신청하신 휴대폰 번호와 동일하게 입력해주세요.</span></label
+              >
+              <input
+                id="profilePhone"
+                type="tel"
+                inputmode="tel"
+                autocomplete="tel-national"
+                placeholder="010-1234-5678"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="profileMbti">MBTI</label>
+              <input id="profileMbti" type="text" maxlength="8" placeholder="예: ENFP" />
+            </div>
+            <div class="field">
+              <label for="profileJob"
+                >직업 / 직무<span class="helper"
+                  >분야까지 자세히 적어주시면 프로필에 그대로 반영됩니다.</span
+                ></label
+              >
+              <input id="profileJob" type="text" placeholder="예: 중견 무역회사 해외영업" />
+            </div>
+            <div class="field">
+              <label for="profileUniversity">대학교 (캠퍼스)</label>
+              <input id="profileUniversity" type="text" placeholder="예: 서울대학교 (관악캠퍼스)" />
+            </div>
+            <div class="field">
+              <label for="profileSalaryRange">연봉 (세전 기준 / 프로필 미공개)</label>
+              <select id="profileSalaryRange">
+                <option value="">선택</option>
+                <option value="1">1) 3000만원 미만</option>
+                <option value="2">2) 3000-4000</option>
+                <option value="3">3) 4000-6000</option>
+                <option value="4">4) 6000-8000</option>
+                <option value="5">5) 8000-1억</option>
+                <option value="6">6) 1억-2억</option>
+                <option value="7">7) 2억-3억</option>
+                <option value="8">8) 3억 이상</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileSmoking">흡연</label>
+              <select id="profileSmoking">
+                <option value="">선택</option>
+                <option value="비흡연">비흡연</option>
+                <option value="사회적 흡연">사회적 흡연</option>
+                <option value="흡연">흡연</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileReligion">종교</label>
+              <select id="profileReligion">
+                <option value="">선택</option>
+                <option value="무교">무교</option>
+                <option value="기독교">기독교</option>
+                <option value="천주교">천주교</option>
+                <option value="불교">불교</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>세부 프로필</legend>
+          <div class="field-grid">
+            <div class="field">
+              <label for="profileJobDetail">직업 / 직무 상세</label>
+              <textarea
+                id="profileJobDetail"
+                class="textarea-small"
+                placeholder="예: 중견 무역회사 해외영업팀 북미 파트 담당"
+              ></textarea>
+            </div>
+            <div class="field">
+              <label for="profileAppeal"
+                >추가 어필
+                <span class="helper"
+                  >연봉, 자산, 학력 등 프로필에 강조하고 싶은 내용을 적어주세요.</span
+                ></label
+              >
+              <textarea
+                id="profileAppeal"
+                class="textarea-small"
+                placeholder="예: 연매출 00억 사업가, 서울 자가 보유 등"
+              ></textarea>
+            </div>
+            <div class="field">
+              <label for="profileLikesDislikes">좋아하는 것 / 싫어하는 것</label>
+              <textarea
+                id="profileLikesDislikes"
+                class="textarea-small"
+                placeholder="예: 캠핑과 등산을 즐기며, 인스턴트 음식은 잘 먹지 않습니다."
+              ></textarea>
+            </div>
+            <div class="field">
+              <label for="profileSufficientCondition">충분조건</label>
+              <textarea
+                id="profileSufficientCondition"
+                class="textarea-small"
+                placeholder="예: 서로 성장하고 응원할 수 있는 관계를 원합니다."
+              ></textarea>
+            </div>
+            <div class="field">
+              <label for="profileNecessaryCondition">필요조건</label>
+              <textarea
+                id="profileNecessaryCondition"
+                class="textarea-small"
+                placeholder="예: 장거리 연애가 가능한 분을 선호합니다."
+              ></textarea>
+            </div>
+            <div class="field">
+              <label for="profileAboutMe">'저는 이런 사람입니다'</label>
+              <textarea
+                id="profileAboutMe"
+                placeholder="나를 표현할 수 있는 매력 포인트, 성격, 장점 등을 2-3줄로 작성해주세요."
+              ></textarea>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>선호 조건</legend>
+          <div class="field-grid">
+            <div class="field">
+              <label for="profilePreferredHeights">선호하는 키 (중복 선택 가능)</label>
+              <select id="profilePreferredHeights" multiple size="6">
+                <option value="160cm 이하">160cm 이하</option>
+                <option value="161-165cm">161-165cm</option>
+                <option value="166-170cm">166-170cm</option>
+                <option value="171-175cm">171-175cm</option>
+                <option value="176-180cm">176-180cm</option>
+                <option value="181cm 이상">181cm 이상</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profilePreferredAges">선호 나이 (중복 선택 가능)</label>
+              <select id="profilePreferredAges" multiple size="6">
+                <option value="20대 초반">20대 초반</option>
+                <option value="20대 중반">20대 중반</option>
+                <option value="20대 후반">20대 후반</option>
+                <option value="30대 초반">30대 초반</option>
+                <option value="30대 중반">30대 중반</option>
+                <option value="30대 후반 이상">30대 후반 이상</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileValues"
+                >인생의 주요 가치관<span class="helper">최대 2개까지 선택 가능합니다.</span></label
+              >
+              <select id="profileValues" multiple size="6">
+                <option value="하루하루 최선을 다하는">하루하루 최선을 다하는</option>
+                <option value="화목한 가족이 중심이 되는">화목한 가족이 중심이 되는</option>
+                <option value="건강관리에 철저한">건강관리에 철저한</option>
+                <option value="일과 사랑 모두 성공하는">일과 사랑 모두 성공하는</option>
+                <option value="사랑하면 맞춰주는(이해하는)">사랑하면 맞춰주는(이해하는)</option>
+              </select>
+              <input
+                id="profileValuesCustom"
+                type="text"
+                placeholder="기타 가치관이 있다면 입력해주세요."
+              />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="agreements">
+          <legend>동의 사항</legend>
+          <label>
+            <input id="agreementInfo" type="checkbox" required />
+            <span>
+              개인정보 수집 및 활용, 책임 및 면책 조항을 확인하고 동의합니다.
+            </span>
+          </label>
+          <p class="notice">
+            - 허위 정보 기재 시 민/형사상 책임이 발생할 수 있으며, 참가자의 정보는 매칭 기간 종료 후
+            모두 폐기됩니다.<br />
+            - 기혼자 혹은 돌싱의 경우 프라이빗 매칭을 이용할 수 없습니다.<br />
+            - 상대방 프로필의 캡처, 저장, 유포 및 상업적 이용 시 법적 책임을 물을 수 있습니다.
+          </p>
+          <label>
+            <input id="agreementManners" type="checkbox" required />
+            <span>
+              매너있는 대화 및 만남에 대한 동의 사항(잠수, 일방 취소 시 벌금 등)을 확인했습니다.
+            </span>
+          </label>
+        </fieldset>
+
+        <div class="submit-row">
+          <button type="submit" id="submitButton">프로필 정보 제출하기</button>
+          <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+        </div>
+      </form>
+    </main>
+
+    <script src="backend-config.js"></script>
+    <script>
+      const HOSTNAME = window.location && window.location.hostname
+      const IS_LOCAL_HOST = /^(localhost|127\\.0\\.0\\.1)$/i.test(HOSTNAME || '')
+      const DEFAULT_BACKEND_ORIGIN = IS_LOCAL_HOST
+        ? 'http://localhost:5000'
+        : 'https://ygsa-backend.onrender.com'
+      const BACKEND_ORIGIN_RAW = (window.BACKEND_ORIGIN || '').trim()
+      const BACKEND_ORIGIN = (BACKEND_ORIGIN_RAW || DEFAULT_BACKEND_ORIGIN).replace(/\\/$/, '')
+      const API_BASE_URL = BACKEND_ORIGIN
+      const PROFILE_API_URL = `${API_BASE_URL}/api/consult/profile`
+
+      const formEl = document.getElementById('profileForm')
+      const submitBtn = document.getElementById('submitButton')
+      const messageEl = document.getElementById('formMessage')
+
+      const phoneInput = document.getElementById('profilePhone')
+      const jobInput = document.getElementById('profileJob')
+      const mbtiInput = document.getElementById('profileMbti')
+      const universityInput = document.getElementById('profileUniversity')
+      const salaryRangeSelect = document.getElementById('profileSalaryRange')
+      const jobDetailInput = document.getElementById('profileJobDetail')
+      const appealInput = document.getElementById('profileAppeal')
+      const smokingSelect = document.getElementById('profileSmoking')
+      const religionSelect = document.getElementById('profileReligion')
+      const sufficientInput = document.getElementById('profileSufficientCondition')
+      const necessaryInput = document.getElementById('profileNecessaryCondition')
+      const likesDislikesInput = document.getElementById('profileLikesDislikes')
+      const aboutMeInput = document.getElementById('profileAboutMe')
+      const preferredHeightsSelect = document.getElementById('profilePreferredHeights')
+      const preferredAgesSelect = document.getElementById('profilePreferredAges')
+      const valuesSelect = document.getElementById('profileValues')
+      const valuesCustomInput = document.getElementById('profileValuesCustom')
+      const agreementInfo = document.getElementById('agreementInfo')
+      const agreementManners = document.getElementById('agreementManners')
+
+      let selectedValues = []
+
+      if (phoneInput) {
+        phoneInput.addEventListener('input', () => {
+          phoneInput.value = formatPhoneNumber(phoneInput.value)
+        })
+      }
+
+      if (valuesSelect) {
+        valuesSelect.addEventListener('change', () => enforceValuesLimit(valuesSelect, 2))
+      }
+
+      function formatPhoneNumber(raw) {
+        const digits = String(raw || '').replace(/[^0-9]/g, '')
+        if (!digits) return ''
+        if (digits.length < 4) return digits
+        if (digits.length < 8) return digits.replace(/(\\d{3})(\\d+)/, '$1-$2')
+        return digits.replace(/(\\d{3})(\\d{3,4})(\\d{0,4}).*/, '$1-$2-$3')
+      }
+
+      function getMultiSelectValues(selectEl) {
+        if (!selectEl) return []
+        return Array.from(selectEl.selectedOptions || [])
+          .map((option) => option.value)
+          .filter(Boolean)
+      }
+
+      function setMultiSelectValues(selectEl, values) {
+        if (!selectEl) return
+        const set = new Set(values || [])
+        Array.from(selectEl.options || []).forEach((option) => {
+          option.selected = set.has(option.value)
+        })
+      }
+
+      function enforceValuesLimit(selectEl, limit) {
+        if (!selectEl) return
+        const selected = getMultiSelectValues(selectEl)
+        if (selected.length > limit) {
+          setMultiSelectValues(selectEl, selectedValues)
+          showMessage(`가치관은 최대 ${limit}개까지 선택할 수 있습니다.`, 'error')
+        } else {
+          selectedValues = selected
+          showMessage('', '')
+        }
+      }
+
+      function showMessage(text, type) {
+        if (!messageEl) return
+        messageEl.textContent = text
+        messageEl.classList.remove('success', 'error')
+        if (type) {
+          messageEl.classList.add(type)
+        }
+      }
+
+      function setSubmitting(isSubmitting) {
+        if (submitBtn) {
+          submitBtn.disabled = isSubmitting
+          submitBtn.textContent = isSubmitting ? '전송 중…' : '프로필 정보 제출하기'
+        }
+      }
+
+      formEl?.addEventListener('submit', async (event) => {
+        event.preventDefault()
+        showMessage('', '')
+
+        if (!formEl.reportValidity()) {
+          showMessage('누락된 항목이 없는지 확인해주세요.', 'error')
+          return
+        }
+
+        const values = getMultiSelectValues(valuesSelect)
+        if (values.length > 2) {
+          showMessage('가치관은 최대 2개까지 선택할 수 있습니다.', 'error')
+          return
+        }
+        selectedValues = values
+
+        if (!agreementInfo.checked || !agreementManners.checked) {
+          showMessage('모든 동의 항목에 체크해주세요.', 'error')
+          return
+        }
+
+        const payload = {
+          phone: formatPhoneNumber(phoneInput?.value || ''),
+          mbti: mbtiInput?.value?.trim() || '',
+          job: jobInput?.value?.trim() || '',
+          university: universityInput?.value?.trim() || '',
+          salaryRange: salaryRangeSelect?.value || '',
+          jobDetail: jobDetailInput?.value?.trim() || '',
+          profileAppeal: appealInput?.value?.trim() || '',
+          smoking: smokingSelect?.value || '',
+          religion: religionSelect?.value || '',
+          sufficientCondition: sufficientInput?.value?.trim() || '',
+          necessaryCondition: necessaryInput?.value?.trim() || '',
+          likesDislikes: likesDislikesInput?.value?.trim() || '',
+          aboutMe: aboutMeInput?.value?.trim() || '',
+          preferredHeights: getMultiSelectValues(preferredHeightsSelect),
+          preferredAges: getMultiSelectValues(preferredAgesSelect),
+          values,
+          valuesCustom: valuesCustomInput?.value?.trim() || '',
+          agreements: {
+            info: agreementInfo.checked,
+            manners: agreementManners.checked,
+          },
+        }
+
+        if (!payload.phone) {
+          showMessage('연락처를 입력해주세요.', 'error')
+          return
+        }
+
+        try {
+          setSubmitting(true)
+          const res = await fetch(PROFILE_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          })
+          const body = await res.json().catch(() => ({}))
+
+          if (!res.ok || !body?.ok) {
+            const message =
+              body?.message ||
+              (res.status === 404 ? '예약한 번호가 없습니다.' : '프로필 저장에 실패했습니다.')
+            throw new Error(message)
+          }
+
+          showMessage('프로필 정보를 저장했습니다. 매칭 매니저가 확인 후 안내드릴게요!', 'success')
+          formEl.reset()
+          selectedValues = []
+          setMultiSelectValues(valuesSelect, [])
+          setMultiSelectValues(preferredHeightsSelect, [])
+          setMultiSelectValues(preferredAgesSelect, [])
+        } catch (error) {
+          const message = error?.message || '프로필 저장에 실패했습니다. 다시 시도해주세요.'
+          showMessage(message, 'error')
+        } finally {
+          setSubmitting(false)
+        }
+      })
+    </script>
+  </body>
+</html>
+

@@ -83,6 +83,41 @@ app.post('/api/consult', async (req, res) => {
   }
 })
 
+app.post('/api/consult/profile', async (req, res) => {
+  const { phone, updates, agreements } = sanitizeProfileUpdate(req.body)
+  if (!phone) {
+    return res.status(400).json({ ok: false, message: '연락처를 확인할 수 없습니다.' })
+  }
+
+  try {
+    const list = await readConsultations()
+    const index = list.findIndex((item) => normalizePhoneNumber(item.phone) === phone)
+    if (index === -1) {
+      return res.status(404).json({ ok: false, message: '예약한 번호가 없습니다.' })
+    }
+
+    const updatedAt = new Date().toISOString()
+    const existing = list[index] || {}
+    const updatedRecord = normalizeStoredRecord({
+      ...existing,
+      ...updates,
+      agreements: {
+        ...(existing.agreements || {}),
+        ...agreements,
+      },
+      updatedAt,
+    })
+
+    list[index] = updatedRecord
+    await writeConsultations(list)
+    broadcast({ type: 'consult:update', payload: updatedRecord })
+    res.json({ ok: true, data: updatedRecord })
+  } catch (error) {
+    console.error('[consult:profile]', error)
+    res.status(500).json({ ok: false, message: '프로필 정보를 저장하지 못했습니다.' })
+  }
+})
+
 app.post('/api/consult/import', async (req, res) => {
   const rows = Array.isArray(req.body?.items) ? req.body.items : []
   if (!rows.length) {
@@ -331,6 +366,45 @@ async function writeConsultations(data) {
   await fs.writeFile(DATA_FILE, JSON.stringify(normalized, null, 2), 'utf-8')
 }
 
+function sanitizeProfileUpdate(body) {
+  const phone = normalizePhoneNumber(body?.phone)
+  const updates = {
+    mbti: sanitizeText(body?.mbti),
+    university: sanitizeText(body?.university),
+    salaryRange: sanitizeText(body?.salaryRange),
+    jobDetail: sanitizeNotes(body?.jobDetail),
+    profileAppeal: sanitizeNotes(body?.profileAppeal),
+    smoking: sanitizeText(body?.smoking),
+    religion: sanitizeText(body?.religion),
+    sufficientCondition: sanitizeNotes(body?.sufficientCondition),
+    necessaryCondition: sanitizeNotes(body?.necessaryCondition),
+    likesDislikes: sanitizeNotes(body?.likesDislikes),
+    valuesCustom: sanitizeNotes(body?.valuesCustom),
+    aboutMe: sanitizeNotes(body?.aboutMe),
+    preferredHeights: sanitizeStringArray(body?.preferredHeights),
+    preferredAges: sanitizeStringArray(body?.preferredAges),
+    values: sanitizeStringArray(body?.values).slice(0, 2),
+  }
+
+  if (Object.prototype.hasOwnProperty.call(body || {}, 'job')) {
+    updates.job = sanitizeText(body.job)
+  }
+  if (Object.prototype.hasOwnProperty.call(body || {}, 'height')) {
+    updates.height = normalizeHeight(body.height)
+  }
+
+  const agreements = {
+    info: Boolean(body?.agreements?.info),
+    manners: Boolean(body?.agreements?.manners),
+  }
+
+  return { phone, updates, agreements }
+}
+
+function normalizePhoneNumber(value) {
+  return sanitizeText(value).replace(/\D/g, '')
+}
+
 function sanitizePayload(body) {
   return {
     name: sanitizeText(body?.name),
@@ -381,12 +455,45 @@ function normalizeStoredRecord(entry) {
       record['거주 구'] ??
       '',
   )
+  record.mbti = sanitizeText(record.mbti)
+  record.university = sanitizeText(record.university)
+  record.salaryRange = sanitizeText(record.salaryRange)
+  record.jobDetail = sanitizeNotes(record.jobDetail)
+  record.profileAppeal = sanitizeNotes(record.profileAppeal)
+  record.smoking = sanitizeText(record.smoking)
+  record.religion = sanitizeText(record.religion)
+  record.sufficientCondition = sanitizeNotes(record.sufficientCondition)
+  record.necessaryCondition = sanitizeNotes(record.necessaryCondition)
+  record.likesDislikes = sanitizeNotes(record.likesDislikes)
+  record.valuesCustom = sanitizeNotes(record.valuesCustom)
+  record.aboutMe = sanitizeNotes(record.aboutMe)
+  record.preferredHeights = sanitizeStringArray(record.preferredHeights)
+  record.preferredAges = sanitizeStringArray(record.preferredAges)
+  record.values = sanitizeStringArray(record.values)
+  record.agreements =
+    record.agreements && typeof record.agreements === 'object'
+      ? {
+          info: Boolean(record.agreements.info),
+          manners: Boolean(record.agreements.manners),
+        }
+      : { info: false, manners: false }
   record.meetingSchedule = sanitizeText(record.meetingSchedule)
   record.notes = sanitizeNotes(record.notes)
   record.createdAt = safeToISOString(record.createdAt, new Date().toISOString())
   record.updatedAt = safeToISOString(record.updatedAt, record.createdAt)
   record.phoneConsultStatus = normalizePhoneStatus(record.phoneConsultStatus, 'pending')
   return record
+}
+
+function sanitizeStringArray(input) {
+  if (Array.isArray(input)) {
+    return input.map((value) => sanitizeText(value)).filter(Boolean)
+  }
+  if (typeof input === 'string') {
+    const value = sanitizeText(input)
+    return value ? [value] : []
+  }
+  return []
 }
 
 function validatePayload(payload) {
