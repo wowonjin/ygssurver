@@ -250,12 +250,23 @@ app.get('/events', async (req, res) => {
   res.setHeader('Connection', 'keep-alive')
   res.flushHeaders()
 
+  res.write('retry: 15000\n\n')
+
   const client = { id: nanoid(), res }
   sseClients.add(client)
 
   res.write(`event: ready\ndata: {}\n\n`)
 
+  const keepAlive = setInterval(() => {
+    if (res.writableEnded) {
+      clearInterval(keepAlive)
+      return
+    }
+    res.write(': keep-alive\n\n')
+  }, 25000)
+
   req.on('close', () => {
+    clearInterval(keepAlive)
     sseClients.delete(client)
   })
 })
@@ -307,9 +318,21 @@ function validatePayload(payload) {
 
 function broadcast(message) {
   const data = `data: ${JSON.stringify(message)}\n\n`
-  sseClients.forEach((client) => {
-    client.res.write(data)
-  })
+  for (const client of Array.from(sseClients)) {
+    try {
+      if (client.res.writableEnded) {
+        sseClients.delete(client)
+        continue
+      }
+      client.res.write(data)
+    } catch (error) {
+      console.warn('[sse] 전송 실패, 클라이언트를 제거합니다.', error)
+      sseClients.delete(client)
+      try {
+        client.res.end()
+      } catch (_) {}
+    }
+  }
 }
 
 async function triggerNotifications(record) {
