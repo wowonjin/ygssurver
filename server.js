@@ -22,6 +22,7 @@ const EMAIL_RECIPIENTS = [
   { name: '공정아', email: 'chestnut01nse@gmail.com' },
   { name: '장진우', email: 'jjw78013@gmail.com' },
   { name: '연결사', email: 'yeongyeolsa@gmail.com' },
+  { name: '연결사 예약팀', email: 'gyeolsay@gmail.com' },
 ]
 
 const SMS_RECIPIENTS = [
