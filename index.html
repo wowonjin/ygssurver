@@ -537,7 +537,8 @@
         display: none;
       }
       .modal-content {
-        width: min(520px, 100%);
+        width: min(960px, 90vw);
+        max-height: min(85vh, 840px);
         background: #0d1117;
         border: 1px solid #30363d;
         border-radius: 20px;
@@ -546,6 +547,12 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+        overflow: hidden;
+      }
+      .modal-body {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 6px;
       }
       .modal-header {
         display: flex;
@@ -610,6 +617,7 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
+        padding-bottom: 8px;
       }
       .modal-form label {
         display: block;
@@ -819,6 +827,13 @@
         .sticky-note {
           display: none;
         }
+        .modal-content {
+          width: min(100%, 92vw);
+          max-height: 90vh;
+        }
+        .modal-body {
+          padding-right: 0;
+        }
       }
     </style>
     <script src="backend-config.js"></script>
@@ -924,119 +939,121 @@
         </div>
         <p class="modal-subtitle" id="detailSubtitle"></p>
         <form id="detailForm" class="modal-form">
-          <div class="detail-fields" aria-live="polite">
-            <div class="field-grid">
-              <div class="field">
-                <label for="detailName">성명</label>
-                <input id="detailName" type="text" autocomplete="name" required />
-              </div>
-              <div class="field">
-                <label for="detailPhone">연락처</label>
-                <input
-                  id="detailPhone"
-                  type="tel"
-                  inputmode="tel"
-                  autocomplete="tel-national"
-                  placeholder="010-1234-5678"
-                  required
-                />
-              </div>
-              <div class="field">
-                <label for="detailGender">성별</label>
-                <select id="detailGender" required>
-                  <option value="">선택</option>
-                  <option value="남">남자</option>
-                  <option value="여">여자</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="detailBirth">생년</label>
-                <input
-                  id="detailBirth"
-                  type="text"
-                  inputmode="numeric"
-                  maxlength="6"
-                  placeholder="1998년"
-                  required
-                />
-              </div>
-              <div class="field">
-                <label for="detailHeight">신장</label>
-                <input
-                  id="detailHeight"
-                  type="text"
-                  inputmode="numeric"
-                  maxlength="5"
-                  placeholder="170cm"
-                  required
-                />
-              </div>
-              <div class="field">
-                <label for="detailEducation">최종학력</label>
-                <select id="detailEducation" required>
-                  <option value="">선택</option>
-                  <optgroup label="고등교육 이전">
-                    <option>고등학교 재학</option>
-                    <option>고등학교 졸업(검정고시 포함)</option>
-                  </optgroup>
-                  <optgroup label="전문대(2·3년)">
-                    <option>전문대 재학</option>
-                    <option>전문학사 졸업</option>
-                  </optgroup>
-                  <optgroup label="대학교(4년)">
-                    <option>대학교 재학(4년)</option>
-                    <option>학사 졸업</option>
-                  </optgroup>
-                  <optgroup label="대학원">
-                    <option>석사 과정 재학</option>
-                    <option>석사 졸업</option>
-                    <option>박사 과정 재학</option>
-                    <option>박사 졸업</option>
-                  </optgroup>
-                  <optgroup label="기타">
-                    <option>해외 대학 재학/졸업</option>
-                    <option>기타</option>
-                  </optgroup>
-                </select>
-              </div>
-              <div class="field">
-                <label for="detailJob">직업</label>
-                <input
-                  id="detailJob"
-                  type="text"
-                  placeholder="삼성전자"
-                  autocomplete="organization"
-                  required
-                />
-              </div>
-              <div class="field">
-                <label for="detailDistrict">거주 구</label>
-                <input id="detailDistrict" type="text" placeholder="서울특별시 강남구" required />
+          <div class="modal-body">
+            <div class="detail-fields" aria-live="polite">
+              <div class="field-grid">
+                <div class="field">
+                  <label for="detailName">성명</label>
+                  <input id="detailName" type="text" autocomplete="name" required />
+                </div>
+                <div class="field">
+                  <label for="detailPhone">연락처</label>
+                  <input
+                    id="detailPhone"
+                    type="tel"
+                    inputmode="tel"
+                    autocomplete="tel-national"
+                    placeholder="010-1234-5678"
+                    required
+                  />
+                </div>
+                <div class="field">
+                  <label for="detailGender">성별</label>
+                  <select id="detailGender" required>
+                    <option value="">선택</option>
+                    <option value="남">남자</option>
+                    <option value="여">여자</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="detailBirth">생년</label>
+                  <input
+                    id="detailBirth"
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="6"
+                    placeholder="1998년"
+                    required
+                  />
+                </div>
+                <div class="field">
+                  <label for="detailHeight">신장</label>
+                  <input
+                    id="detailHeight"
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="5"
+                    placeholder="170cm"
+                    required
+                  />
+                </div>
+                <div class="field">
+                  <label for="detailEducation">최종학력</label>
+                  <select id="detailEducation" required>
+                    <option value="">선택</option>
+                    <optgroup label="고등교육 이전">
+                      <option>고등학교 재학</option>
+                      <option>고등학교 졸업(검정고시 포함)</option>
+                    </optgroup>
+                    <optgroup label="전문대(2·3년)">
+                      <option>전문대 재학</option>
+                      <option>전문학사 졸업</option>
+                    </optgroup>
+                    <optgroup label="대학교(4년)">
+                      <option>대학교 재학(4년)</option>
+                      <option>학사 졸업</option>
+                    </optgroup>
+                    <optgroup label="대학원">
+                      <option>석사 과정 재학</option>
+                      <option>석사 졸업</option>
+                      <option>박사 과정 재학</option>
+                      <option>박사 졸업</option>
+                    </optgroup>
+                    <optgroup label="기타">
+                      <option>해외 대학 재학/졸업</option>
+                      <option>기타</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="detailJob">직업</label>
+                  <input
+                    id="detailJob"
+                    type="text"
+                    placeholder="삼성전자"
+                    autocomplete="organization"
+                    required
+                  />
+                </div>
+                <div class="field">
+                  <label for="detailDistrict">거주 구</label>
+                  <input id="detailDistrict" type="text" placeholder="서울특별시 강남구" required />
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <label for="detailPhoneStatus">전화 상담 상태</label>
-            <select id="detailPhoneStatus">
-              <option value="pending">상담 전</option>
-              <option value="scheduled">상담 예정</option>
-              <option value="done">상담 완료</option>
-            </select>
-          </div>
-          <div>
-            <label>대면 상담 일정 (15분 단위)</label>
-            <div class="inline-group">
-              <input type="date" id="detailDate" />
-              <select id="detailTime" class="time-select" disabled>
-                <option value="">시간 선택</option>
+            <div>
+              <label for="detailPhoneStatus">전화 상담 상태</label>
+              <select id="detailPhoneStatus">
+                <option value="pending">상담 전</option>
+                <option value="scheduled">상담 예정</option>
+                <option value="done">상담 완료</option>
               </select>
-              <button type="button" id="detailClearSchedule" aria-label="일정 초기화">🗑</button>
             </div>
-            <p class="modal-subtitle" id="detailScheduleInfo"></p>
-          </div>
-          <div>
-            <label for="detailNotes">특이사항 메모</label>
-            <textarea id="detailNotes" placeholder="상담 기록을 입력하세요."></textarea>
+            <div>
+              <label>대면 상담 일정 (15분 단위)</label>
+              <div class="inline-group">
+                <input type="date" id="detailDate" />
+                <select id="detailTime" class="time-select" disabled>
+                  <option value="">시간 선택</option>
+                </select>
+                <button type="button" id="detailClearSchedule" aria-label="일정 초기화">🗑</button>
+              </div>
+              <p class="modal-subtitle" id="detailScheduleInfo"></p>
+            </div>
+            <div>
+              <label for="detailNotes">특이사항 메모</label>
+              <textarea id="detailNotes" placeholder="상담 기록을 입력하세요."></textarea>
+            </div>
           </div>
           <div class="modal-actions">
             <button type="button" class="secondary" id="detailCancelBtn">취소</button>
