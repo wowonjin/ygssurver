@@ -552,7 +552,23 @@
       .modal-body {
         flex: 1;
         overflow-y: auto;
-        padding-right: 6px;
+        padding-right: 12px;
+        scrollbar-color: #3b4251 rgba(48, 54, 61, 0.4);
+        scrollbar-width: thin;
+      }
+      .modal-body::-webkit-scrollbar {
+        width: 8px;
+      }
+      .modal-body::-webkit-scrollbar-track {
+        background: rgba(48, 54, 61, 0.4);
+        border-radius: 999px;
+      }
+      .modal-body::-webkit-scrollbar-thumb {
+        background: #3b4251;
+        border-radius: 999px;
+      }
+      .modal-body::-webkit-scrollbar-thumb:hover {
+        background: #4c5568;
       }
       .modal-header {
         display: flex;
@@ -582,21 +598,21 @@
       }
       .detail-fields .field-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 16px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
       }
-      .detail-fields .field {
+      .modal-form .field {
         display: flex;
         flex-direction: column;
         gap: 6px;
       }
-      .detail-fields .field label {
+      .modal-form .field label {
         font-size: 13px;
         color: #8b949e;
         font-weight: 600;
       }
-      .detail-fields .field input,
-      .detail-fields .field select {
+      .modal-form .field input,
+      .modal-form .field select {
         border: 1px solid #30363d;
         background: #161b22;
         color: #f0f6fc;
@@ -656,6 +672,18 @@
       }
       .modal-form .inline-group button:hover {
         background: #30363d;
+      }
+      .detail-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 12px;
+      }
+      .grid-span-2 {
+        grid-column: span 2;
+      }
+      .grid-span-3 {
+        grid-column: span 3;
       }
       .modal-actions {
         display: flex;
@@ -764,6 +792,19 @@
         line-height: 1.6;
         z-index: 60;
       }
+      @media (max-width: 1024px) {
+        .detail-fields .field-grid,
+        .detail-meta-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+        }
+        .grid-span-2 {
+          grid-column: span 2;
+        }
+        .grid-span-3 {
+          grid-column: span 2;
+        }
+      }
       @media (max-width: 640px) {
         header {
           padding: 24px 20px;
@@ -825,6 +866,15 @@
         }
         .modal-body {
           padding-right: 0;
+        }
+        .detail-fields .field-grid,
+        .detail-meta-grid {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+        .grid-span-2,
+        .grid-span-3 {
+          grid-column: span 1;
         }
       }
     </style>
@@ -1021,7 +1071,7 @@
                 <input id="detailDistrict" type="text" placeholder="서울특별시 강남구" required />
               </div>
             </div>
-            <div class="field-grid">
+            <div class="detail-meta-grid">
               <div class="field">
                 <label for="detailPhoneStatus">전화 상담 상태</label>
                 <select id="detailPhoneStatus">
@@ -1030,7 +1080,7 @@
                   <option value="done">상담 완료</option>
                 </select>
               </div>
-              <div class="field">
+              <div class="field grid-span-2">
                 <label>대면 상담 일정 (15분 단위)</label>
                 <div class="inline-group">
                   <input type="date" id="detailDate" />
@@ -1042,7 +1092,7 @@
                 <p class="modal-subtitle" id="detailScheduleInfo"></p>
               </div>
             </div>
-            <div>
+            <div class="field grid-span-3 detail-notes">
               <label for="detailNotes">특이사항 메모</label>
               <textarea id="detailNotes" placeholder="상담 기록을 입력하세요."></textarea>
             </div>
