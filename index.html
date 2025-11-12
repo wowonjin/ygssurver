@@ -2125,10 +2125,37 @@
         })
       }
 
+      function getFileSource(fileData) {
+        if (!fileData) return ''
+        if (typeof fileData === 'string') return fileData
+        if (typeof fileData.dataUrl === 'string' && fileData.dataUrl.trim()) return fileData.dataUrl.trim()
+        if (typeof fileData.url === 'string' && fileData.url.trim()) return fileData.url.trim()
+        if (typeof fileData.src === 'string' && fileData.src.trim()) return fileData.src.trim()
+        if (typeof fileData.data === 'string' && fileData.data.trim()) {
+          const data = fileData.data.trim()
+          if (data.startsWith('data:')) return data
+          const mime =
+            typeof fileData.type === 'string' && fileData.type.trim()
+              ? fileData.type.trim()
+              : 'application/octet-stream'
+          return `data:${mime};base64,${data}`
+        }
+        if (typeof fileData.base64 === 'string' && fileData.base64.trim()) {
+          const mime =
+            typeof fileData.type === 'string' && fileData.type.trim()
+              ? fileData.type.trim()
+              : 'application/octet-stream'
+          return `data:${mime};base64,${fileData.base64.trim()}`
+        }
+        return ''
+      }
+
       function setAttachmentLink(linkEl, fileData, fallbackLabel) {
-        if (!linkEl || !fileData || !fileData.dataUrl) return false
+        if (!linkEl || !fileData) return false
+        const source = getFileSource(fileData)
+        if (!source) return false
         const name = fileData.name || fallbackLabel || '첨부파일'
-        linkEl.href = fileData.dataUrl
+        linkEl.href = source
         linkEl.download = name
         linkEl.textContent = `${name} 다운로드`
         return true
@@ -2139,15 +2166,19 @@
         container.innerHTML = ''
         const list = Array.isArray(photos) ? photos : []
         list
-          .filter((photo) => photo && photo.dataUrl)
+          .filter((photo) => {
+            const source = getFileSource(photo)
+            return Boolean(source)
+          })
           .forEach((photo, index) => {
             const link = document.createElement('a')
-            link.href = photo.dataUrl
+            const source = getFileSource(photo)
+            link.href = source
             const label = photo.name || `사진 ${index + 1}`
             link.download = label
             link.title = `${label} 다운로드`
             const img = document.createElement('img')
-            img.src = photo.dataUrl
+            img.src = source
             img.alt = label
             link.appendChild(img)
             container.appendChild(link)
@@ -2977,15 +3008,26 @@
           normalized.likesDislikes != null ? String(normalized.likesDislikes) : ''
         normalized.valuesCustom = normalized.valuesCustom != null ? String(normalized.valuesCustom) : ''
         normalized.aboutMe = normalized.aboutMe != null ? String(normalized.aboutMe) : ''
-        const normalizeFileEntry = (entry) => {
-          if (!entry || typeof entry !== 'object') return null
-          const dataUrl = typeof entry.dataUrl === 'string' ? entry.dataUrl : ''
-          if (!dataUrl) return null
+        const normalizeFileEntry = (entry, fallbackName) => {
+          if (!entry) return null
+          if (typeof entry === 'string') {
+            const source = getFileSource(entry)
+            if (!source) return null
+            return {
+              name: fallbackName || '',
+              size: 0,
+              type: '',
+              dataUrl: source,
+            }
+          }
+          if (typeof entry !== 'object') return null
+          const source = getFileSource(entry)
+          if (!source) return null
           return {
-            name: entry.name != null ? String(entry.name) : '',
+            name: entry.name != null ? String(entry.name) : fallbackName || '',
             size: Number(entry.size) || 0,
             type: entry.type != null ? String(entry.type) : '',
-            dataUrl,
+            dataUrl: source,
           }
         }
         const documentsRaw =

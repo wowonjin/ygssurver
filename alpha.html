@@ -1093,7 +1093,7 @@
         try {
           const draft = collectDraftData()
           localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft))
-          showMessage('입력한 내용을 임시 저장했습니다.', 'success')
+          alert('입력한 내용을 임시 저장했습니다.')
         } catch (error) {
           console.error('[draft] save failed', error)
           showMessage('임시 저장에 실패했습니다. 브라우저 저장소를 확인해주세요.', 'error')
@@ -1104,7 +1104,7 @@
         try {
           const raw = localStorage.getItem(DRAFT_STORAGE_KEY)
           if (!raw) {
-            showMessage('저장된 임시 데이터가 없습니다.', 'error')
+            alert('저장된 임시 데이터가 없습니다.')
             return
           }
           const draft = JSON.parse(raw)
@@ -1265,8 +1265,6 @@
               (res.status === 404 ? '예약한 번호가 없습니다.' : '프로필 저장에 실패했습니다.')
             throw new Error(message)
           }
-
-          showMessage('프로필 정보를 저장했습니다. 매칭 매니저가 확인 후 안내드릴게요!', 'success')
           openSubmissionModal()
           formEl.reset()
           selectedValues = []
