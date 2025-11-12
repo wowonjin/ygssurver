@@ -676,45 +676,76 @@
               </div>
             </div>
             <div class="field">
-              <label for="profilePhotos">
-                프로필 사진 업로드 (2장 이상)
+              <label for="profilePhotosFace">
+                프로필 사진 업로드 (얼굴)
                 <span class="badge-public" aria-hidden="true">공개</span>
                 <span class="sr-only">상대방에게 공개되는 정보</span>
               </label>
               <input
-                id="profilePhotos"
+                id="profilePhotosFace"
                 class="file-input"
                 type="file"
                 accept="image/*"
                 multiple
-                aria-describedby="profilePhotosNote"
+                aria-describedby="profilePhotosFaceNote"
               />
               <div
                 class="file-drop-zone"
-                data-target="profilePhotos"
-                data-placeholder="선택된 파일 없음"
+                data-target="profilePhotosFace"
+                data-placeholder="선택된 얼굴 사진 없음"
                 tabindex="0"
                 role="button"
-                aria-label="프로필 사진을 업로드하려면 클릭하거나 파일을 끌어다 놓으세요"
-                aria-describedby="profilePhotosNote"
+                aria-label="얼굴 사진을 업로드하려면 클릭하거나 파일을 끌어다 놓으세요"
+                aria-describedby="profilePhotosFaceNote"
               >
                 <div class="file-drop-default">
                   <strong>클릭 또는 드래그해서 업로드</strong>
-                  <span class="file-drop-hint">최소 2장의 최신 얼굴·전신 사진을 첨부해주세요.</span>
+                  <span class="file-drop-hint">최근 6개월 내 얼굴이 선명하게 나온 사진을 첨부해주세요.</span>
                 </div>
                 <div class="file-drop-selected">
                   <span class="file-drop-check" aria-hidden="true">✔</span>
-                  <span class="file-drop-files">선택된 파일 없음</span>
+                  <span class="file-drop-files">선택된 얼굴 사진 없음</span>
                 </div>
               </div>
-              <div class="field-note" id="profilePhotosNote">
-                <p>근 6개월 내, 현재와 가장 비슷한 사진 2장을 첨부해주세요.</p>
-                <ul>
-                  <li>얼굴 사진 1장 (마스크 착용 불가)</li>
-                  <li>전신 사진 1장 (얼굴이 보이는 전신)</li>
-                </ul>
-                <p>1:1 매칭 시 상대에게 공개될 수 있는 사진입니다. 본연의 매력을 담아주세요!</p>
-                <p>간혹 실물과 사진이 다른 경우가 있어 첫 느낌을 좌우하니 신경 써주시면 감사하겠습니다.</p>
+              <div class="field-note" id="profilePhotosFaceNote">
+                <p>얼굴 사진은 최소 1장 이상 첨부해주세요. (마스크·선글라스 착용 불가)</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="profilePhotosFull">
+                프로필 사진 업로드 (전신)
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <input
+                id="profilePhotosFull"
+                class="file-input"
+                type="file"
+                accept="image/*"
+                multiple
+                aria-describedby="profilePhotosFullNote"
+              />
+              <div
+                class="file-drop-zone"
+                data-target="profilePhotosFull"
+                data-placeholder="선택된 전신 사진 없음"
+                tabindex="0"
+                role="button"
+                aria-label="전신 사진을 업로드하려면 클릭하거나 파일을 끌어다 놓으세요"
+                aria-describedby="profilePhotosFullNote"
+              >
+                <div class="file-drop-default">
+                  <strong>클릭 또는 드래그해서 업로드</strong>
+                  <span class="file-drop-hint">얼굴이 보이는 전신 사진을 첨부해주세요.</span>
+                </div>
+                <div class="file-drop-selected">
+                  <span class="file-drop-check" aria-hidden="true">✔</span>
+                  <span class="file-drop-files">선택된 전신 사진 없음</span>
+                </div>
+              </div>
+              <div class="field-note" id="profilePhotosFullNote">
+                <p>전신이 보이는 사진은 최소 1장 이상 첨부해주세요.</p>
+                <p>1:1 매칭 시 상대에게 공개될 수 있으니 현재 모습과 가까운 사진을 사용해주세요.</p>
               </div>
             </div>
           </div>
@@ -831,7 +862,8 @@
       const valuesSelect = document.getElementById('profileValues')
       const idCardInput = document.getElementById('profileIdCard')
       const employmentProofInput = document.getElementById('profileEmploymentProof')
-      const photosInput = document.getElementById('profilePhotos')
+      const photosFaceInput = document.getElementById('profilePhotosFace')
+      const photosFullInput = document.getElementById('profilePhotosFull')
       const agreementInfo = document.getElementById('agreementInfo')
       const agreementManners = document.getElementById('agreementManners')
       const agreementToggles = Array.from(document.querySelectorAll('.agreement-toggle'))
@@ -1271,7 +1303,8 @@
         const fileSizeChecks = [
           { input: idCardInput, label: '신분증' },
           { input: employmentProofInput, label: '재직 증빙' },
-          { input: photosInput, label: '프로필 사진' },
+          { input: photosFaceInput, label: '프로필 얼굴 사진' },
+          { input: photosFullInput, label: '프로필 전신 사진' },
         ]
         for (const { input, label } of fileSizeChecks) {
           if (!input || !input.files) continue
@@ -1287,9 +1320,21 @@
           }
         }
 
+        const faceFiles = photosFaceInput?.files ? Array.from(photosFaceInput.files) : []
+        const fullFiles = photosFullInput?.files ? Array.from(photosFullInput.files) : []
+        if (!faceFiles.length) {
+          showMessage('얼굴 사진을 최소 1장 이상 업로드해주세요.', 'error')
+          return
+        }
+        if (!fullFiles.length) {
+          showMessage('전신 사진을 최소 1장 이상 업로드해주세요.', 'error')
+          return
+        }
+
         let idCardUpload = null
         let employmentUpload = null
-        let photosUpload = []
+        let photosFaceUpload = []
+        let photosFullUpload = []
         try {
           if (idCardInput?.files && idCardInput.files[0]) {
             showMessage('신분증 파일을 업로드하고 있습니다…', '')
@@ -1301,13 +1346,23 @@
               category: 'employmentProof',
             })
           }
-          const photoFiles = photosInput?.files ? Array.from(photosInput.files) : []
-          if (photoFiles.length) {
-            showMessage('프로필 사진을 업로드하고 있습니다…', '')
-            const uploadedPhotos = await Promise.all(
-              photoFiles.map((file) => uploadAttachment(file, { category: 'profilePhoto' }))
+          if (faceFiles.length) {
+            showMessage('얼굴 사진을 업로드하고 있습니다…', '')
+            const uploadedFacePhotos = await Promise.all(
+              faceFiles.map((file) =>
+                uploadAttachment(file, { category: 'profilePhoto', meta: { type: 'face' } })
+              )
             )
-            photosUpload = uploadedPhotos.filter(Boolean)
+            photosFaceUpload = uploadedFacePhotos.filter(Boolean)
+          }
+          if (fullFiles.length) {
+            showMessage('전신 사진을 업로드하고 있습니다…', '')
+            const uploadedFullPhotos = await Promise.all(
+              fullFiles.map((file) =>
+                uploadAttachment(file, { category: 'profilePhoto', meta: { type: 'full' } })
+              )
+            )
+            photosFullUpload = uploadedFullPhotos.filter(Boolean)
           }
         } catch (error) {
           console.error('[attachments] upload failed', error)
@@ -1316,6 +1371,11 @@
         }
 
         showMessage('', '')
+
+        const photosPayload = [
+          ...photosFaceUpload.map((photo) => ({ ...photo, role: photo.role || 'face' })),
+          ...photosFullUpload.map((photo) => ({ ...photo, role: photo.role || 'full' })),
+        ]
 
         const documentsPayload = {}
         if (idCardUpload) documentsPayload.idCard = idCardUpload
@@ -1344,7 +1404,9 @@
             manners: agreementManners.checked,
           },
           documents: documentsPayload,
-          photos: photosUpload,
+          photos: photosPayload,
+          photosFace: photosFaceUpload,
+          photosFull: photosFullUpload,
         }
 
         if (!payload.phone) {
