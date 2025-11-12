@@ -50,6 +50,35 @@
         gap: 8px;
         margin-left: auto;
       }
+      #alpha-profile-root .legend-hint-wrap {
+        position: relative;
+        display: inline-flex;
+      }
+      #alpha-profile-root .legend-hint {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translate(-50%, -6px);
+        background: rgba(83, 119, 246, 0.18);
+        color: #2f49c8;
+        border-radius: 999px;
+        padding: 3px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.4;
+        white-space: nowrap;
+        box-shadow: 0 8px 18px rgba(83, 119, 246, 0.18);
+        pointer-events: none;
+      }
+      #alpha-profile-root .legend-hint::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: rgba(83, 119, 246, 0.18);
+      }
       #alpha-profile-root .btn-outline {
         border: 1px solid #bfc7d8;
         background: #ffffff;
@@ -200,11 +229,88 @@
       #alpha-profile-root .file-drop-zone.has-files .file-drop-default {
         display: none;
       }
+      #alpha-profile-root .file-drop-list {
+        margin: 12px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 8px;
+      }
+      #alpha-profile-root .file-drop-list[hidden] {
+        display: none;
+      }
+      #alpha-profile-root .file-drop-list li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 14px;
+        border: 1px solid #d5dbea;
+        border-radius: 10px;
+        background: #eef3ff;
+        font-size: 15px;
+        color: #4f4f4f;
+      }
+      #alpha-profile-root .file-drop-list li span {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #alpha-profile-root .file-drop-list li button {
+        border: none;
+        background: #f87171;
+        color: #ffffff;
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      #alpha-profile-root .file-drop-list li button:hover {
+        background: #dc2626;
+      }
       #alpha-profile-root label span.helper {
         display: block;
         margin-top: 4px;
         font-size: 15px;
         color: #6b7a90;
+      }
+      #alpha-profile-root .multi-checkbox-list {
+        display: grid;
+        gap: 8px;
+      }
+      #alpha-profile-root .multi-checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1px solid #d5dbea;
+        border-radius: 10px;
+        background: #ffffff;
+        transition: border-color 0.2s ease, background 0.2s ease;
+      }
+      #alpha-profile-root .multi-checkbox-item:hover {
+        border-color: #5a67d8;
+        background: #eef3ff;
+      }
+      #alpha-profile-root .multi-checkbox-item input[type='checkbox'] {
+        width: 18px;
+        height: 18px;
+        accent-color: #5377f6;
+        flex-shrink: 0;
+      }
+      #alpha-profile-root .multi-select-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
+        border: 0;
+        white-space: nowrap;
       }
       #alpha-profile-root input,
       #alpha-profile-root textarea,
@@ -416,8 +522,14 @@
           <legend>
             <span class="legend-title">기본 정보</span>
             <span class="legend-actions" role="group" aria-label="임시 저장">
-              <button type="button" class="btn-outline" id="draftSaveButton">임시 저장하기</button>
-              <button type="button" class="btn-outline" id="draftLoadButton">임시 저장 불러오기</button>
+              <span class="legend-hint-wrap">
+                <span class="legend-hint">번호 입력 후 저장</span>
+                <button type="button" class="btn-outline" id="draftSaveButton">임시 저장하기</button>
+              </span>
+              <span class="legend-hint-wrap">
+                <span class="legend-hint">번호 입력 후 불러오기</span>
+                <button type="button" class="btn-outline" id="draftLoadButton">임시 저장 불러오기</button>
+              </span>
             </span>
           </legend>
           <div class="field-grid">
@@ -579,12 +691,51 @@
           <legend>선호 조건</legend>
           <div class="field-grid">
             <div class="field">
-              <label for="profilePreferredHeights">
-                선호하는 키 (단일 선택 가능)
+              <label for="profilePreferredHeights" id="profilePreferredHeightsLabel">
+                선호하는 키
                 <span class="badge-public" aria-hidden="true">공개</span>
                 <span class="sr-only">상대방에게 공개되는 정보</span>
+                <span class="helper">여러 항목을 선택할 수 있습니다.</span>
               </label>
-              <select id="profilePreferredHeights">
+              <div
+                class="multi-checkbox-list"
+                data-multi-select="profilePreferredHeights"
+                role="group"
+                aria-labelledby="profilePreferredHeightsLabel"
+              >
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="160cm 이하" />
+                  <span>160cm 이하</span>
+                </label>
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="161-165cm" />
+                  <span>161-165cm</span>
+                </label>
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="166-170cm" />
+                  <span>166-170cm</span>
+                </label>
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="171-175cm" />
+                  <span>171-175cm</span>
+                </label>
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="176-180cm" />
+                  <span>176-180cm</span>
+                </label>
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="181cm 이상" />
+                  <span>181cm 이상</span>
+                </label>
+              </div>
+              <select
+                id="profilePreferredHeights"
+                multiple
+                size="6"
+                class="multi-select-hidden"
+                aria-hidden="true"
+                tabindex="-1"
+              >
                 <option value="160cm 이하">160cm 이하</option>
                 <option value="161-165cm">161-165cm</option>
                 <option value="166-170cm">166-170cm</option>
@@ -594,12 +745,51 @@
               </select>
             </div>
             <div class="field">
-              <label for="profilePreferredAges">
-                선호 나이 (단일 선택 가능)
+              <label for="profilePreferredAges" id="profilePreferredAgesLabel">
+                선호 나이
                 <span class="badge-public" aria-hidden="true">공개</span>
                 <span class="sr-only">상대방에게 공개되는 정보</span>
+                <span class="helper">여러 항목을 선택할 수 있습니다.</span>
               </label>
-              <select id="profilePreferredAges">
+              <div
+                class="multi-checkbox-list"
+                data-multi-select="profilePreferredAges"
+                role="group"
+                aria-labelledby="profilePreferredAgesLabel"
+              >
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="20대 초반" />
+                  <span>20대 초반</span>
+                </label>
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="20대 중반" />
+                  <span>20대 중반</span>
+                </label>
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="20대 후반" />
+                  <span>20대 후반</span>
+                </label>
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="30대 초반" />
+                  <span>30대 초반</span>
+                </label>
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="30대 중반" />
+                  <span>30대 중반</span>
+                </label>
+                <label class="multi-checkbox-item">
+                  <input type="checkbox" value="30대 후반 이상" />
+                  <span>30대 후반 이상</span>
+                </label>
+              </div>
+              <select
+                id="profilePreferredAges"
+                multiple
+                size="6"
+                class="multi-select-hidden"
+                aria-hidden="true"
+                tabindex="-1"
+              >
                 <option value="20대 초반">20대 초반</option>
                 <option value="20대 중반">20대 중반</option>
                 <option value="20대 후반">20대 후반</option>
@@ -620,7 +810,13 @@
                 <span class="badge-public" aria-hidden="true">확인용</span>
                 <span class="sr-only">매칭 매니저 확인용 비공개 정보</span>
               </label>
-              <input id="profileIdCard" class="file-input" type="file" accept="image/*,.pdf" />
+              <input
+                id="profileIdCard"
+                class="file-input"
+                type="file"
+                accept="image/*,.pdf"
+                multiple
+              />
               <div
                 class="file-drop-zone"
                 data-target="profileIdCard"
@@ -638,6 +834,7 @@
                   <span class="file-drop-files">선택된 파일 없음</span>
                 </div>
               </div>
+              <ul class="file-drop-list" data-target="profileIdCard" hidden></ul>
             </div>
             <div class="field">
               <label for="profileEmploymentProof">
@@ -650,6 +847,7 @@
                 class="file-input"
                 type="file"
                 accept="image/*,.pdf"
+                multiple
                 aria-describedby="employmentProofNote"
               />
               <div
@@ -674,6 +872,7 @@
                 <p>건강보험 자격득실, 4대보험 가입증명서, 사업자등록증, 급여명세서도 가능합니다.</p>
                 <p>프리랜서는 매니저에게 별도 문의해 주시면 방법을 안내합니다.</p>
               </div>
+              <ul class="file-drop-list" data-target="profileEmploymentProof" hidden></ul>
             </div>
             <div class="field">
               <label for="profilePhotosFace">
@@ -710,6 +909,7 @@
               <div class="field-note" id="profilePhotosFaceNote">
                 <p>얼굴 사진은 최소 1장 이상 첨부해주세요. (마스크·선글라스 착용 불가)</p>
               </div>
+              <ul class="file-drop-list" data-target="profilePhotosFace" hidden></ul>
             </div>
             <div class="field">
               <label for="profilePhotosFull">
@@ -747,6 +947,7 @@
                 <p>전신이 보이는 사진은 최소 1장 이상 첨부해주세요.</p>
                 <p>1:1 매칭 시 상대에게 공개될 수 있으니 현재 모습과 가까운 사진을 사용해주세요.</p>
               </div>
+              <ul class="file-drop-list" data-target="profilePhotosFull" hidden></ul>
             </div>
           </div>
         </fieldset>
@@ -782,7 +983,7 @@
               <label class="agreements">
                 <input id="agreementManners" type="checkbox" required />
                 <span>
-                  매너있는 대화 및 만남에 대한 동의 사항(잠수, 일방 취소 시 벌금 등)을 확인했습니다.
+                  매너있는 대화 및 만남에 대한 동의 사항(잠수, 일방 취소 패널티 등)을 확인했습니다.
                 </span>
               </label>
               <button
@@ -797,7 +998,7 @@
             </div>
             <div id="agreementMannersDetails" class="agreement-details" hidden>
               <p>
-                상대방과의 약속을 존중하고 잠수나 일방 취소 등 비매너 행위 발생 시 안내된 벌금 및 제재가 적용됩니다.
+                상대방과의 약속을 존중하고 잠수나 일방 취소 등 비매너 행위 발생 시 안내된 패널티 및 제재가 적용됩니다.
                 또한 상대방 프로필의 캡처, 저장, 유포 및 상업적 이용은 금지되며, 위반 시 법적 책임이 따를 수 있습니다.
               </p>
             </div>
@@ -872,9 +1073,64 @@
       const fileDropZones = Array.from(document.querySelectorAll('.file-drop-zone'))
       const submissionModal = document.getElementById('submissionModal')
       const submissionModalCloseBtn = document.getElementById('submissionModalClose')
+      const zoneUploadCounters = new Map()
 
       let selectedValues = []
       const multiFileSelections = new Map()
+      function syncCheckboxGroupFromSelect(selectEl) {
+        if (!selectEl || !selectEl.id) return
+        const group = document.querySelector(`[data-multi-select="${selectEl.id}"]`)
+        if (!group) return
+        const selectedValues = new Set(
+          Array.from(selectEl.options || [])
+            .filter((option) => option.selected)
+            .map((option) => option.value)
+        )
+        Array.from(group.querySelectorAll('input[type="checkbox"]')).forEach((checkbox) => {
+          checkbox.checked = selectedValues.has(checkbox.value)
+        })
+      }
+
+      function handleMultiSelectCheckboxChange(event) {
+        const checkbox = event.target
+        if (!checkbox || checkbox.type !== 'checkbox') return
+        const group = checkbox.closest('[data-multi-select]')
+        if (!group) return
+        const targetId = group.dataset.multiSelect
+        if (!targetId) return
+        const selectEl = document.getElementById(targetId)
+        if (!selectEl) return
+        Array.from(selectEl.options || []).forEach((option) => {
+          if (option.value === checkbox.value) {
+            option.selected = checkbox.checked
+          }
+        })
+        selectEl.dispatchEvent(new Event('change', { bubbles: true }))
+      }
+
+      const multiSelectCheckboxGroups = Array.from(document.querySelectorAll('[data-multi-select]'))
+      multiSelectCheckboxGroups.forEach((group) => {
+        group.addEventListener('change', handleMultiSelectCheckboxChange)
+        const targetId = group.dataset.multiSelect
+        const selectEl = targetId ? document.getElementById(targetId) : null
+        if (selectEl) {
+          syncCheckboxGroupFromSelect(selectEl)
+        }
+      })
+      const ensureArray = (value) => {
+        if (Array.isArray(value)) {
+          return value
+            .map((item) => (item == null ? '' : String(item).trim()))
+            .filter(Boolean)
+        }
+        if (typeof value === 'string') {
+          const trimmed = value.trim()
+          return trimmed ? [trimmed] : []
+        }
+        return []
+      }
+      if (preferredHeightsSelect) setMultiSelectValues(preferredHeightsSelect, [])
+      if (preferredAgesSelect) setMultiSelectValues(preferredAgesSelect, [])
 
       if (phoneInput) {
         const applyPhoneFormatting = () => {
@@ -939,12 +1195,14 @@
         const list = Array.isArray(values) ? values : []
         if (!selectEl.multiple) {
           selectEl.value = list[0] || ''
+          syncCheckboxGroupFromSelect(selectEl)
           return
         }
         const set = new Set(list)
         Array.from(selectEl.options || []).forEach((option) => {
           option.selected = set.has(option.value)
         })
+        syncCheckboxGroupFromSelect(selectEl)
       }
 
       function enforceValuesLimit(selectEl, limit) {
@@ -980,6 +1238,37 @@
         return list.find((file) => Number(file?.size) > MAX_UPLOAD_SIZE_BYTES) || null
       }
 
+      function getFileListContainer(inputEl) {
+        if (!inputEl || !inputEl.id) return null
+        return document.querySelector(`.file-drop-list[data-target="${inputEl.id}"]`)
+      }
+
+      function renderFileList(inputEl) {
+        const container = getFileListContainer(inputEl)
+        if (!container) return
+        const files = Array.from(inputEl?.files || [])
+        container.innerHTML = ''
+        if (!files.length) {
+          container.hidden = true
+          return
+        }
+        container.hidden = false
+        files.forEach((file, index) => {
+          const item = document.createElement('li')
+          const nameSpan = document.createElement('span')
+          nameSpan.textContent = file.name || `파일 ${index + 1}`
+          const removeBtn = document.createElement('button')
+          removeBtn.type = 'button'
+          removeBtn.className = 'file-remove-btn'
+          removeBtn.dataset.target = inputEl.id
+          removeBtn.dataset.index = String(index)
+          removeBtn.textContent = '삭제'
+          item.appendChild(nameSpan)
+          item.appendChild(removeBtn)
+          container.appendChild(item)
+        })
+      }
+
       function getStoredFiles(inputEl) {
         if (!inputEl || !inputEl.id) return []
         return multiFileSelections.get(inputEl.id) || []
@@ -1008,6 +1297,9 @@
             if (file) dataTransfer.items.add(file)
           })
           inputEl.files = dataTransfer.files
+        }
+        if (!list.length) {
+          inputEl.value = ''
         }
         if (inputEl.multiple) {
           if (inputEl.id && list.length) {
@@ -1057,22 +1349,30 @@
         const placeholder = zone.dataset.placeholder || '선택된 파일 없음'
         if (!summaryEl || !inputEl) {
           if (summaryEl) summaryEl.textContent = placeholder
+          renderFileList(inputEl)
           return
         }
         const files = Array.from(inputEl.files || [])
         const hasFiles = files.length > 0
         zone.classList.toggle('has-files', hasFiles)
-        if (!hasFiles) {
-          summaryEl.textContent = placeholder
-          return
+        let summaryText = placeholder
+        if (hasFiles) {
+          if (!inputEl.multiple) {
+            summaryText = files[0].name
+          } else {
+            const names = files.map((file) => file.name)
+            summaryText =
+              names.length <= 3
+                ? names.join(', ')
+                : `${names.slice(0, 3).join(', ')} 외 ${names.length - 3}개`
+          }
         }
-        if (!inputEl.multiple) {
-          summaryEl.textContent = files[0].name
-          return
+        const zoneKey = zone.dataset.target || inputEl.id || zone.id || ''
+        if ((zoneUploadCounters.get(zoneKey) || 0) > 0) {
+          summaryText = `${summaryText} (업로드 중...)`
         }
-        const names = files.map((file) => file.name)
-        summaryEl.textContent =
-          names.length <= 3 ? names.join(', ') : `${names.slice(0, 3).join(', ')} 외 ${names.length - 3}개`
+        summaryEl.textContent = summaryText
+        renderFileList(inputEl)
       }
 
       fileDropZones.forEach((zone) => {
@@ -1158,6 +1458,21 @@
         })
       })
 
+      document.addEventListener('click', (event) => {
+        const button = event.target.closest('.file-remove-btn')
+        if (!button) return
+        const targetId = button.dataset.target
+        const index = Number(button.dataset.index)
+        if (!targetId || Number.isNaN(index)) return
+        const inputEl = document.getElementById(targetId)
+        const zone = document.querySelector(`.file-drop-zone[data-target="${targetId}"]`)
+        if (!inputEl || !zone) return
+        const files = Array.from(inputEl.files || [])
+        if (index < 0 || index >= files.length) return
+        files.splice(index, 1)
+        syncInputFiles(inputEl, files, zone)
+      })
+
       function collectDraftData() {
         const values = valuesSelect ? getMultiSelectValues(valuesSelect) : []
         const phoneRaw = phoneInput?.value || ''
@@ -1177,8 +1492,8 @@
           sufficientCondition: sufficientInput?.value || '',
           necessaryCondition: necessaryInput?.value || '',
           aboutMe: aboutMeInput?.value || '',
-          preferredHeights: preferredHeightsSelect?.value || '',
-          preferredAges: preferredAgesSelect?.value || '',
+          preferredHeights: getMultiSelectValues(preferredHeightsSelect),
+          preferredAges: getMultiSelectValues(preferredAgesSelect),
           values,
           agreements: {
             info: agreementInfo?.checked || false,
@@ -1206,8 +1521,10 @@
         if (sufficientInput) sufficientInput.value = draft.sufficientCondition || ''
         if (necessaryInput) necessaryInput.value = draft.necessaryCondition || ''
         if (aboutMeInput) aboutMeInput.value = draft.aboutMe || ''
-        if (preferredHeightsSelect) preferredHeightsSelect.value = draft.preferredHeights || ''
-        if (preferredAgesSelect) preferredAgesSelect.value = draft.preferredAges || ''
+        if (preferredHeightsSelect)
+          setMultiSelectValues(preferredHeightsSelect, ensureArray(draft.preferredHeights))
+        if (preferredAgesSelect)
+          setMultiSelectValues(preferredAgesSelect, ensureArray(draft.preferredAges))
 
         const draftValues = Array.isArray(draft.values) ? draft.values.slice(0, 1) : []
         if (valuesSelect) {
@@ -1223,6 +1540,7 @@
           const inputEl = targetId ? document.getElementById(targetId) : null
           if (inputEl) {
             inputEl.value = ''
+            queueFirebaseSync(inputEl)
           }
           updateFileDropSummary(zone, inputEl)
         })
@@ -1363,21 +1681,24 @@
           }
         }
 
-        const faceFiles = photosFaceInput?.files ? Array.from(photosFaceInput.files) : []
-        const fullFiles = photosFullInput?.files ? Array.from(photosFullInput.files) : []
-        if (!faceFiles.length) {
+        if (hasPendingFirebaseUploads()) {
+          showMessage('사진 업로드가 완료될 때까지 잠시만 기다려주세요.', 'error')
+          return
+        }
+
+        const photosFaceUpload = buildPhotoPayload('profilePhotosFace')
+        const photosFullUpload = buildPhotoPayload('profilePhotosFull')
+        if (!photosFaceUpload.length) {
           showMessage('얼굴 사진을 최소 1장 이상 업로드해주세요.', 'error')
           return
         }
-        if (!fullFiles.length) {
+        if (!photosFullUpload.length) {
           showMessage('전신 사진을 최소 1장 이상 업로드해주세요.', 'error')
           return
         }
 
         let idCardUpload = null
         let employmentUpload = null
-        let photosFaceUpload = []
-        let photosFullUpload = []
         try {
           if (idCardInput?.files && idCardInput.files[0]) {
             showMessage('신분증 파일을 업로드하고 있습니다…', '')
@@ -1389,24 +1710,6 @@
               category: 'employmentProof',
             })
           }
-          if (faceFiles.length) {
-            showMessage('얼굴 사진을 업로드하고 있습니다…', '')
-            const uploadedFacePhotos = await Promise.all(
-              faceFiles.map((file) =>
-                uploadAttachment(file, { category: 'profilePhoto', meta: { type: 'face' } })
-              )
-            )
-            photosFaceUpload = uploadedFacePhotos.filter(Boolean)
-          }
-          if (fullFiles.length) {
-            showMessage('전신 사진을 업로드하고 있습니다…', '')
-            const uploadedFullPhotos = await Promise.all(
-              fullFiles.map((file) =>
-                uploadAttachment(file, { category: 'profilePhoto', meta: { type: 'full' } })
-              )
-            )
-            photosFullUpload = uploadedFullPhotos.filter(Boolean)
-          }
         } catch (error) {
           console.error('[attachments] upload failed', error)
           showMessage(error?.message || '첨부 파일 업로드에 실패했습니다. 다시 시도해주세요.', 'error')
@@ -1415,10 +1718,7 @@
 
         showMessage('', '')
 
-        const photosPayload = [
-          ...photosFaceUpload.map((photo) => ({ ...photo, role: photo.role || 'face' })),
-          ...photosFullUpload.map((photo) => ({ ...photo, role: photo.role || 'full' })),
-        ]
+        const photosPayload = [...photosFaceUpload, ...photosFullUpload]
 
         const documentsPayload = {}
         if (idCardUpload) documentsPayload.idCard = idCardUpload
@@ -1473,6 +1773,7 @@
             throw new Error(message)
           }
           openSubmissionModal()
+          resetFirebaseUploadsAfterSubmit()
           formEl.reset()
           selectedValues = []
           setMultiSelectValues(valuesSelect, [])
@@ -1486,6 +1787,7 @@
               if (inputEl.id) {
                 multiFileSelections.delete(inputEl.id)
               }
+              queueFirebaseSync(inputEl)
             }
             updateFileDropSummary(zone, inputEl)
           })
