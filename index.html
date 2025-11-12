@@ -547,26 +547,22 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+        overflow: hidden;
       }
       .modal-header {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
-        gap: 12px;
+        align-items: center;
+        gap: 16px;
+      }
+      .modal-title-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
       }
       .modal-header h2 {
         margin: 0;
         font-size: 22px;
-        color: #f0f6fc;
-      }
-      .modal-header button {
-        border: none;
-        background: transparent;
-        color: #8b949e;
-        font-size: 22px;
-        cursor: pointer;
-      }
-      .modal-header button:hover {
         color: #f0f6fc;
       }
       .modal-subtitle {
@@ -587,10 +583,50 @@
         flex-direction: column;
         gap: 8px;
       }
+      .detail-priority {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+        padding: 18px 20px;
+        border-radius: 18px;
+        background: rgba(31, 110, 235, 0.12);
+        border: 1px solid rgba(56, 139, 253, 0.3);
+        box-shadow: 0 20px 50px rgba(12, 28, 64, 0.35);
+      }
+      .detail-priority .field {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .detail-priority .span-2 {
+        grid-column: span 2;
+      }
+      .detail-priority .modal-subtitle {
+        color: #d6e4ff;
+        font-weight: 500;
+      }
       .modal-form {
         display: flex;
         flex-direction: column;
         gap: 16px;
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 6px;
+        min-height: 0;
+      }
+      .modal-form::-webkit-scrollbar {
+        width: 8px;
+      }
+      .modal-form::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .modal-form::-webkit-scrollbar-thumb {
+        background: rgba(99, 110, 123, 0.4);
+        border-radius: 999px;
+      }
+      .modal-form {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(99, 110, 123, 0.5) transparent;
       }
       .modal-form .field {
         display: flex;
@@ -623,21 +659,10 @@
         min-height: 100px;
         resize: vertical;
       }
-      .detail-secondary-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 24px;
-      }
-      .detail-secondary-grid .span-2 {
-        grid-column: span 2;
-      }
       .detail-preferences-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 24px;
-      }
-      .detail-preferences-grid select[multiple] {
-        min-height: 160px;
       }
       .full-width {
         grid-column: 1 / -1;
@@ -668,15 +693,15 @@
       .modal-actions {
         display: flex;
         justify-content: flex-end;
-        gap: 12px;
-        margin-top: 8px;
+        gap: 10px;
       }
       .modal-actions button {
-        padding: 12px 20px;
-        border-radius: 12px;
+        padding: 10px 16px;
+        border-radius: 10px;
         border: none;
         font-weight: 700;
         cursor: pointer;
+        font-size: 14px;
       }
       .modal-actions .secondary {
         background: #21262d;
@@ -692,6 +717,178 @@
       }
       .modal-actions .primary:hover {
         transform: translateY(-1px);
+      }
+      .modal-actions .ghost {
+        background: transparent;
+        color: #8b949e;
+        border: 1px solid #30363d;
+      }
+      .modal-actions .ghost:hover {
+        background: #21262d;
+        color: #f0f6fc;
+      }
+      #pdfExportRoot {
+        position: fixed;
+        top: -12000px;
+        left: -12000px;
+        padding: 0;
+        margin: 0;
+        pointer-events: none;
+        z-index: -1;
+      }
+      #pdfExportRoot[hidden] {
+        display: none;
+      }
+      .pdf-page {
+        width: 1120px;
+        height: 720px;
+        background: #0a0d13;
+        color: #f4f7fb;
+        font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        padding: 48px 56px;
+        box-sizing: border-box;
+      }
+      .pdf-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 18px;
+        color: #d0d6e1;
+      }
+      .pdf-body {
+        display: grid;
+        grid-template-columns: 420px 1fr;
+        gap: 36px;
+        flex: 1;
+      }
+      .pdf-left {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+      .pdf-photo-frame {
+        position: relative;
+        width: 100%;
+        padding-top: 120%;
+        background: #141922;
+        border: 1px solid #21293a;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 18px 60px rgba(1, 4, 9, 0.45);
+      }
+      #pdfPhoto {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      #pdfPhotoFallback {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 42px;
+        font-weight: 700;
+        color: #9da7bb;
+        background: linear-gradient(145deg, rgba(31, 40, 55, 0.9), rgba(19, 25, 38, 0.9));
+      }
+      .pdf-contact-card {
+        background: #10141f;
+        border: 1px solid #21293a;
+        border-radius: 18px;
+        padding: 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .pdf-contact-name {
+        font-size: 24px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+      .pdf-contact-meta {
+        font-size: 14px;
+        color: #9ca6ba;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .pdf-contact-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .pdf-contact-list li {
+        display: flex;
+        gap: 12px;
+        font-size: 15px;
+        color: #d5dbe8;
+      }
+      .pdf-contact-list span.label {
+        min-width: 80px;
+        color: #7c869a;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 13px;
+      }
+      .pdf-right {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        align-content: start;
+      }
+      .pdf-card {
+        background: #10141f;
+        border: 1px solid #21293a;
+        border-radius: 18px;
+        padding: 26px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        min-height: 0;
+      }
+      .pdf-card h3 {
+        margin: 0;
+        font-size: 18px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: #f5f7fa;
+      }
+      .pdf-card p {
+        margin: 0;
+        font-size: 15px;
+        color: #d1d7e3;
+        line-height: 1.7;
+        white-space: pre-wrap;
+      }
+      .pdf-card ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 15px;
+        color: #d1d7e3;
+      }
+      .pdf-card ul li::before {
+        content: '•';
+        color: #6c7a94;
+        margin-right: 10px;
+      }
+      .pdf-card.span-2 {
+        grid-column: span 2;
       }
       .card {
         background: linear-gradient(160deg, #161b22 0%, #0d1117 100%);
@@ -773,12 +970,12 @@
         z-index: 60;
       }
       @media (max-width: 1200px) {
+        .detail-priority,
         .detail-fields .field-grid,
-        .detail-secondary-grid,
         .detail-preferences-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
-        .detail-secondary-grid .span-2,
+        .detail-priority .span-2,
         .full-width {
           grid-column: span 2;
         }
@@ -835,12 +1032,12 @@
         .status-chip {
           align-self: flex-start;
         }
+        .detail-priority,
         .detail-preferences-grid,
-        .detail-fields .field-grid,
-        .detail-secondary-grid {
+        .detail-fields .field-grid {
           grid-template-columns: 1fr;
         }
-        .detail-secondary-grid .span-2,
+        .detail-priority .span-2,
         .full-width {
           grid-column: span 1;
         }
@@ -946,12 +1143,39 @@
     </div>
     <div class="modal-overlay" id="detailModal" hidden>
       <div class="modal-content">
-        <div class="modal-header">
-          <h2 id="detailTitle">상세 정보</h2>
-          <button type="button" id="detailCloseBtn" aria-label="닫기">×</button>
-        </div>
-        <p class="modal-subtitle" id="detailSubtitle"></p>
         <form id="detailForm" class="modal-form">
+          <div class="modal-header">
+            <div class="modal-title-group">
+              <h2 id="detailTitle">상세 정보</h2>
+              <p class="modal-subtitle" id="detailSubtitle"></p>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="ghost" id="detailExportBtn">PDF 내보내기</button>
+              <button type="button" class="secondary" id="detailCancelBtn">취소</button>
+              <button type="submit" class="primary">저장</button>
+            </div>
+          </div>
+          <div class="detail-priority" aria-label="상담 진행 상태">
+            <div class="field">
+              <label for="detailPhoneStatus">전화 상담 상태</label>
+              <select id="detailPhoneStatus">
+                <option value="pending">상담 전</option>
+                <option value="scheduled">상담 예정</option>
+                <option value="done">상담 완료</option>
+              </select>
+            </div>
+            <div class="field span-2">
+              <label>대면 상담 일정 (15분 단위)</label>
+              <div class="inline-group">
+                <input type="date" id="detailDate" />
+                <select id="detailTime" class="time-select" disabled>
+                  <option value="">시간 선택</option>
+                </select>
+                <button type="button" id="detailClearSchedule" aria-label="일정 초기화">🗑</button>
+              </div>
+              <p class="modal-subtitle" id="detailScheduleInfo"></p>
+            </div>
+          </div>
           <div class="detail-fields" aria-live="polite">
             <div class="field-grid">
               <div class="field">
@@ -1099,31 +1323,11 @@
               </div>
             </div>
           </div>
-          <div class="detail-secondary-grid">
-            <div class="field">
-              <label for="detailPhoneStatus">전화 상담 상태</label>
-              <select id="detailPhoneStatus">
-                <option value="pending">상담 전</option>
-                <option value="scheduled">상담 예정</option>
-                <option value="done">상담 완료</option>
-              </select>
-            </div>
-            <div class="field span-2">
-              <label>대면 상담 일정 (15분 단위)</label>
-              <div class="inline-group">
-                <input type="date" id="detailDate" />
-                <select id="detailTime" class="time-select" disabled>
-                  <option value="">시간 선택</option>
-                </select>
-                <button type="button" id="detailClearSchedule" aria-label="일정 초기화">🗑</button>
-              </div>
-              <p class="modal-subtitle" id="detailScheduleInfo"></p>
-            </div>
-          </div>
           <div class="detail-preferences-grid">
             <div class="field">
-              <label for="detailPreferredHeights">선호하는 키 (중복 선택 가능)</label>
-              <select id="detailPreferredHeights" multiple size="6">
+              <label for="detailPreferredHeights">선호하는 키</label>
+              <select id="detailPreferredHeights">
+                <option value="">선택</option>
                 <option value="160cm 이하">160cm 이하</option>
                 <option value="161-165cm">161-165cm</option>
                 <option value="166-170cm">166-170cm</option>
@@ -1133,8 +1337,9 @@
               </select>
             </div>
             <div class="field">
-              <label for="detailPreferredAges">선호 나이 (중복 선택 가능)</label>
-              <select id="detailPreferredAges" multiple size="6">
+              <label for="detailPreferredAges">선호 나이</label>
+              <select id="detailPreferredAges">
+                <option value="">선택</option>
                 <option value="20대 초반">20대 초반</option>
                 <option value="20대 중반">20대 중반</option>
                 <option value="20대 후반">20대 후반</option>
@@ -1144,8 +1349,9 @@
               </select>
             </div>
             <div class="field">
-              <label for="detailValues">인생의 주요 가치관 (최대 2개)</label>
-              <select id="detailValues" multiple size="6">
+              <label for="detailValues">인생의 주요 가치관 (한 개 선택)</label>
+              <select id="detailValues">
+                <option value="">선택</option>
                 <option value="하루하루 최선을 다하는">하루하루 최선을 다하는</option>
                 <option value="화목한 가족이 중심이 되는">화목한 가족이 중심이 되는</option>
                 <option value="건강관리에 철저한">건강관리에 철저한</option>
@@ -1191,10 +1397,6 @@
               <textarea id="detailNotes" placeholder="상담 기록이나 참고 사항을 입력하세요."></textarea>
             </div>
           </div>
-          <div class="modal-actions">
-            <button type="button" class="secondary" id="detailCancelBtn">취소</button>
-            <button type="submit" class="primary">저장</button>
-          </div>
         </form>
       </div>
     </div>
@@ -1202,7 +1404,64 @@
       <span id="selectionInfo"></span>
       <button type="button" id="deleteSelectedBtn">정보 삭제하기</button>
     </div>
+    <div id="pdfExportRoot" hidden>
+      <div class="pdf-page" id="pdfProfilePage">
+        <div class="pdf-header">
+          <span id="pdfNameLabel">PROFILE</span>
+          <span id="pdfHeaderTitle">MATCHING PORTFOLIO</span>
+        </div>
+        <div class="pdf-body">
+          <div class="pdf-left">
+            <div class="pdf-photo-frame">
+              <img id="pdfPhoto" alt="프로필 사진" hidden />
+              <div id="pdfPhotoFallback">PHOTO</div>
+            </div>
+            <div class="pdf-contact-card">
+              <div class="pdf-contact-name" id="pdfContactName">이름</div>
+              <div class="pdf-contact-meta" id="pdfContactTagline">MATCHING PROFILE</div>
+              <ul class="pdf-contact-list">
+                <li><span class="label">Birth</span><span id="pdfBirth">-</span></li>
+                <li><span class="label">Phone</span><span id="pdfPhone">-</span></li>
+                <li><span class="label">Email</span><span id="pdfEmail">-</span></li>
+                <li><span class="label">Height</span><span id="pdfHeight">-</span></li>
+                <li><span class="label">Address</span><span id="pdfAddress">-</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="pdf-right">
+            <section class="pdf-card span-2">
+              <h3>Profile</h3>
+              <p id="pdfProfileSummary">
+                연결사 회원님의 주요 프로필 소개가 여기에 표시됩니다.
+              </p>
+            </section>
+            <section class="pdf-card">
+              <h3>Character</h3>
+              <p id="pdfCharacterText">추가 특성 정보가 입력됩니다.</p>
+            </section>
+            <section class="pdf-card">
+              <h3>Experience</h3>
+              <ul id="pdfExperienceList">
+                <li>경력 정보가 표시됩니다.</li>
+              </ul>
+            </section>
+            <section class="pdf-card">
+              <h3>Tools</h3>
+              <p id="pdfToolsText">입력된 역량/선호 정보가 표시됩니다.</p>
+            </section>
+            <section class="pdf-card">
+              <h3>Education</h3>
+              <ul id="pdfEducationList">
+                <li>학력 정보가 표시됩니다.</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNa5lmsXtO0mGlzYJkU+qHi9CFuRgxN6E466+vWXTjhBMWrMUR3pvN8MPmMXxMvmP0xSg6u40wP3sp8I4N3K0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-YcsIPn1ytY1/6Yr2vNh+lX6YsJhBKt3vnDnN/SUXOc6Bx/6CkXbkqVKgf/mBlC9ZwTe74MkRUYw35vj0POnC1w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
       const ADMIN_ID = 'admin'
       const ADMIN_PASSWORD = 'admin'
@@ -1318,8 +1577,8 @@
       const sortSelect = document.getElementById('sortSelect')
       const detailModal = document.getElementById('detailModal')
       const detailForm = document.getElementById('detailForm')
-      const detailCloseBtn = document.getElementById('detailCloseBtn')
       const detailCancelBtn = document.getElementById('detailCancelBtn')
+      const detailExportBtn = document.getElementById('detailExportBtn')
       const detailTitleEl = document.getElementById('detailTitle')
       const detailSubtitleEl = document.getElementById('detailSubtitle')
       const detailNameInput = document.getElementById('detailName')
@@ -1351,6 +1610,31 @@
       const detailClearScheduleBtn = document.getElementById('detailClearSchedule')
       const detailNotesInput = document.getElementById('detailNotes')
       const detailScheduleInfo = document.getElementById('detailScheduleInfo')
+      const pdfRoot = document.getElementById('pdfExportRoot')
+      const pdfPage = document.getElementById('pdfProfilePage')
+      const pdfPhoto = document.getElementById('pdfPhoto')
+      const pdfPhotoFallback = document.getElementById('pdfPhotoFallback')
+      const pdfNameLabel = document.getElementById('pdfNameLabel')
+      const pdfHeaderTitle = document.getElementById('pdfHeaderTitle')
+      const pdfContactName = document.getElementById('pdfContactName')
+      const pdfContactTagline = document.getElementById('pdfContactTagline')
+      const pdfBirth = document.getElementById('pdfBirth')
+      const pdfPhone = document.getElementById('pdfPhone')
+      const pdfEmail = document.getElementById('pdfEmail')
+      const pdfHeight = document.getElementById('pdfHeight')
+      const pdfAddress = document.getElementById('pdfAddress')
+      const pdfProfileSummary = document.getElementById('pdfProfileSummary')
+      const pdfCharacterText = document.getElementById('pdfCharacterText')
+      const pdfExperienceList = document.getElementById('pdfExperienceList')
+      const pdfToolsText = document.getElementById('pdfToolsText')
+      const pdfEducationList = document.getElementById('pdfEducationList')
+      if (pdfPhoto) {
+        try {
+          pdfPhoto.crossOrigin = 'anonymous'
+        } catch (error) {
+          console.warn('[pdf] crossOrigin 설정 실패', error)
+        }
+      }
       const calendarScrollBtn = document.getElementById('calendarScrollBtn')
       const calendarModal = document.getElementById('calendarModal')
       const calendarCloseBtn = document.getElementById('calendarCloseBtn')
@@ -1408,7 +1692,6 @@
       deleteSelectedBtn.addEventListener('click', handleDeleteSelected)
       cardsEl.addEventListener('change', handleCardChange)
       cardsEl.addEventListener('click', handleCardButtonClick)
-      detailCloseBtn.addEventListener('click', closeDetailModal)
       detailCancelBtn.addEventListener('click', (event) => {
         event.preventDefault()
         closeDetailModal()
@@ -1422,9 +1705,10 @@
       detailDateInput.addEventListener('change', handleDetailDateChange)
       detailTimeSelect.addEventListener('change', handleDetailTimeChange)
       detailClearScheduleBtn.addEventListener('click', handleClearSchedule)
+      detailExportBtn?.addEventListener('click', handleDetailExport)
       if (detailValuesSelect) {
         detailValuesSelect.addEventListener('change', () =>
-          enforceMultiSelectLimit(detailValuesSelect, 2),
+          enforceMultiSelectLimit(detailValuesSelect, 1),
         )
       }
       document.addEventListener('keydown', (event) => {
@@ -1657,7 +1941,7 @@
         setSelectValue(detailReligionSelect, record.religion || '')
         setMultiSelectValues(detailPreferredHeightsSelect, record.preferredHeights || [])
         setMultiSelectValues(detailPreferredAgesSelect, record.preferredAges || [])
-        detailValuesSelection = Array.isArray(record.values) ? record.values.slice() : []
+        detailValuesSelection = Array.isArray(record.values) ? record.values.slice(0, 1) : []
         setMultiSelectValues(detailValuesSelect, detailValuesSelection)
         if (detailValuesCustomInput) detailValuesCustomInput.value = record.valuesCustom || ''
         if (detailSufficientConditionInput)
@@ -1680,11 +1964,13 @@
 
         detailModal.hidden = false
         document.body.classList.add('modal-open')
+        if (detailForm) detailForm.scrollTop = 0
       }
 
       function closeDetailModal() {
         detailModal.hidden = true
         document.body.classList.remove('modal-open')
+        if (detailForm) detailForm.scrollTop = 0
         detailRecordId = null
         detailForm.reset()
         detailTimeSelect.innerHTML = '<option value="">시간 선택</option>'
@@ -1740,7 +2026,12 @@
 
       function setMultiSelectValues(selectEl, values) {
         if (!selectEl) return
-        const valueSet = new Set((values || []).map((value) => String(value)))
+        const list = Array.isArray(values) ? values : []
+        if (!selectEl.multiple) {
+          selectEl.value = list[0] || ''
+          return
+        }
+        const valueSet = new Set(list.map((value) => String(value)))
         Array.from(selectEl.options || []).forEach((option) => {
           option.selected = valueSet.has(option.value)
         })
@@ -1748,6 +2039,10 @@
 
       function getMultiSelectValues(selectEl) {
         if (!selectEl) return []
+        if (!selectEl.multiple) {
+          const value = selectEl.value
+          return value ? [value] : []
+        }
         return Array.from(selectEl.selectedOptions || [])
           .map((option) => option.value)
           .filter(Boolean)
@@ -1756,6 +2051,10 @@
       function enforceMultiSelectLimit(selectEl, limit) {
         if (!selectEl) return
         const selected = getMultiSelectValues(selectEl)
+        if (!selectEl.multiple) {
+          detailValuesSelection = selected
+          return
+        }
         if (selected.length > limit) {
           setMultiSelectValues(selectEl, detailValuesSelection)
           showToast(`가치관은 최대 ${limit}개까지 선택할 수 있습니다.`)
@@ -1797,6 +2096,230 @@
         detailDateInput.value = ''
         updateTimeOptions('', '', detailRecordId)
         detailScheduleInfo.textContent = '대면 상담 일정이 아직 없습니다.'
+      }
+
+      async function handleDetailExport() {
+        if (!detailRecordId) {
+          showToast('먼저 상세 정보를 열어주세요.')
+          return
+        }
+        const record = items.find((item) => item.id === detailRecordId)
+        if (!record) {
+          showToast('프로필 정보를 찾지 못했습니다.')
+          return
+        }
+        if (!(await ensurePdfLibraries())) {
+          showToast('PDF 라이브러리를 불러오지 못했습니다.')
+          return
+        }
+        detailExportBtn.disabled = true
+        try {
+          await exportProfilePdf(record)
+          showToast('PDF 파일을 다운로드했습니다.')
+        } catch (error) {
+          console.error('[pdf:export]', error)
+          showToast('PDF 내보내기에 실패했습니다.')
+        } finally {
+          detailExportBtn.disabled = false
+        }
+      }
+
+      async function exportProfilePdf(record) {
+        if (!pdfRoot || !pdfPage) {
+          throw new Error('PDF 템플릿을 찾지 못했습니다.')
+        }
+        populateProfilePdf(record)
+        pdfRoot.hidden = false
+        let canvas
+        try {
+          const capture = window.html2canvas
+          if (typeof capture !== 'function') {
+            throw new Error('html2canvas가 준비되지 않았습니다.')
+          }
+          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+          canvas = await capture(pdfPage, { scale: 2, backgroundColor: '#0a0d13', useCORS: true })
+        } finally {
+          pdfRoot.hidden = true
+        }
+        if (!canvas) {
+          throw new Error('PDF 이미지를 생성하지 못했습니다.')
+        }
+        const { jsPDF } = window.jspdf || {}
+        if (!jsPDF) {
+          throw new Error('PDF 라이브러리를 불러오지 못했습니다.')
+        }
+        const pdf = new jsPDF('landscape', 'pt', 'a4')
+        const pdfWidth = pdf.internal.pageSize.getWidth()
+        const pdfHeight = pdf.internal.pageSize.getHeight()
+        const ratio = Math.min(pdfWidth / canvas.width, pdfHeight / canvas.height)
+        const imgWidth = canvas.width * ratio
+        const imgHeight = canvas.height * ratio
+        const offsetX = (pdfWidth - imgWidth) / 2
+        const offsetY = (pdfHeight - imgHeight) / 2
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', offsetX, offsetY, imgWidth, imgHeight)
+        const fileName = `${String(record.name || 'profile').replace(/\s+/g, '_')}_profile.pdf`
+        pdf.save(fileName)
+      }
+
+      function populateProfilePdf(record) {
+        const name = safeText(record.name, '프로필')
+        const phone = formatPhoneNumber(record.phone)
+        const height = normalizeHeightValue(record.height)
+        const birth = safeText(record.birth, '미입력')
+        const email = safeText(record.email, '미입력')
+        const address = safeText(record.district || record.address, '미입력')
+        const profileText =
+          buildMultilineText(record.aboutMe, record.profileAppeal) ||
+          '프로필 소개가 아직 등록되지 않았습니다.'
+        const characterText =
+          buildMultilineText(record.sufficientCondition, record.necessaryCondition, record.likesDislikes) ||
+          '추가 특성 정보가 아직 없습니다.'
+        const experienceSource = buildMultilineText(record.jobDetail, record.notes)
+        const educationEntries = buildEducationEntries(record)
+        const toolParts = [
+          record.mbti && `MBTI ${record.mbti}`,
+          record.salaryRange && `연봉 ${formatSalaryRange(record.salaryRange) || record.salaryRange}`,
+          Array.isArray(record.values) && record.values.length ? `가치관 ${record.values.join(', ')}` : '',
+          record.valuesCustom,
+          record.preferredHeights && record.preferredHeights.length
+            ? `선호 키 ${record.preferredHeights.join(', ')}`
+            : '',
+          record.preferredAges && record.preferredAges.length
+            ? `선호 나이 ${record.preferredAges.join(', ')}`
+            : '',
+          record.smoking && `흡연 ${record.smoking}`,
+          record.religion && `종교 ${record.religion}`,
+        ]
+          .map((entry) => (entry ? entry.trim() : ''))
+          .filter(Boolean)
+          .join('\n')
+
+        pdfNameLabel.textContent = name.toUpperCase()
+        if (pdfHeaderTitle) {
+          pdfHeaderTitle.textContent = record.job ? record.job : 'MATCHING PORTFOLIO'
+        }
+        pdfContactName.textContent = name
+        pdfContactTagline.textContent = record.job ? record.job : 'Matching Profile'
+        pdfBirth.textContent = birth
+        pdfPhone.textContent = safeText(phone, '미입력')
+        pdfEmail.textContent = email
+        pdfHeight.textContent = safeText(height, '미입력')
+        pdfAddress.textContent = address
+        pdfProfileSummary.textContent = profileText
+        pdfCharacterText.textContent = characterText
+        pdfToolsText.textContent = toolParts || '등록된 역량 정보가 없습니다.'
+        setPdfList(pdfExperienceList, experienceSource, '경력 정보가 없습니다.')
+        setPdfList(pdfEducationList, educationEntries, '학력 정보가 없습니다.')
+
+        const photoUrl = getPrimaryPhotoUrl(record)
+        if (photoUrl) {
+          pdfPhoto.src = photoUrl
+          pdfPhoto.hidden = false
+          pdfPhotoFallback.hidden = true
+        } else {
+          pdfPhoto.hidden = true
+          pdfPhotoFallback.hidden = false
+          pdfPhotoFallback.textContent = name.slice(0, 2).toUpperCase()
+        }
+      }
+
+      function getPrimaryPhotoUrl(record) {
+        if (!record) return ''
+        if (typeof record.photoUrl === 'string' && record.photoUrl.trim()) {
+          return record.photoUrl.trim()
+        }
+        if (Array.isArray(record.photoUploads) && record.photoUploads.length) {
+          return String(record.photoUploads[0] || '').trim()
+        }
+        return ''
+      }
+
+      function buildEducationEntries(record) {
+        const entries = []
+        if (record.education) entries.push(String(record.education))
+        if (record.university) entries.push(String(record.university))
+        if (record.school) entries.push(String(record.school))
+        return entries
+      }
+
+      async function ensurePdfLibraries() {
+        const needsHtml2Canvas = typeof window.html2canvas !== 'function'
+        const needsJsPdf = !(window.jspdf && window.jspdf.jsPDF)
+        try {
+          const tasks = []
+          if (needsHtml2Canvas) {
+            tasks.push(loadScriptOnce(
+              'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+              'html2canvas'
+            ))
+          }
+          if (needsJsPdf) {
+            tasks.push(loadScriptOnce(
+              'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+              'jspdf'
+            ))
+          }
+          if (tasks.length) {
+            await Promise.all(tasks)
+          }
+          return typeof window.html2canvas === 'function' && window.jspdf && window.jspdf.jsPDF
+        } catch (error) {
+          console.error('[pdf:libs]', error)
+          return false
+        }
+      }
+
+      const loadedScripts = new Set()
+      function loadScriptOnce(src, key) {
+        if (loadedScripts.has(key)) return Promise.resolve()
+        return new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+          script.src = src
+          script.async = true
+          script.onload = () => {
+            loadedScripts.add(key)
+            resolve()
+          }
+          script.onerror = () => reject(new Error(`script load failed: ${src}`))
+          document.head.appendChild(script)
+        })
+      }
+
+      function setPdfList(container, source, fallback) {
+        if (!container) return
+        container.innerHTML = ''
+        let entries = []
+        if (Array.isArray(source)) {
+          entries = source.map((item) => String(item || '').trim()).filter(Boolean)
+        } else if (typeof source === 'string') {
+          entries = source
+            .split(/[\r\n]+|,|·|•/)
+            .map((item) => item.trim())
+            .filter(Boolean)
+        }
+        if (!entries.length) {
+          const li = document.createElement('li')
+          li.textContent = fallback
+          container.appendChild(li)
+          return
+        }
+        entries.forEach((entry) => {
+          const li = document.createElement('li')
+          li.textContent = entry
+          container.appendChild(li)
+        })
+      }
+
+      function buildMultilineText(...values) {
+        return values
+          .map((value) => (value ? String(value).trim() : ''))
+          .filter(Boolean)
+          .join('\n')
+      }
+
+      function safeText(value, fallback = '미입력') {
+        const result = typeof value === 'string' ? value.trim() : value != null ? String(value) : ''
+        return result ? result : fallback
       }
 
       async function handleDetailSubmit(event) {
@@ -1844,11 +2367,11 @@
         setSelectValue(detailSmokingSelect, smokingValue)
         const religionValue = detailReligionSelect?.value || ''
         setSelectValue(detailReligionSelect, religionValue)
-        const preferredHeights = getMultiSelectValues(detailPreferredHeightsSelect)
-        const preferredAges = getMultiSelectValues(detailPreferredAgesSelect)
-        const valuesSelected = getMultiSelectValues(detailValuesSelect)
-        if (valuesSelected.length > 2) {
-          showToast('가치관은 최대 2개까지 선택할 수 있습니다.')
+        const preferredHeights = getMultiSelectValues(detailPreferredHeightsSelect).slice(0, 1)
+        const preferredAges = getMultiSelectValues(detailPreferredAgesSelect).slice(0, 1)
+        const valuesSelected = getMultiSelectValues(detailValuesSelect).slice(0, 1)
+        if (valuesSelected.length > 1) {
+          showToast('가치관은 한 개만 선택할 수 있습니다.')
           return
         }
         detailValuesSelection = valuesSelected
@@ -2312,13 +2835,13 @@
         normalized.valuesCustom = normalized.valuesCustom != null ? String(normalized.valuesCustom) : ''
         normalized.aboutMe = normalized.aboutMe != null ? String(normalized.aboutMe) : ''
         normalized.preferredHeights = Array.isArray(normalized.preferredHeights)
-          ? normalized.preferredHeights.map((value) => String(value))
+          ? normalized.preferredHeights.map((value) => String(value)).slice(0, 1)
           : []
         normalized.preferredAges = Array.isArray(normalized.preferredAges)
-          ? normalized.preferredAges.map((value) => String(value))
+          ? normalized.preferredAges.map((value) => String(value)).slice(0, 1)
           : []
         normalized.values = Array.isArray(normalized.values)
-          ? normalized.values.map((value) => String(value))
+          ? normalized.values.map((value) => String(value)).slice(0, 1)
           : []
         normalized.agreements =
           normalized.agreements && typeof normalized.agreements === 'object'
