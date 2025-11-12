@@ -690,6 +690,63 @@
       .modal-form .inline-group button:hover {
         background: #30363d;
       }
+      .detail-attachments {
+        margin-top: 24px;
+        padding: 18px 20px;
+        border-radius: 16px;
+        border: 1px solid #30363d;
+        background: #161b22;
+        display: grid;
+        gap: 16px;
+      }
+      .detail-attachments h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #f0f6fc;
+      }
+      .attachment-items {
+        display: grid;
+        gap: 16px;
+      }
+      .attachment-item h4 {
+        margin: 0 0 8px;
+        font-size: 15px;
+        color: #c9d1d9;
+      }
+      .attachment-item a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 10px;
+        border: 1px solid #30363d;
+        background: #21262d;
+        color: #f0f6fc;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .attachment-item a:hover {
+        background: #30363d;
+      }
+      .attachment-photo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+      }
+      .attachment-photo-grid a {
+        display: block;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #30363d;
+        background: #0d1117;
+      }
+      .attachment-photo-grid img {
+        display: block;
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+      }
       .modal-actions {
         display: flex;
         justify-content: flex-end;
@@ -1397,6 +1454,23 @@
               <textarea id="detailNotes" placeholder="상담 기록이나 참고 사항을 입력하세요."></textarea>
             </div>
           </div>
+          <section class="detail-attachments" id="detailAttachmentsSection" hidden>
+            <h3>증빙 자료 및 사진</h3>
+            <div class="attachment-items">
+              <div class="attachment-item" id="detailIdCardItem" hidden>
+                <h4>신분증</h4>
+                <a id="detailIdCardLink" href="#" download>다운로드</a>
+              </div>
+              <div class="attachment-item" id="detailEmploymentItem" hidden>
+                <h4>재직 증빙</h4>
+                <a id="detailEmploymentLink" href="#" download>다운로드</a>
+              </div>
+              <div class="attachment-item" id="detailPhotosItem" hidden>
+                <h4>프로필 사진</h4>
+                <div class="attachment-photo-grid" id="detailPhotosGrid"></div>
+              </div>
+            </div>
+          </section>
         </form>
       </div>
     </div>
@@ -1610,6 +1684,13 @@
       const detailClearScheduleBtn = document.getElementById('detailClearSchedule')
       const detailNotesInput = document.getElementById('detailNotes')
       const detailScheduleInfo = document.getElementById('detailScheduleInfo')
+      const detailAttachmentsSection = document.getElementById('detailAttachmentsSection')
+      const detailIdCardItem = document.getElementById('detailIdCardItem')
+      const detailIdCardLink = document.getElementById('detailIdCardLink')
+      const detailEmploymentItem = document.getElementById('detailEmploymentItem')
+      const detailEmploymentLink = document.getElementById('detailEmploymentLink')
+      const detailPhotosItem = document.getElementById('detailPhotosItem')
+      const detailPhotosGrid = document.getElementById('detailPhotosGrid')
       const pdfRoot = document.getElementById('pdfExportRoot')
       const pdfPage = document.getElementById('pdfProfilePage')
       const pdfPhoto = document.getElementById('pdfPhoto')
@@ -1962,6 +2043,8 @@
           ? `현재 예약: ${formatDate(record.meetingSchedule)}`
           : '대면 상담 일정이 아직 없습니다.'
 
+        updateDetailAttachments(record)
+
         detailModal.hidden = false
         document.body.classList.add('modal-open')
         if (detailForm) detailForm.scrollTop = 0
@@ -1994,6 +2077,11 @@
         if (detailNecessaryConditionInput) detailNecessaryConditionInput.value = ''
         if (detailLikesDislikesInput) detailLikesDislikesInput.value = ''
         if (detailAboutMeInput) detailAboutMeInput.value = ''
+        if (detailAttachmentsSection) detailAttachmentsSection.hidden = true
+        if (detailIdCardItem) detailIdCardItem.hidden = true
+        if (detailEmploymentItem) detailEmploymentItem.hidden = true
+        if (detailPhotosItem) detailPhotosItem.hidden = true
+        if (detailPhotosGrid) detailPhotosGrid.innerHTML = ''
       }
 
       function renderEntry(label, value) {
@@ -2035,6 +2123,58 @@
         Array.from(selectEl.options || []).forEach((option) => {
           option.selected = valueSet.has(option.value)
         })
+      }
+
+      function setAttachmentLink(linkEl, fileData, fallbackLabel) {
+        if (!linkEl || !fileData || !fileData.dataUrl) return false
+        const name = fileData.name || fallbackLabel || '첨부파일'
+        linkEl.href = fileData.dataUrl
+        linkEl.download = name
+        linkEl.textContent = `${name} 다운로드`
+        return true
+      }
+
+      function renderPhotoAttachments(container, photos) {
+        if (!container) return 0
+        container.innerHTML = ''
+        const list = Array.isArray(photos) ? photos : []
+        list
+          .filter((photo) => photo && photo.dataUrl)
+          .forEach((photo, index) => {
+            const link = document.createElement('a')
+            link.href = photo.dataUrl
+            const label = photo.name || `사진 ${index + 1}`
+            link.download = label
+            link.title = `${label} 다운로드`
+            const img = document.createElement('img')
+            img.src = photo.dataUrl
+            img.alt = label
+            link.appendChild(img)
+            container.appendChild(link)
+          })
+        return container.childElementCount
+      }
+
+      function updateDetailAttachments(record) {
+        if (!detailAttachmentsSection) return
+        const documents = record?.documents || {}
+        const photos = Array.isArray(record?.photos) ? record.photos : []
+
+        const hasIdCard = setAttachmentLink(detailIdCardLink, documents.idCard, '신분증')
+        if (detailIdCardItem) detailIdCardItem.hidden = !hasIdCard
+
+        const hasEmployment = setAttachmentLink(
+          detailEmploymentLink,
+          documents.employmentProof,
+          '재직 증빙'
+        )
+        if (detailEmploymentItem) detailEmploymentItem.hidden = !hasEmployment
+
+        const photoCount = renderPhotoAttachments(detailPhotosGrid, photos)
+        if (detailPhotosItem) detailPhotosItem.hidden = photoCount === 0
+
+        const hasAny = hasIdCard || hasEmployment || photoCount > 0
+        detailAttachmentsSection.hidden = !hasAny
       }
 
       function getMultiSelectValues(selectEl) {
@@ -2438,6 +2578,9 @@
           meetingSchedule,
           notes: detailNotesInput.value?.trim() || '',
         }
+        const existingRecord = items.find((item) => item.id === detailRecordId) || {}
+        payload.documents = existingRecord.documents || {}
+        payload.photos = existingRecord.photos || []
 
         suppressUpdateToast = true
         try {
@@ -2834,6 +2977,30 @@
           normalized.likesDislikes != null ? String(normalized.likesDislikes) : ''
         normalized.valuesCustom = normalized.valuesCustom != null ? String(normalized.valuesCustom) : ''
         normalized.aboutMe = normalized.aboutMe != null ? String(normalized.aboutMe) : ''
+        const normalizeFileEntry = (entry) => {
+          if (!entry || typeof entry !== 'object') return null
+          const dataUrl = typeof entry.dataUrl === 'string' ? entry.dataUrl : ''
+          if (!dataUrl) return null
+          return {
+            name: entry.name != null ? String(entry.name) : '',
+            size: Number(entry.size) || 0,
+            type: entry.type != null ? String(entry.type) : '',
+            dataUrl,
+          }
+        }
+        const documentsRaw =
+          normalized.documents && typeof normalized.documents === 'object'
+            ? normalized.documents
+            : {}
+        normalized.documents = {
+          idCard: normalizeFileEntry(documentsRaw.idCard),
+          employmentProof: normalizeFileEntry(documentsRaw.employmentProof),
+        }
+        normalized.photos = Array.isArray(normalized.photos)
+          ? normalized.photos
+              .map((photo) => normalizeFileEntry(photo))
+              .filter((entry) => entry && entry.dataUrl)
+          : []
         normalized.preferredHeights = Array.isArray(normalized.preferredHeights)
           ? normalized.preferredHeights.map((value) => String(value)).slice(0, 1)
           : []
@@ -3187,6 +3354,9 @@
           가치관: (item.values || []).join(', '),
           가치관기타: item.valuesCustom || '',
           자기소개: item.aboutMe || '',
+          신분증파일: item.documents?.idCard?.name || '',
+          재직증빙파일: item.documents?.employmentProof?.name || '',
+          사진파일: (item.photos || []).map((photo) => photo.name).join(', '),
           접수시간: formatDate(item.createdAt),
         }))
         const worksheet = XLSX.utils.json_to_sheet(rows)

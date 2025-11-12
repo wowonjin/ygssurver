@@ -30,10 +30,45 @@
         margin-top: 40px;
       }
       #alpha-profile-root legend {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
         font-weight: 700;
         font-size: 22px;
         margin-bottom: 8px;
         color: #4f4f4f;
+      }
+      #alpha-profile-root .legend-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      #alpha-profile-root .legend-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: auto;
+      }
+      #alpha-profile-root .btn-outline {
+        border: 1px solid #bfc7d8;
+        background: #ffffff;
+        color: #4f4f4f;
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      #alpha-profile-root .btn-outline:hover {
+        border-color: #5377f6;
+        color: #2f49c8;
+        box-shadow: 0 10px 20px rgba(83, 119, 246, 0.15);
+      }
+      #alpha-profile-root .btn-outline:focus-visible {
+        outline: 2px solid #5377f6;
+        outline-offset: 2px;
       }
       #alpha-profile-root .field-grid {
         display: grid;
@@ -49,6 +84,121 @@
         font-weight: 600;
         color: #7e7e7e;
         font-size: 18px;
+      }
+      #alpha-profile-root .file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
+        border: 0;
+        white-space: nowrap;
+      }
+      #alpha-profile-root .badge-public {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(83, 119, 246, 0.12);
+        color: #5377f6;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      #alpha-profile-root .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      #alpha-profile-root .field-note {
+        margin: 0;
+        font-size: 14px;
+        color: #9aa2b4;
+      }
+      #alpha-profile-root .field-note p {
+        margin: 0 0 6px;
+      }
+      #alpha-profile-root .field-note p:last-child {
+        margin-bottom: 0;
+      }
+      #alpha-profile-root .field-note ul {
+        margin: 8px 0 0;
+        padding-left: 18px;
+        list-style: disc;
+      }
+      #alpha-profile-root .field-note li {
+        margin-top: 4px;
+      }
+      #alpha-profile-root .file-drop-zone {
+        border: 1px dashed #bfc7d8;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        background: #f9fbff;
+        color: #7e7e7e;
+        display: grid;
+        gap: 10px;
+        cursor: pointer;
+        transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+      }
+      #alpha-profile-root .file-drop-zone .file-drop-default {
+        display: grid;
+        gap: 6px;
+      }
+      #alpha-profile-root .file-drop-zone strong {
+        font-size: 16px;
+        color: #4f4f4f;
+      }
+      #alpha-profile-root .file-drop-zone .file-drop-hint {
+        font-size: 14px;
+      }
+      #alpha-profile-root .file-drop-zone.is-dragover {
+        border-color: #5377f6;
+        background: rgba(83, 119, 246, 0.12);
+        color: #4f4f4f;
+      }
+      #alpha-profile-root .file-drop-zone:focus-visible {
+        outline: 2px solid #5377f6;
+        outline-offset: 2px;
+      }
+      #alpha-profile-root .file-drop-zone .file-drop-selected {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #4f4f4f;
+      }
+      #alpha-profile-root .file-drop-zone .file-drop-check {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #e4ecff;
+        color: #2f49c8;
+        font-weight: 700;
+        font-size: 18px;
+      }
+      #alpha-profile-root .file-drop-zone:not(.has-files) .file-drop-selected {
+        display: none;
+      }
+      #alpha-profile-root .file-drop-zone.has-files .file-drop-default {
+        display: none;
       }
       #alpha-profile-root label span.helper {
         display: block;
@@ -263,7 +413,13 @@
     <div id="alpha-profile-root">
       <form id="profileForm" novalidate>
         <fieldset>
-          <legend>기본 정보</legend>
+          <legend>
+            <span class="legend-title">기본 정보</span>
+            <span class="legend-actions" role="group" aria-label="임시 저장">
+              <button type="button" class="btn-outline" id="draftSaveButton">임시 저장하기</button>
+              <button type="button" class="btn-outline" id="draftLoadButton">임시 저장 불러오기</button>
+            </span>
+          </legend>
           <div class="field-grid">
             <div class="field">
               <label for="profilePhone">연락처 (처음 신청하신 휴대폰 번호와 동일하게 입력해주세요.)</label>
@@ -277,15 +433,39 @@
               />
             </div>
             <div class="field">
-              <label for="profileMbti">MBTI</label>
+              <label for="profileMbti">
+                MBTI
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
               <input id="profileMbti" type="text" maxlength="8" placeholder="예: ENFP" />
             </div>
             <div class="field">
-              <label for="profileJob">직업 / 직무</label>
+              <label for="profileJob">
+                직업 / 직무
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
               <input id="profileJob" type="text" placeholder="예: 중견 무역회사 해외영업" />
             </div>
             <div class="field">
-              <label for="profileUniversity">대학교 (캠퍼스)</label>
+              <label for="profileJobDetail">
+                직업 / 직무 상세
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <input
+                id="profileJobDetail"
+                type="text"
+                placeholder="예: 중견 무역회사 해외영업팀 북미 파트 담당"
+              />
+            </div>
+            <div class="field">
+              <label for="profileUniversity">
+                대학교 (캠퍼스)
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
               <input id="profileUniversity" type="text" placeholder="예: 서울대학교 (관악캠퍼스)" />
             </div>
             <div class="field">
@@ -329,15 +509,11 @@
           <legend>세부 프로필</legend>
           <div class="field-grid">
             <div class="field">
-              <label for="profileJobDetail">직업 / 직무 상세</label>
-              <textarea
-                id="profileJobDetail"
-                class="textarea-small"
-                placeholder="예: 중견 무역회사 해외영업팀 북미 파트 담당"
-              ></textarea>
-            </div>
-            <div class="field">
-              <label for="profileAppeal">추가 어필</label>
+              <label for="profileAppeal">
+                추가 어필
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
               <textarea
                 id="profileAppeal"
                 class="textarea-small"
@@ -345,7 +521,11 @@
               ></textarea>
             </div>
             <div class="field">
-              <label for="profileLikesDislikes">좋아하는 것 / 싫어하는 것</label>
+              <label for="profileLikesDislikes">
+                좋아하는 것 / 싫어하는 것
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
               <textarea
                 id="profileLikesDislikes"
                 class="textarea-small"
@@ -353,23 +533,39 @@
               ></textarea>
             </div>
             <div class="field">
-              <label for="profileSufficientCondition">충분조건</label>
+              <label for="profileSufficientCondition">
+                충분조건
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <p class="field-note" id="sufficientConditionNote">이런 점이 있다면 더 잘 맞을 거예요.</p>
               <textarea
                 id="profileSufficientCondition"
                 class="textarea-small"
+                aria-describedby="sufficientConditionNote"
                 placeholder="예: 서로 성장하고 응원할 수 있는 관계를 원합니다."
               ></textarea>
             </div>
             <div class="field">
-              <label for="profileNecessaryCondition">필요조건</label>
+              <label for="profileNecessaryCondition">
+                필요조건
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <p class="field-note" id="necessaryConditionNote">이건 꼭 맞아야 해요.</p>
               <textarea
                 id="profileNecessaryCondition"
                 class="textarea-small"
+                aria-describedby="necessaryConditionNote"
                 placeholder="예: 장거리 연애가 가능한 분을 선호합니다."
               ></textarea>
             </div>
             <div class="field">
-              <label for="profileAboutMe">'저는 이런 사람입니다'</label>
+              <label for="profileAboutMe">
+                '저는 이런 사람입니다'
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
               <textarea
                 id="profileAboutMe"
                 class="textarea-small"
@@ -383,7 +579,11 @@
           <legend>선호 조건</legend>
           <div class="field-grid">
             <div class="field">
-              <label for="profilePreferredHeights">선호하는 키 (단일 선택 가능)</label>
+              <label for="profilePreferredHeights">
+                선호하는 키 (단일 선택 가능)
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
               <select id="profilePreferredHeights">
                 <option value="160cm 이하">160cm 이하</option>
                 <option value="161-165cm">161-165cm</option>
@@ -394,7 +594,11 @@
               </select>
             </div>
             <div class="field">
-              <label for="profilePreferredAges">선호 나이 (단일 선택 가능)</label>
+              <label for="profilePreferredAges">
+                선호 나이 (단일 선택 가능)
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
               <select id="profilePreferredAges">
                 <option value="20대 초반">20대 초반</option>
                 <option value="20대 중반">20대 중반</option>
@@ -404,15 +608,114 @@
                 <option value="30대 후반 이상">30대 후반 이상</option>
               </select>
             </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>증빙 자료 및 사진</legend>
+          <div class="field-grid">
             <div class="field">
-              <label for="profileValues">인생의 주요 가치관 (단일 선택 가능)</label>
-              <select id="profileValues">
-                <option value="하루하루 최선을 다하는">하루하루 최선을 다하는</option>
-                <option value="화목한 가족이 중심이 되는">화목한 가족이 중심이 되는</option>
-                <option value="건강관리에 철저한">건강관리에 철저한</option>
-                <option value="일과 사랑 모두 성공하는">일과 사랑 모두 성공하는</option>
-                <option value="사랑하면 맞춰주는(이해하는)">사랑하면 맞춰주는(이해하는)</option>
-              </select>
+              <label for="profileIdCard">
+                신분증 업로드
+                <span class="badge-public" aria-hidden="true">확인용</span>
+                <span class="sr-only">매칭 매니저 확인용 비공개 정보</span>
+              </label>
+              <input id="profileIdCard" class="file-input" type="file" accept="image/*,.pdf" />
+              <div
+                class="file-drop-zone"
+                data-target="profileIdCard"
+                data-placeholder="선택된 파일 없음"
+                tabindex="0"
+                role="button"
+                aria-label="신분증 파일을 업로드하려면 클릭하거나 파일을 끌어다 놓으세요"
+              >
+                <div class="file-drop-default">
+                  <strong>클릭 또는 드래그해서 업로드</strong>
+                  <span class="file-drop-hint">신분증 이미지 또는 PDF 파일을 첨부해주세요.</span>
+                </div>
+                <div class="file-drop-selected">
+                  <span class="file-drop-check" aria-hidden="true">✔</span>
+                  <span class="file-drop-files">선택된 파일 없음</span>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label for="profileEmploymentProof">
+                재직 증명서 / 명함 업로드
+                <span class="badge-public" aria-hidden="true">확인용</span>
+                <span class="sr-only">매칭 매니저 확인용 비공개 정보</span>
+              </label>
+              <input
+                id="profileEmploymentProof"
+                class="file-input"
+                type="file"
+                accept="image/*,.pdf"
+                aria-describedby="employmentProofNote"
+              />
+              <div
+                class="file-drop-zone"
+                data-target="profileEmploymentProof"
+                data-placeholder="선택된 파일 없음"
+                tabindex="0"
+                role="button"
+                aria-label="재직 증빙 파일을 업로드하려면 클릭하거나 파일을 끌어다 놓으세요"
+                aria-describedby="employmentProofNote"
+              >
+                <div class="file-drop-default">
+                  <strong>클릭 또는 드래그해서 업로드</strong>
+                  <span class="file-drop-hint">건강보험 자격득실·4대보험·사업자등록증 등 증빙 자료를 첨부해주세요.</span>
+                </div>
+                <div class="file-drop-selected">
+                  <span class="file-drop-check" aria-hidden="true">✔</span>
+                  <span class="file-drop-files">선택된 파일 없음</span>
+                </div>
+              </div>
+              <div class="field-note" id="employmentProofNote">
+                <p>건강보험 자격득실, 4대보험 가입증명서, 사업자등록증, 급여명세서도 가능합니다.</p>
+                <p>프리랜서는 매니저에게 별도 문의해 주시면 방법을 안내합니다.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="profilePhotos">
+                프로필 사진 업로드 (2장 이상)
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <input
+                id="profilePhotos"
+                class="file-input"
+                type="file"
+                accept="image/*"
+                multiple
+                aria-describedby="profilePhotosNote"
+              />
+              <div
+                class="file-drop-zone"
+                data-target="profilePhotos"
+                data-placeholder="선택된 파일 없음"
+                tabindex="0"
+                role="button"
+                aria-label="프로필 사진을 업로드하려면 클릭하거나 파일을 끌어다 놓으세요"
+                aria-describedby="profilePhotosNote"
+              >
+                <div class="file-drop-default">
+                  <strong>클릭 또는 드래그해서 업로드</strong>
+                  <span class="file-drop-hint">최소 2장의 최신 얼굴·전신 사진을 첨부해주세요.</span>
+                </div>
+                <div class="file-drop-selected">
+                  <span class="file-drop-check" aria-hidden="true">✔</span>
+                  <span class="file-drop-files">선택된 파일 없음</span>
+                </div>
+              </div>
+              <div class="field-note" id="profilePhotosNote">
+                <p>근 6개월 내, 현재와 가장 비슷한 사진 2장을 첨부해주세요.</p>
+                <ul>
+                  <li>얼굴 사진 1장 (마스크 착용 불가)</li>
+                  <li>전신 사진 1장 (얼굴이 보이는 전신)</li>
+                </ul>
+                <p>1:1 매칭 시 상대에게 공개될 수 있는 사진입니다. 본연의 매력을 담아주세요!</p>
+                <p>간혹 실물과 사진이 다른 경우가 있어 첫 느낌을 좌우하니 신경 써주시면 감사하겠습니다.</p>
+              </div>
             </div>
           </div>
         </fieldset>
@@ -500,6 +803,7 @@
       const BACKEND_ORIGIN = (BACKEND_ORIGIN_RAW || DEFAULT_BACKEND_ORIGIN).replace(/\/$/, '')
       const API_BASE_URL = BACKEND_ORIGIN
       const PROFILE_API_URL = `${API_BASE_URL}/api/consult/profile`
+      const DRAFT_STORAGE_KEY = 'alphaProfileDraft_v1'
 
       const formEl = document.getElementById('profileForm')
       const submitBtn = document.getElementById('submitButton')
@@ -521,9 +825,15 @@
       const preferredHeightsSelect = document.getElementById('profilePreferredHeights')
       const preferredAgesSelect = document.getElementById('profilePreferredAges')
       const valuesSelect = document.getElementById('profileValues')
+      const idCardInput = document.getElementById('profileIdCard')
+      const employmentProofInput = document.getElementById('profileEmploymentProof')
+      const photosInput = document.getElementById('profilePhotos')
       const agreementInfo = document.getElementById('agreementInfo')
       const agreementManners = document.getElementById('agreementManners')
       const agreementToggles = Array.from(document.querySelectorAll('.agreement-toggle'))
+      const draftSaveButton = document.getElementById('draftSaveButton')
+      const draftLoadButton = document.getElementById('draftLoadButton')
+      const fileDropZones = Array.from(document.querySelectorAll('.file-drop-zone'))
       const submissionModal = document.getElementById('submissionModal')
       const submissionModalCloseBtn = document.getElementById('submissionModalClose')
 
@@ -613,6 +923,199 @@
         }
       }
 
+      function readFileAsDataUrl(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = () => resolve(reader.result)
+          reader.onerror = () => reject(reader.error || new Error('파일을 읽지 못했습니다.'))
+          reader.readAsDataURL(file)
+        })
+      }
+
+      async function serializeFile(file) {
+        if (!file) return null
+        const dataUrl = await readFileAsDataUrl(file)
+        return {
+          name: file.name || '',
+          size: Number(file.size) || 0,
+          type: file.type || '',
+          dataUrl: typeof dataUrl === 'string' ? dataUrl : '',
+        }
+      }
+
+      function updateFileDropSummary(zone, inputEl) {
+        if (!zone) return
+        const summaryEl = zone.querySelector('.file-drop-files')
+        const placeholder = zone.dataset.placeholder || '선택된 파일 없음'
+        if (!summaryEl || !inputEl) {
+          if (summaryEl) summaryEl.textContent = placeholder
+          return
+        }
+        const files = Array.from(inputEl.files || [])
+        const hasFiles = files.length > 0
+        zone.classList.toggle('has-files', hasFiles)
+        if (!hasFiles) {
+          summaryEl.textContent = placeholder
+          return
+        }
+        if (!inputEl.multiple) {
+          summaryEl.textContent = files[0].name
+          return
+        }
+        const names = files.map((file) => file.name)
+        summaryEl.textContent =
+          names.length <= 3 ? names.join(', ') : `${names.slice(0, 3).join(', ')} 외 ${names.length - 3}개`
+      }
+
+      fileDropZones.forEach((zone) => {
+        const targetId = zone.dataset.target
+        const inputEl = document.getElementById(targetId)
+        if (!inputEl) return
+
+        updateFileDropSummary(zone, inputEl)
+
+        zone.addEventListener('click', (event) => {
+          event.preventDefault()
+          inputEl.click()
+        })
+
+        zone.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            inputEl.click()
+          }
+        })
+
+        zone.addEventListener('dragenter', (event) => {
+          event.preventDefault()
+          zone.classList.add('is-dragover')
+        })
+
+        zone.addEventListener('dragover', (event) => {
+          event.preventDefault()
+          if (event.dataTransfer) {
+            event.dataTransfer.dropEffect = 'copy'
+          }
+          zone.classList.add('is-dragover')
+        })
+
+        zone.addEventListener('dragleave', () => {
+          zone.classList.remove('is-dragover')
+        })
+
+        zone.addEventListener('drop', (event) => {
+          event.preventDefault()
+          zone.classList.remove('is-dragover')
+          const incomingFiles = Array.from(event.dataTransfer?.files || [])
+          if (!incomingFiles.length) return
+          if (typeof DataTransfer === 'undefined') return
+
+          const filesToUse = inputEl.multiple ? incomingFiles : [incomingFiles[0]].filter(Boolean)
+          const dataTransfer = new DataTransfer()
+          filesToUse.forEach((file) => dataTransfer.items.add(file))
+          inputEl.files = dataTransfer.files
+
+          updateFileDropSummary(zone, inputEl)
+          inputEl.dispatchEvent(new Event('change', { bubbles: true }))
+        })
+
+        inputEl.addEventListener('change', () => updateFileDropSummary(zone, inputEl))
+      })
+
+      function collectDraftData() {
+        const values = valuesSelect ? getMultiSelectValues(valuesSelect) : []
+        return {
+          phone: phoneInput?.value || '',
+          mbti: mbtiInput?.value || '',
+          job: jobInput?.value || '',
+          jobDetail: jobDetailInput?.value || '',
+          university: universityInput?.value || '',
+          salaryRange: salaryRangeSelect?.value || '',
+          smoking: smokingSelect?.value || '',
+          religion: religionSelect?.value || '',
+          profileAppeal: appealInput?.value || '',
+          likesDislikes: likesDislikesInput?.value || '',
+          sufficientCondition: sufficientInput?.value || '',
+          necessaryCondition: necessaryInput?.value || '',
+          aboutMe: aboutMeInput?.value || '',
+          preferredHeights: preferredHeightsSelect?.value || '',
+          preferredAges: preferredAgesSelect?.value || '',
+          values,
+          agreements: {
+            info: agreementInfo?.checked || false,
+            manners: agreementManners?.checked || false,
+          },
+          savedAt: Date.now(),
+        }
+      }
+
+      function applyDraftData(draft) {
+        if (!draft || typeof draft !== 'object') return
+        if (phoneInput) {
+          phoneInput.value = draft.phone || ''
+          phoneInput.dispatchEvent(new Event('input'))
+        }
+        if (mbtiInput) mbtiInput.value = draft.mbti || ''
+        if (jobInput) jobInput.value = draft.job || ''
+        if (jobDetailInput) jobDetailInput.value = draft.jobDetail || ''
+        if (universityInput) universityInput.value = draft.university || ''
+        if (salaryRangeSelect) salaryRangeSelect.value = draft.salaryRange || ''
+        if (smokingSelect) smokingSelect.value = draft.smoking || ''
+        if (religionSelect) religionSelect.value = draft.religion || ''
+        if (appealInput) appealInput.value = draft.profileAppeal || ''
+        if (likesDislikesInput) likesDislikesInput.value = draft.likesDislikes || ''
+        if (sufficientInput) sufficientInput.value = draft.sufficientCondition || ''
+        if (necessaryInput) necessaryInput.value = draft.necessaryCondition || ''
+        if (aboutMeInput) aboutMeInput.value = draft.aboutMe || ''
+        if (preferredHeightsSelect) preferredHeightsSelect.value = draft.preferredHeights || ''
+        if (preferredAgesSelect) preferredAgesSelect.value = draft.preferredAges || ''
+
+        const draftValues = Array.isArray(draft.values) ? draft.values.slice(0, 1) : []
+        if (valuesSelect) {
+          setMultiSelectValues(valuesSelect, draftValues)
+        }
+        selectedValues = draftValues
+
+        if (agreementInfo) agreementInfo.checked = Boolean(draft.agreements?.info)
+        if (agreementManners) agreementManners.checked = Boolean(draft.agreements?.manners)
+
+        fileDropZones.forEach((zone) => {
+          const targetId = zone.dataset.target
+          const inputEl = targetId ? document.getElementById(targetId) : null
+          if (inputEl) {
+            inputEl.value = ''
+          }
+          updateFileDropSummary(zone, inputEl)
+        })
+      }
+
+      draftSaveButton?.addEventListener('click', () => {
+        try {
+          const draft = collectDraftData()
+          localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft))
+          showMessage('입력한 내용을 임시 저장했습니다.', 'success')
+        } catch (error) {
+          console.error('[draft] save failed', error)
+          showMessage('임시 저장에 실패했습니다. 브라우저 저장소를 확인해주세요.', 'error')
+        }
+      })
+
+      draftLoadButton?.addEventListener('click', () => {
+        try {
+          const raw = localStorage.getItem(DRAFT_STORAGE_KEY)
+          if (!raw) {
+            showMessage('저장된 임시 데이터가 없습니다.', 'error')
+            return
+          }
+          const draft = JSON.parse(raw)
+          applyDraftData(draft)
+          showMessage('임시 저장된 데이터를 불러왔습니다. 제출 전 내용을 확인해주세요.', 'success')
+        } catch (error) {
+          console.error('[draft] load failed', error)
+          showMessage('임시 데이터를 불러오지 못했습니다.', 'error')
+        }
+      })
+
       function openSubmissionModal() {
         if (!submissionModal) return
         submissionModal.hidden = false
@@ -691,6 +1194,31 @@
           return
         }
 
+        let idCardUpload = null
+        let employmentUpload = null
+        let photosUpload = []
+        try {
+          idCardUpload =
+            idCardInput?.files && idCardInput.files[0] ? await serializeFile(idCardInput.files[0]) : null
+          employmentUpload =
+            employmentProofInput?.files && employmentProofInput.files[0]
+              ? await serializeFile(employmentProofInput.files[0])
+              : null
+          const photoFiles = photosInput?.files ? Array.from(photosInput.files) : []
+          if (photoFiles.length) {
+            const serializedPhotos = await Promise.all(photoFiles.map((file) => serializeFile(file)))
+            photosUpload = serializedPhotos.filter(Boolean)
+          }
+        } catch (error) {
+          console.error('[attachments] serialize failed', error)
+          showMessage('첨부 파일을 읽어오지 못했습니다. 다시 시도해주세요.', 'error')
+          return
+        }
+
+        const documentsPayload = {}
+        if (idCardUpload) documentsPayload.idCard = idCardUpload
+        if (employmentUpload) documentsPayload.employmentProof = employmentUpload
+
         const payload = {
           phone: formatPhoneNumber(phoneInput?.value || ''),
           mbti: mbtiInput?.value?.trim() || '',
@@ -713,6 +1241,8 @@
             info: agreementInfo.checked,
             manners: agreementManners.checked,
           },
+          documents: documentsPayload,
+          photos: photosUpload,
         }
 
         if (!payload.phone) {
@@ -743,6 +1273,14 @@
           setMultiSelectValues(valuesSelect, [])
           setMultiSelectValues(preferredHeightsSelect, [])
           setMultiSelectValues(preferredAgesSelect, [])
+          fileDropZones.forEach((zone) => {
+            const targetId = zone.dataset.target
+            const inputEl = targetId ? document.getElementById(targetId) : null
+            if (inputEl) {
+              inputEl.value = ''
+            }
+            updateFileDropSummary(zone, inputEl)
+          })
           agreementToggles.forEach((button) => {
             const targetId = button.dataset.target
             const detailsEl = document.getElementById(targetId)
