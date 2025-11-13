@@ -380,6 +380,61 @@ async function writeConsultations(data) {
   await fs.writeFile(DATA_FILE, JSON.stringify(normalized, null, 2), 'utf-8')
 }
 
+function sanitizeUploadEntry(entry, { fallbackName = '', defaultRole = '' } = {}) {
+  if (!entry) return null
+  if (typeof entry === 'string') {
+    const source = sanitizeText(entry)
+    if (!source) return null
+    return {
+      id: nanoid(),
+      name: fallbackName || '',
+      size: 0,
+      type: '',
+      downloadURL: source,
+      url: source,
+      storagePath: '',
+      uploadedAt: Date.now(),
+      group: '',
+      category: '',
+      persistLevel: '',
+      role: defaultRole,
+    }
+  }
+  if (typeof entry !== 'object') return null
+
+  const downloadURL =
+    sanitizeText(entry.downloadURL) ||
+    sanitizeText(entry.url) ||
+    sanitizeText(entry.dataUrl)
+  if (!downloadURL) return null
+
+  const size = Number(entry.size)
+  const uploadedAt = Number(entry.uploadedAt)
+  const sanitized = {
+    id: sanitizeText(entry.id) || nanoid(),
+    name: sanitizeText(entry.name) || fallbackName || '',
+    size: Number.isFinite(size) && size > 0 ? size : 0,
+    type: sanitizeText(entry.type),
+    downloadURL,
+    url: downloadURL,
+    storagePath: sanitizeText(entry.storagePath),
+    uploadedAt: Number.isFinite(uploadedAt) && uploadedAt > 0 ? uploadedAt : Date.now(),
+    group: sanitizeText(entry.group),
+    category: sanitizeText(entry.category),
+    persistLevel: sanitizeText(entry.persistLevel),
+    role: sanitizeText(entry.role || entry.category || entry.meta?.type || defaultRole),
+  }
+
+  const bucket = sanitizeText(entry.bucket)
+  if (bucket) sanitized.bucket = bucket
+  const contentType = sanitizeText(entry.contentType || entry.type)
+  if (contentType) sanitized.contentType = contentType
+  const dataUrl = sanitizeText(entry.dataUrl)
+  if (dataUrl) sanitized.dataUrl = dataUrl
+
+  return sanitized
+}
+
 function sanitizeProfileUpdate(body) {
   const phone = normalizePhoneNumber(body?.phone)
   const updates = {
@@ -405,6 +460,36 @@ function sanitizeProfileUpdate(body) {
   }
   if (Object.prototype.hasOwnProperty.call(body || {}, 'height')) {
     updates.height = normalizeHeight(body.height)
+  }
+
+  const documentsRaw =
+    body?.documents && typeof body.documents === 'object' ? body.documents : {}
+  const sanitizedDocuments = {
+    idCard: sanitizeUploadEntry(documentsRaw.idCard, {
+      fallbackName: '신분증',
+      defaultRole: 'idCard',
+    }),
+    employmentProof: sanitizeUploadEntry(documentsRaw.employmentProof, {
+      fallbackName: '재직 증빙',
+      defaultRole: 'employmentProof',
+    }),
+  }
+  const documentEntries = Object.entries(sanitizedDocuments).filter(([, value]) => Boolean(value))
+  if (documentEntries.length) {
+    updates.documents = Object.fromEntries(documentEntries)
+  }
+
+  const photosRaw = Array.isArray(body?.photos) ? body.photos : []
+  const sanitizedPhotos = photosRaw
+    .map((photo) =>
+      sanitizeUploadEntry(photo, {
+        fallbackName: '사진',
+        defaultRole: sanitizeText(photo?.role || photo?.category || photo?.meta?.type || ''),
+      }),
+    )
+    .filter(Boolean)
+  if (sanitizedPhotos.length) {
+    updates.photos = sanitizedPhotos
   }
 
   const agreements = {
@@ -491,6 +576,36 @@ function normalizeStoredRecord(entry) {
           manners: Boolean(record.agreements.manners),
         }
       : { info: false, manners: false }
+  const documentsRaw =
+    record.documents && typeof record.documents === 'object' ? record.documents : {}
+  const normalizedDocuments = {
+    idCard: sanitizeUploadEntry(documentsRaw.idCard, {
+      fallbackName: '신분증',
+      defaultRole: 'idCard',
+    }),
+    employmentProof: sanitizeUploadEntry(documentsRaw.employmentProof, {
+      fallbackName: '재직 증빙',
+      defaultRole: 'employmentProof',
+    }),
+  }
+  record.documents = {}
+  Object.entries(normalizedDocuments).forEach(([key, value]) => {
+    if (value) {
+      record.documents[key] = value
+    }
+  })
+  if (!Object.keys(record.documents).length) {
+    record.documents = {}
+  }
+  const photosRaw = Array.isArray(record.photos) ? record.photos : []
+  record.photos = photosRaw
+    .map((photo) =>
+      sanitizeUploadEntry(photo, {
+        fallbackName: '사진',
+        defaultRole: sanitizeText(photo?.role || photo?.category || photo?.meta?.type || ''),
+      }),
+    )
+    .filter(Boolean)
   record.meetingSchedule = sanitizeText(record.meetingSchedule)
   record.notes = sanitizeNotes(record.notes)
   record.createdAt = safeToISOString(record.createdAt, new Date().toISOString())
