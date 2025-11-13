@@ -17,6 +17,7 @@ const DATA_FILE = path.join(DATA_DIR, DATA_FILE_NAME)
 console.info(`[ygsa] 상담 데이터 저장 위치: ${DATA_FILE}`)
 
 const sseClients = new Set()
+const FIREBASE_REQUIRED_KEYS = ['apiKey', 'projectId', 'storageBucket']
 
 const EMAIL_RECIPIENTS = [
   { name: '공정아', email: 'chestnut01nse@gmail.com' },
@@ -38,6 +39,19 @@ const smsClient = initialiseSmsClient()
 app.use(cors())
 app.use(express.json({ limit: '1mb' }))
 app.use(express.static(__dirname))
+
+app.get('/api/firebase-config', (req, res) => {
+  const { config, missing } = getFirebaseConfigFromEnv()
+  if (missing.length) {
+    console.warn('[firebase-config] Missing required keys:', missing.join(', '))
+    return res.status(503).json({
+      ok: false,
+      message: `Firebase 설정이 구성되지 않았습니다. 누락된 항목: ${missing.join(', ')}`,
+    })
+  }
+  console.info('[firebase-config] Served config keys:', Object.keys(config))
+  res.json({ ok: true, config })
+})
 
 app.get('/api/consult', async (req, res) => {
   try {
@@ -736,6 +750,35 @@ function safeToISOString(value, fallback) {
   const date = new Date(raw)
   if (Number.isNaN(date.getTime())) return fallback
   return date.toISOString()
+}
+
+function sanitizeEnvValue(value) {
+  if (typeof value === 'string') {
+    return value.trim()
+  }
+  return ''
+}
+
+function getFirebaseConfigFromEnv() {
+  const rawConfig = {
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID,
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+  }
+  const storageRoot = sanitizeEnvValue(process.env.FIREBASE_STORAGE_ROOT)
+  const sanitizedEntries = Object.entries(rawConfig)
+    .map(([key, value]) => [key, sanitizeEnvValue(value)])
+    .filter(([, value]) => Boolean(value))
+  if (storageRoot) {
+    sanitizedEntries.push(['storageRoot', storageRoot])
+  }
+  const sanitized = Object.fromEntries(sanitizedEntries)
+  const missing = FIREBASE_REQUIRED_KEYS.filter((key) => !sanitized[key])
+  return { config: sanitized, missing }
 }
 
 app.listen(PORT, () => {

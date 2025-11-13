@@ -1046,10 +1046,10 @@
       </form>
     </div>
 
+    <script src="backend-config.js"></script>
     <script src="firebase-config.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
-    <script src="backend-config.js"></script>
     <script>
       const HOSTNAME = window.location && window.location.hostname
       const IS_LOCAL_HOST = /^(localhost|127\\.0\\.0\\.1)$/i.test(HOSTNAME || '')
@@ -1176,14 +1176,28 @@
         }
       })
 
-      function ensureFirebaseStorage() {
+      async function ensureFirebaseStorage() {
         if (firebaseStorageInstance) return firebaseStorageInstance
         if (firebaseInitError) throw firebaseInitError
         if (typeof firebase === 'undefined' || typeof firebase.initializeApp !== 'function') {
           firebaseInitError = new Error('Firebase SDK가 로드되지 않았습니다.')
           throw firebaseInitError
         }
-        const config = window.FIREBASE_CONFIG
+        let config = window.FIREBASE_CONFIG
+        if (!config || !config.apiKey) {
+          const configPromise = window.__FIREBASE_CONFIG_PROMISE__
+          if (configPromise && typeof configPromise.then === 'function') {
+            try {
+              config = await configPromise
+            } catch (error) {
+              firebaseInitError =
+                error instanceof Error
+                  ? error
+                  : new Error('Firebase 설정(FIREBASE_CONFIG)을 불러오지 못했습니다.')
+              throw firebaseInitError
+            }
+          }
+        }
         if (!config || !config.apiKey) {
           firebaseInitError = new Error('Firebase 설정(FIREBASE_CONFIG)이 필요합니다.')
           throw firebaseInitError
@@ -1268,7 +1282,7 @@
         target = 'temp',
         phoneKey = '',
       }) {
-        const storage = ensureFirebaseStorage()
+        const storage = await ensureFirebaseStorage()
         const storagePath = buildStoragePath({
           target,
           folder,
@@ -1318,7 +1332,7 @@
       async function deleteFromFirebase(storagePath) {
         if (!storagePath) return
         try {
-          const storage = ensureFirebaseStorage()
+          const storage = await ensureFirebaseStorage()
           const ref = storage.ref().child(storagePath)
           await ref.delete()
         } catch (error) {
@@ -1354,7 +1368,7 @@
         const stored = loadPendingUploadPaths()
         if (!stored.size) return
         try {
-          ensureFirebaseStorage()
+          await ensureFirebaseStorage()
         } catch (error) {
           return
         }
@@ -1593,7 +1607,7 @@
           return
         }
         try {
-          ensureFirebaseStorage()
+          await ensureFirebaseStorage()
         } catch (error) {
           console.error('[firebase] init failed', error)
           showMessage(error.message || '파일 업로드 환경 설정이 필요합니다.', 'error')
