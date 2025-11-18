@@ -1476,6 +1476,98 @@
                   <option value="기타">기타</option>
                 </select>
               </div>
+              <div class="field">
+                <label for="detailLongDistance">장거리 연애 가능 여부</label>
+                <select id="detailLongDistance">
+                  <option value="">선택</option>
+                  <option value="가능">가능</option>
+                  <option value="불가능">불가능</option>
+                  <option value="상황에 따라">상황에 따라</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="detailDink">딩크 여부</label>
+                <select id="detailDink">
+                  <option value="">선택</option>
+                  <option value="딩크를 원합니다">딩크를 원합니다</option>
+                  <option value="딩크를 고려 중입니다">딩크를 고려 중입니다</option>
+                  <option value="딩크를 원하지 않습니다">딩크를 원하지 않습니다</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="detailLastRelationship">마지막 연애 시기</label>
+                <input
+                  id="detailLastRelationship"
+                  type="text"
+                  placeholder="예: 2024년 5쯤 이별"
+                />
+              </div>
+              <div class="field">
+                <label for="detailMarriageTiming">결혼을 생각하는 시기</label>
+                <select id="detailMarriageTiming">
+                  <option value="">선택</option>
+                  <option value="결혼생각 없음">결혼생각 없음</option>
+                  <option value="연애 시작 후 3개월 안에 결혼준비 시작">
+                    연애 시작 후 3개월 안에 결혼준비 시작
+                  </option>
+                  <option value="연애 시작 후 6개월 안에 결혼준비 시작">
+                    연애 시작 후 6개월 안에 결혼준비 시작
+                  </option>
+                  <option value="연애 시작 후 1년 정도에 결혼준비 시작">
+                    연애 시작 후 1년 정도에 결혼준비 시작
+                  </option>
+                  <option value="연애 시작 후 1년 6개월 정도에 결혼준비 시작">
+                    연애 시작 후 1년 6개월 정도에 결혼준비 시작
+                  </option>
+                  <option value="연애 시작 후 2년정도에 결혼준비 시작">
+                    연애 시작 후 2년정도에 결혼준비 시작
+                  </option>
+                  <option value="연애 시작 후 2년 이상에 결혼준비 시작">
+                    연애 시작 후 2년 이상에 결혼준비 시작
+                  </option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="detailRelationshipCount">성인 후 연애 횟수</label>
+                <select id="detailRelationshipCount">
+                  <option value="">선택</option>
+                  <option value="0회">0회</option>
+                  <option value="1~3회">1~3회</option>
+                  <option value="4~6회">4~6회</option>
+                  <option value="7~9회">7~9회</option>
+                  <option value="10~12회">10~12회</option>
+                  <option value="13~15회">13~15회</option>
+                  <option value="16~19회">16~19회</option>
+                  <option value="20회 이상">20회 이상</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="detailCarOwnership">자차 유무</label>
+                <select id="detailCarOwnership">
+                  <option value="">선택</option>
+                  <option value="있음">있음</option>
+                  <option value="없음">없음</option>
+                  <option value="구입 계획 있음">구입 계획 있음</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="detailTattoo">문신 여부</label>
+                <select id="detailTattoo">
+                  <option value="">선택</option>
+                  <option value="문신 없음">문신 없음</option>
+                  <option value="문신 있음">문신 있음</option>
+                  <option value="비공개">비공개</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="detailDivorceStatus">돌싱 여부</label>
+                <select id="detailDivorceStatus">
+                  <option value="">선택</option>
+                  <option value="돌싱입니다(자녀o)">돌싱입니다(자녀o)</option>
+                  <option value="돌싱입니다(자녀x)">돌싱입니다(자녀x)</option>
+                  <option value="돌싱이 아닙니다">돌싱이 아닙니다</option>
+                </select>
+              </div>
             </div>
           </div>
           <div class="detail-preferences-grid">
@@ -1848,6 +1940,14 @@
       const detailProfileAppealInput = document.getElementById('detailProfileAppeal')
       const detailSmokingSelect = document.getElementById('detailSmoking')
       const detailReligionSelect = document.getElementById('detailReligion')
+      const detailLongDistanceSelect = document.getElementById('detailLongDistance')
+      const detailDinkSelect = document.getElementById('detailDink')
+      const detailLastRelationshipInput = document.getElementById('detailLastRelationship')
+      const detailMarriageTimingSelect = document.getElementById('detailMarriageTiming')
+      const detailRelationshipCountSelect = document.getElementById('detailRelationshipCount')
+      const detailCarOwnershipSelect = document.getElementById('detailCarOwnership')
+      const detailTattooSelect = document.getElementById('detailTattoo')
+      const detailDivorceStatusSelect = document.getElementById('detailDivorceStatus')
       const detailPreferredHeightsSelect = document.getElementById('detailPreferredHeights')
       const detailPreferredAgesSelect = document.getElementById('detailPreferredAges')
       const detailSufficientConditionInput = document.getElementById('detailSufficientCondition')
@@ -2250,6 +2350,15 @@
         if (detailProfileAppealInput) detailProfileAppealInput.value = record.profileAppeal || ''
         setSelectValue(detailSmokingSelect, record.smoking || '')
         setSelectValue(detailReligionSelect, record.religion || '')
+        setSelectValue(detailLongDistanceSelect, record.longDistance || '')
+        setSelectValue(detailDinkSelect, record.dink || '')
+        if (detailLastRelationshipInput)
+          detailLastRelationshipInput.value = record.lastRelationship || ''
+        setSelectValue(detailMarriageTimingSelect, record.marriageTiming || '')
+        setSelectValue(detailRelationshipCountSelect, record.relationshipCount || '')
+        setSelectValue(detailCarOwnershipSelect, record.carOwnership || '')
+        setSelectValue(detailTattooSelect, record.tattoo || '')
+        setSelectValue(detailDivorceStatusSelect, record.divorceStatus || '')
         setMultiSelectValues(detailPreferredHeightsSelect, record.preferredHeights || [])
         setMultiSelectValues(detailPreferredAgesSelect, record.preferredAges || [])
         detailValuesSelection = Array.isArray(record.values) ? record.values.slice(0, 1) : []
@@ -2317,6 +2426,14 @@
         if (detailProfileAppealInput) detailProfileAppealInput.value = ''
         setSelectValue(detailSmokingSelect, '')
         setSelectValue(detailReligionSelect, '')
+        setSelectValue(detailLongDistanceSelect, '')
+        setSelectValue(detailDinkSelect, '')
+        if (detailLastRelationshipInput) detailLastRelationshipInput.value = ''
+        setSelectValue(detailMarriageTimingSelect, '')
+        setSelectValue(detailRelationshipCountSelect, '')
+        setSelectValue(detailCarOwnershipSelect, '')
+        setSelectValue(detailTattooSelect, '')
+        setSelectValue(detailDivorceStatusSelect, '')
         setMultiSelectValues(detailPreferredHeightsSelect, [])
         setMultiSelectValues(detailPreferredAgesSelect, [])
         setMultiSelectValues(detailValuesSelect, [])
@@ -2595,6 +2712,22 @@
           setSelectValue(detailSmokingSelect, draft.smoking || '')
         if (detailReligionSelect && draft.religion !== undefined)
           setSelectValue(detailReligionSelect, draft.religion || '')
+        if (detailLongDistanceSelect && draft.longDistance !== undefined)
+          setSelectValue(detailLongDistanceSelect, draft.longDistance || '')
+        if (detailDinkSelect && draft.dink !== undefined)
+          setSelectValue(detailDinkSelect, draft.dink || '')
+        if (detailLastRelationshipInput && draft.lastRelationship !== undefined)
+          detailLastRelationshipInput.value = draft.lastRelationship || ''
+        if (detailMarriageTimingSelect && draft.marriageTiming !== undefined)
+          setSelectValue(detailMarriageTimingSelect, draft.marriageTiming || '')
+        if (detailRelationshipCountSelect && draft.relationshipCount !== undefined)
+          setSelectValue(detailRelationshipCountSelect, draft.relationshipCount || '')
+        if (detailCarOwnershipSelect && draft.carOwnership !== undefined)
+          setSelectValue(detailCarOwnershipSelect, draft.carOwnership || '')
+        if (detailTattooSelect && draft.tattoo !== undefined)
+          setSelectValue(detailTattooSelect, draft.tattoo || '')
+        if (detailDivorceStatusSelect && draft.divorceStatus !== undefined)
+          setSelectValue(detailDivorceStatusSelect, draft.divorceStatus || '')
         if (detailProfileAppealInput && draft.profileAppeal !== undefined)
           detailProfileAppealInput.value = draft.profileAppeal || ''
         if (detailLikesDislikesInput && draft.likesDislikes !== undefined)
@@ -2946,6 +3079,22 @@
         setSelectValue(detailSmokingSelect, smokingValue)
         const religionValue = detailReligionSelect?.value || ''
         setSelectValue(detailReligionSelect, religionValue)
+        const longDistanceValue = detailLongDistanceSelect?.value || ''
+        setSelectValue(detailLongDistanceSelect, longDistanceValue)
+        const dinkValue = detailDinkSelect?.value || ''
+        setSelectValue(detailDinkSelect, dinkValue)
+        const lastRelationshipValue = (detailLastRelationshipInput?.value || '').trim()
+        if (detailLastRelationshipInput) detailLastRelationshipInput.value = lastRelationshipValue
+        const marriageTimingValue = detailMarriageTimingSelect?.value || ''
+        setSelectValue(detailMarriageTimingSelect, marriageTimingValue)
+        const relationshipCountValue = detailRelationshipCountSelect?.value || ''
+        setSelectValue(detailRelationshipCountSelect, relationshipCountValue)
+        const carOwnershipValue = detailCarOwnershipSelect?.value || ''
+        setSelectValue(detailCarOwnershipSelect, carOwnershipValue)
+        const tattooValue = detailTattooSelect?.value || ''
+        setSelectValue(detailTattooSelect, tattooValue)
+        const divorceStatusValue = detailDivorceStatusSelect?.value || ''
+        setSelectValue(detailDivorceStatusSelect, divorceStatusValue)
         const preferredHeights = getMultiSelectValues(detailPreferredHeightsSelect)
         const preferredAges = getMultiSelectValues(detailPreferredAgesSelect)
         const valuesSelected = getMultiSelectValues(detailValuesSelect).slice(0, 1)
@@ -3005,6 +3154,14 @@
           profileAppeal: profileAppealValue,
           smoking: smokingValue,
           religion: religionValue,
+          longDistance: longDistanceValue,
+          dink: dinkValue,
+          lastRelationship: lastRelationshipValue,
+          marriageTiming: marriageTimingValue,
+          relationshipCount: relationshipCountValue,
+          carOwnership: carOwnershipValue,
+          tattoo: tattooValue,
+          divorceStatus: divorceStatusValue,
           preferredHeights,
           preferredAges,
           sufficientCondition: sufficientConditionValue,
@@ -3408,6 +3565,20 @@
           normalized.profileAppeal != null ? String(normalized.profileAppeal) : ''
         normalized.smoking = normalized.smoking != null ? String(normalized.smoking) : ''
         normalized.religion = normalized.religion != null ? String(normalized.religion) : ''
+      normalized.longDistance =
+        normalized.longDistance != null ? String(normalized.longDistance) : ''
+      normalized.dink = normalized.dink != null ? String(normalized.dink) : ''
+      normalized.lastRelationship =
+        normalized.lastRelationship != null ? String(normalized.lastRelationship) : ''
+      normalized.marriageTiming =
+        normalized.marriageTiming != null ? String(normalized.marriageTiming) : ''
+      normalized.relationshipCount =
+        normalized.relationshipCount != null ? String(normalized.relationshipCount) : ''
+      normalized.carOwnership =
+        normalized.carOwnership != null ? String(normalized.carOwnership) : ''
+      normalized.tattoo = normalized.tattoo != null ? String(normalized.tattoo) : ''
+      normalized.divorceStatus =
+        normalized.divorceStatus != null ? String(normalized.divorceStatus) : ''
         normalized.sufficientCondition =
           normalized.sufficientCondition != null ? String(normalized.sufficientCondition) : ''
         normalized.necessaryCondition =
@@ -3553,6 +3724,14 @@
               'valuesCustom',
               'sufficientCondition',
               'necessaryCondition',
+              'longDistance',
+              'dink',
+              'lastRelationship',
+              'marriageTiming',
+              'relationshipCount',
+              'carOwnership',
+              'tattoo',
+              'divorceStatus',
             ]
               .map((key) => String(item[key] || '').toLowerCase())
               .some((value) => value.includes(term))

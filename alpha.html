@@ -453,6 +453,39 @@
         gap: 12px;
         align-items: center;
       }
+      #alpha-profile-root .submit-hint {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 4px;
+        padding: 10px 16px;
+        background: #eef3ff;
+        border-radius: 14px;
+        color: #2f49c8;
+        font-size: 15px;
+        font-weight: 600;
+        text-align: center;
+        animation: submitHintFloat 3.2s ease-in-out infinite;
+        will-change: transform;
+      }
+      #alpha-profile-root .submit-hint::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 8px 8px 0 8px;
+        border-style: solid;
+        border-color: #eef3ff transparent transparent transparent;
+      }
+      @keyframes submitHintFloat {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
       #alpha-profile-root button[type='submit'] {
         border: none;
         border-radius: 12px;
@@ -713,6 +746,136 @@
                 class="textarea-small"
                 placeholder="나를 표현할 수 있는 매력 포인트, 성격, 장점 등을 작성해주세요."
               ></textarea>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>관계 및 라이프스타일</legend>
+          <div class="field-grid">
+            <div class="field">
+              <label for="profileLongDistance">
+                장거리 연애 가능 여부
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <select id="profileLongDistance">
+                <option value="">선택</option>
+                <option value="가능">가능</option>
+                <option value="불가능">불가능</option>
+                <option value="상황에 따라">상황에 따라</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileDink">
+                딩크 여부
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <select id="profileDink">
+                <option value="">선택</option>
+                <option value="딩크를 원합니다">딩크를 원합니다</option>
+                <option value="딩크를 고려 중입니다">딩크를 고려 중입니다</option>
+                <option value="딩크를 원하지 않습니다">딩크를 원하지 않습니다</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileLastRelationship">
+                마지막 연애 시기
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <input
+                id="profileLastRelationship"
+                type="text"
+                placeholder="예: 2024년 5쯤 이별"
+              />
+            </div>
+            <div class="field">
+              <label for="profileMarriageTiming">
+                결혼을 생각하는 시기
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <select id="profileMarriageTiming">
+                <option value="">선택</option>
+                <option value="결혼생각 없음">결혼생각 없음</option>
+                <option value="연애 시작 후 3개월 안에 결혼준비 시작">
+                  연애 시작 후 3개월 안에 결혼준비 시작
+                </option>
+                <option value="연애 시작 후 6개월 안에 결혼준비 시작">
+                  연애 시작 후 6개월 안에 결혼준비 시작
+                </option>
+                <option value="연애 시작 후 1년 정도에 결혼준비 시작">
+                  연애 시작 후 1년 정도에 결혼준비 시작
+                </option>
+                <option value="연애 시작 후 1년 6개월 정도에 결혼준비 시작">
+                  연애 시작 후 1년 6개월 정도에 결혼준비 시작
+                </option>
+                <option value="연애 시작 후 2년정도에 결혼준비 시작">
+                  연애 시작 후 2년정도에 결혼준비 시작
+                </option>
+                <option value="연애 시작 후 2년 이상에 결혼준비 시작">
+                  연애 시작 후 2년 이상에 결혼준비 시작
+                </option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileRelationshipCount">
+                성인 후 연애 횟수
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <select id="profileRelationshipCount">
+                <option value="">선택</option>
+                <option value="0회">0회</option>
+                <option value="1~3회">1~3회</option>
+                <option value="4~6회">4~6회</option>
+                <option value="7~9회">7~9회</option>
+                <option value="10~12회">10~12회</option>
+                <option value="13~15회">13~15회</option>
+                <option value="16~19회">16~19회</option>
+                <option value="20회 이상">20회 이상</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileCarOwnership">
+                자차 유무
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <select id="profileCarOwnership">
+                <option value="">선택</option>
+                <option value="있음">있음</option>
+                <option value="없음">없음</option>
+                <option value="구입 계획 있음">구입 계획 있음</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileTattoo">
+                문신 여부
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <select id="profileTattoo">
+                <option value="">선택</option>
+                <option value="문신 없음">문신 없음</option>
+                <option value="문신 있음">문신 있음</option>
+                <option value="비공개">비공개</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileDivorceStatus">
+                돌싱 여부
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <select id="profileDivorceStatus">
+                <option value="">선택</option>
+                <option value="돌싱입니다(자녀o)">돌싱입니다(자녀o)</option>
+                <option value="돌싱입니다(자녀x)">돌싱입니다(자녀x)</option>
+                <option value="돌싱이 아닙니다">돌싱이 아닙니다</option>
+              </select>
             </div>
           </div>
         </fieldset>
@@ -1027,6 +1190,7 @@
           </div>
         </div>
         <div class="submit-row">
+          <div class="submit-hint" role="note">서버 전송까지 약 5초 정도 걸려요.</div>
           <button type="submit" id="submitButton">프로필 정보 제출하기</button>
           <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
         </div>
@@ -1046,8 +1210,8 @@
       </form>
     </div>
 
-    <script src="backend-config.js"></script>
-    <script src="firebase-config.js"></script>
+    <script src="https://ygsa-backend.onrender.com/backend-config.js"></script>
+    <script src="https://ygsa-backend.onrender.com/firebase-config.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
     <script>
@@ -1078,6 +1242,14 @@
       const appealInput = document.getElementById('profileAppeal')
       const smokingSelect = document.getElementById('profileSmoking')
       const religionSelect = document.getElementById('profileReligion')
+      const longDistanceSelect = document.getElementById('profileLongDistance')
+      const dinkSelect = document.getElementById('profileDink')
+      const lastRelationshipInput = document.getElementById('profileLastRelationship')
+      const marriageTimingSelect = document.getElementById('profileMarriageTiming')
+      const relationshipCountSelect = document.getElementById('profileRelationshipCount')
+      const carOwnershipSelect = document.getElementById('profileCarOwnership')
+      const tattooSelect = document.getElementById('profileTattoo')
+      const divorceStatusSelect = document.getElementById('profileDivorceStatus')
       const sufficientInput = document.getElementById('profileSufficientCondition')
       const necessaryInput = document.getElementById('profileNecessaryCondition')
       const likesDislikesInput = document.getElementById('profileLikesDislikes')
@@ -1135,6 +1307,34 @@
       }
       let firebaseStorageInstance = null
       let firebaseInitError = null
+      let firebaseInitPromise = null
+
+      const STORAGE_RULES_MARKER = '__rules_init_marker__.txt'
+
+      function getStorageRootPrefix() {
+        const root =
+          typeof window.FIREBASE_STORAGE_ROOT === 'string'
+            ? window.FIREBASE_STORAGE_ROOT.trim()
+            : ''
+        if (!root) return ''
+        return root.replace(/\/+$/, '') + '/'
+      }
+
+      async function ensureStorageRulesWritable(storage) {
+        if (!storage || typeof storage.ref !== 'function') return
+        const markerPath = `${getStorageRootPrefix()}${STORAGE_RULES_MARKER}`
+        try {
+          const markerRef = storage.ref().child(markerPath)
+          await markerRef.putString('rules_ready', 'raw', {
+            contentType: 'text/plain',
+            customMetadata: {
+              updatedAt: String(Date.now()),
+            },
+          })
+        } catch (error) {
+          console.warn('[firebase] 초기 업로드 권한 확인 실패', error)
+        }
+      }
       function syncCheckboxGroupFromSelect(selectEl) {
         if (!selectEl || !selectEl.id) return
         const group = document.querySelector(`[data-multi-select="${selectEl.id}"]`)
@@ -1179,46 +1379,65 @@
       async function ensureFirebaseStorage() {
         if (firebaseStorageInstance) return firebaseStorageInstance
         if (firebaseInitError) throw firebaseInitError
-        if (typeof firebase === 'undefined' || typeof firebase.initializeApp !== 'function') {
-          firebaseInitError = new Error('Firebase SDK가 로드되지 않았습니다.')
-          throw firebaseInitError
-        }
-        let config = window.FIREBASE_CONFIG
-        if (!config || !config.apiKey) {
-          const configPromise = window.__FIREBASE_CONFIG_PROMISE__
-          if (configPromise && typeof configPromise.then === 'function') {
-            try {
+        if (firebaseInitPromise) return firebaseInitPromise
+
+        const init = async () => {
+          if (typeof firebase === 'undefined' || typeof firebase.initializeApp !== 'function') {
+            throw new Error('Firebase SDK가 로드되지 않았습니다.')
+          }
+
+          let config = window.FIREBASE_CONFIG
+          if (!config || !config.apiKey) {
+            const configPromise = window.__FIREBASE_CONFIG_PROMISE__
+            if (configPromise && typeof configPromise.then === 'function') {
               config = await configPromise
+            }
+          }
+          if (!config || !config.apiKey) {
+            throw new Error('Firebase 설정(FIREBASE_CONFIG)이 필요합니다.')
+          }
+
+          if (!firebase.apps || !firebase.apps.length) {
+            try {
+              firebase.initializeApp(config)
             } catch (error) {
-              firebaseInitError =
-                error instanceof Error
-                  ? error
-                  : new Error('Firebase 설정(FIREBASE_CONFIG)을 불러오지 못했습니다.')
-              throw firebaseInitError
+              if (!/already exists/i.test(error.message)) {
+                throw error
+              }
             }
           }
+
+          let storageInstance = null
+          let lastError = null
+          for (let attempt = 1; attempt <= 3; attempt += 1) {
+            try {
+              storageInstance = firebase.storage()
+              break
+            } catch (error) {
+              lastError = error
+              await new Promise((resolve) => setTimeout(resolve, 1200 * attempt))
+            }
+          }
+          if (!storageInstance) {
+            throw lastError || new Error('Firebase Storage 초기화에 실패했습니다.')
+          }
+
+          await ensureStorageRulesWritable(storageInstance)
+          firebaseStorageInstance = storageInstance
+          return firebaseStorageInstance
         }
-        if (!config || !config.apiKey) {
-          firebaseInitError = new Error('Firebase 설정(FIREBASE_CONFIG)이 필요합니다.')
+
+        firebaseInitPromise = init().catch((error) => {
+          firebaseInitError =
+            error instanceof Error ? error : new Error('Firebase 초기화에 실패했습니다.')
           throw firebaseInitError
-        }
-        if (!firebase.apps || !firebase.apps.length) {
-          try {
-            firebase.initializeApp(config)
-          } catch (error) {
-            if (!/already exists/i.test(error.message)) {
-              firebaseInitError = error
-              throw error
-            }
-          }
-        }
+        })
+
         try {
-          firebaseStorageInstance = firebase.storage()
-        } catch (error) {
-          firebaseInitError = error
-          throw error
+          return await firebaseInitPromise
+        } finally {
+          firebaseInitPromise = null
         }
-        return firebaseStorageInstance
       }
 
       function sanitizeFileName(name) {
@@ -1966,6 +2185,14 @@
           salaryRange: salaryRangeSelect?.value || '',
           smoking: smokingSelect?.value || '',
           religion: religionSelect?.value || '',
+          longDistance: longDistanceSelect?.value || '',
+          dink: dinkSelect?.value || '',
+          lastRelationship: lastRelationshipInput?.value?.trim() || '',
+          marriageTiming: marriageTimingSelect?.value || '',
+          relationshipCount: relationshipCountSelect?.value || '',
+          carOwnership: carOwnershipSelect?.value || '',
+          tattoo: tattooSelect?.value || '',
+          divorceStatus: divorceStatusSelect?.value || '',
           profileAppeal: appealInput?.value || '',
           likesDislikes: likesDislikesInput?.value || '',
           sufficientCondition: sufficientInput?.value || '',
@@ -1999,6 +2226,14 @@
         if (salaryRangeSelect) salaryRangeSelect.value = draft.salaryRange || ''
         if (smokingSelect) smokingSelect.value = draft.smoking || ''
         if (religionSelect) religionSelect.value = draft.religion || ''
+        if (longDistanceSelect) longDistanceSelect.value = draft.longDistance || ''
+        if (dinkSelect) dinkSelect.value = draft.dink || ''
+        if (lastRelationshipInput) lastRelationshipInput.value = draft.lastRelationship || ''
+        if (marriageTimingSelect) marriageTimingSelect.value = draft.marriageTiming || ''
+        if (relationshipCountSelect) relationshipCountSelect.value = draft.relationshipCount || ''
+        if (carOwnershipSelect) carOwnershipSelect.value = draft.carOwnership || ''
+        if (tattooSelect) tattooSelect.value = draft.tattoo || ''
+        if (divorceStatusSelect) divorceStatusSelect.value = draft.divorceStatus || ''
         if (appealInput) appealInput.value = draft.profileAppeal || ''
         if (likesDislikesInput) likesDislikesInput.value = draft.likesDislikes || ''
         if (sufficientInput) sufficientInput.value = draft.sufficientCondition || ''
@@ -2191,6 +2426,14 @@
           profileAppeal: appealInput?.value?.trim() || '',
           smoking: smokingSelect?.value || '',
           religion: religionSelect?.value || '',
+          longDistance: longDistanceSelect?.value || '',
+          dink: dinkSelect?.value || '',
+          lastRelationship: lastRelationshipInput?.value?.trim() || '',
+          marriageTiming: marriageTimingSelect?.value || '',
+          relationshipCount: relationshipCountSelect?.value || '',
+          carOwnership: carOwnershipSelect?.value || '',
+          tattoo: tattooSelect?.value || '',
+          divorceStatus: divorceStatusSelect?.value || '',
           sufficientCondition: sufficientInput?.value?.trim() || '',
           necessaryCondition: necessaryInput?.value?.trim() || '',
           likesDislikes: likesDislikesInput?.value?.trim() || '',

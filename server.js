@@ -445,6 +445,14 @@ function sanitizeProfileUpdate(body) {
     profileAppeal: sanitizeNotes(body?.profileAppeal),
     smoking: sanitizeText(body?.smoking),
     religion: sanitizeText(body?.religion),
+    longDistance: sanitizeText(body?.longDistance),
+    dink: sanitizeText(body?.dink),
+    lastRelationship: sanitizeText(body?.lastRelationship),
+    marriageTiming: sanitizeText(body?.marriageTiming),
+    relationshipCount: sanitizeText(body?.relationshipCount),
+    carOwnership: sanitizeText(body?.carOwnership),
+    tattoo: sanitizeText(body?.tattoo),
+    divorceStatus: sanitizeText(body?.divorceStatus),
     sufficientCondition: sanitizeNotes(body?.sufficientCondition),
     necessaryCondition: sanitizeNotes(body?.necessaryCondition),
     likesDislikes: sanitizeNotes(body?.likesDislikes),
@@ -561,6 +569,14 @@ function normalizeStoredRecord(entry) {
   record.profileAppeal = sanitizeNotes(record.profileAppeal)
   record.smoking = sanitizeText(record.smoking)
   record.religion = sanitizeText(record.religion)
+  record.longDistance = sanitizeText(record.longDistance)
+  record.dink = sanitizeText(record.dink)
+  record.lastRelationship = sanitizeText(record.lastRelationship)
+  record.marriageTiming = sanitizeText(record.marriageTiming)
+  record.relationshipCount = sanitizeText(record.relationshipCount)
+  record.carOwnership = sanitizeText(record.carOwnership)
+  record.tattoo = sanitizeText(record.tattoo)
+  record.divorceStatus = sanitizeText(record.divorceStatus)
   record.sufficientCondition = sanitizeNotes(record.sufficientCondition)
   record.necessaryCondition = sanitizeNotes(record.necessaryCondition)
   record.likesDislikes = sanitizeNotes(record.likesDislikes)
