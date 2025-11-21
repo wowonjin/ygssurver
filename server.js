@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const path = require('path')
 const fs = require('fs/promises')
+const fsSync = require('fs')
 const { nanoid } = require('nanoid')
 const nodemailer = require('nodemailer')
 const twilio = require('twilio')
@@ -13,6 +14,9 @@ const DATA_ROOT = process.env.DATA_DIR ? path.resolve(process.env.DATA_DIR) : pa
 const DATA_FILE_NAME = process.env.DATA_FILE || 'consultations.json'
 const DATA_DIR = DATA_ROOT
 const DATA_FILE = path.join(DATA_DIR, DATA_FILE_NAME)
+const FRONTEND_DIST = path.join(__dirname, 'frontend', 'dist')
+const FRONTEND_INDEX = path.join(FRONTEND_DIST, 'index.html')
+const HAS_FRONTEND_BUILD = fsSync.existsSync(FRONTEND_INDEX)
 
 console.info(`[ygsa] 상담 데이터 저장 위치: ${DATA_FILE}`)
 
@@ -32,13 +36,22 @@ const SMS_RECIPIENTS = [
 ]
 
 const PHONE_STATUS_OPTIONS = ['pending', 'scheduled', 'done']
+const PROFILE_SHARE_PAGE = 'profile-card.html'
+const PROFILE_SHARE_VIEW_DURATION_MS = 3 * 24 * 60 * 60 * 1000
 
 const emailTransport = initialiseMailTransport()
 const smsClient = initialiseSmsClient()
 
 app.use(cors())
 app.use(express.json({ limit: '1mb' }))
+if (HAS_FRONTEND_BUILD) {
+  app.use(express.static(FRONTEND_DIST))
+}
 app.use(express.static(__dirname))
+
+app.get('/profile-card.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'profile-card.html'))
+})
 
 app.get('/api/firebase-config', (req, res) => {
   const { config, missing } = getFirebaseConfigFromEnv()
@@ -129,6 +142,131 @@ app.post('/api/consult/profile', async (req, res) => {
   } catch (error) {
     console.error('[consult:profile]', error)
     res.status(500).json({ ok: false, message: '프로필 정보를 저장하지 못했습니다.' })
+  }
+})
+
+app.post('/api/consult/:id/profile-link', async (req, res) => {
+  const { id } = req.params
+  if (!id) {
+    return res.status(400).json({ ok: false, message: '대상 정보를 확인할 수 없습니다.' })
+  }
+
+  try {
+    const list = await readConsultations()
+    const index = list.findIndex((item) => item.id === id)
+    if (index === -1) {
+      return res.status(404).json({ ok: false, message: '대상을 찾을 수 없습니다.' })
+    }
+
+    const record = list[index]
+    const share = ensureProfileShare(record)
+    const nextRecord = {
+      ...record,
+      profileShare: share,
+    }
+    list[index] = nextRecord
+    await writeConsultations(list)
+
+    const shareUrl = buildProfileShareUrl(req, share.token)
+    res.json({
+      ok: true,
+      data: {
+        token: share.token,
+        shareUrl,
+        createdAt: share.createdAt,
+        updatedAt: share.updatedAt,
+      },
+    })
+  } catch (error) {
+    console.error('[profile-share:link]', error)
+    res.status(500).json({ ok: false, message: '프로필 카드 링크를 생성하지 못했습니다.' })
+  }
+})
+
+app.post('/api/profile-share/verify', async (req, res) => {
+  const token = sanitizeText(req.body?.token)
+  const phoneInput = sanitizeText(req.body?.phone)
+  const phoneKey = normalizePhoneNumber(phoneInput)
+
+  if (!token || !phoneKey) {
+    return res.status(400).json({ ok: false, message: '토큰과 연락처를 모두 입력해주세요.' })
+  }
+
+  try {
+    const list = await readConsultations()
+    const index = list.findIndex(
+      (item) => item?.profileShare && item.profileShare.token === token,
+    )
+    if (index === -1) {
+      return res.status(404).json({ ok: false, message: '유효하지 않은 링크입니다.' })
+    }
+
+    if (!phoneExistsInConsultations(list, phoneKey)) {
+      return res.status(403).json({
+        ok: false,
+        code: 'share_invalid_phone',
+        message: '등록되지 않은 번호입니다.',
+      })
+    }
+
+    const record = list[index]
+    const share = ensureProfileShare(record)
+    share.grants = share.grants || {}
+    const now = Date.now()
+    const nowIso = new Date(now).toISOString()
+    const existingGrant = share.grants[phoneKey]
+
+    if (existingGrant) {
+      const expires = new Date(existingGrant.expiresAt).getTime()
+      if (Number.isNaN(expires) || expires < now) {
+        return res.status(410).json({
+          ok: false,
+          code: 'share_expired',
+          message: '접속이 불가능합니다. 기간이 만료되었습니다.',
+        })
+      }
+      share.grants[phoneKey] = {
+        ...existingGrant,
+        phone: existingGrant.phone || phoneInput,
+        lastVerifiedAt: nowIso,
+      }
+    } else {
+      const expiresAt = new Date(now + PROFILE_SHARE_VIEW_DURATION_MS).toISOString()
+      share.grants[phoneKey] = {
+        phone: phoneInput,
+        phoneKey,
+        grantedAt: nowIso,
+        lastVerifiedAt: nowIso,
+        expiresAt,
+      }
+    }
+
+    share.updatedAt = nowIso
+    const nextRecord = {
+      ...record,
+      profileShare: share,
+    }
+    list[index] = nextRecord
+    await writeConsultations(list)
+
+    const activeGrant = share.grants[phoneKey]
+    res.json({
+      ok: true,
+      data: {
+        profile: buildSharedProfilePayload(nextRecord),
+        grant: {
+          phone: activeGrant.phone,
+          grantedAt: activeGrant.grantedAt,
+          expiresAt: activeGrant.expiresAt,
+          lastVerifiedAt: activeGrant.lastVerifiedAt,
+        },
+      },
+    })
+  } catch (error) {
+    console.error('[profile-share:verify]', error)
+    res
+      .status(500)
+      .json({ ok: false, message: '프로필 카드를 확인하지 못했습니다.' })
   }
 })
 
@@ -346,7 +484,10 @@ app.get('/events', async (req, res) => {
 })
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'pricing.html'))
+  if (HAS_FRONTEND_BUILD) {
+    return res.sendFile(FRONTEND_INDEX)
+  }
+  return res.sendFile(path.join(__dirname, 'index.html'))
 })
 
 async function readConsultations() {
@@ -522,12 +663,20 @@ function sanitizePayload(body) {
     height: normalizeHeight(body?.height ?? body?.region),
     district: sanitizeText(body?.district),
     education: sanitizeText(body?.education),
+    formType: sanitizeFormType(body?.formType || body?.applicationType),
   }
+}
+
+function sanitizeFormType(value) {
+  const normalized = sanitizeText(value).toLowerCase()
+  if (normalized === 'moim') return 'moim'
+  return 'consult'
 }
 
 function normalizeStoredRecord(entry) {
   if (!entry || typeof entry !== 'object') return {}
   const record = { ...entry }
+  record.formType = sanitizeFormType(record.formType)
   record.id = sanitizeText(record.id) || nanoid()
   record.name = sanitizeText(record.name)
   record.gender = sanitizeText(record.gender)
@@ -624,6 +773,12 @@ function normalizeStoredRecord(entry) {
     .filter(Boolean)
   record.meetingSchedule = sanitizeText(record.meetingSchedule)
   record.notes = sanitizeNotes(record.notes)
+  const shareData = sanitizeProfileShare(record.profileShare)
+  if (shareData) {
+    record.profileShare = shareData
+  } else {
+    delete record.profileShare
+  }
   record.createdAt = safeToISOString(record.createdAt, new Date().toISOString())
   record.updatedAt = safeToISOString(record.updatedAt, record.createdAt)
   record.phoneConsultStatus = normalizePhoneStatus(record.phoneConsultStatus, 'pending')
@@ -640,6 +795,143 @@ function sanitizeStringArray(input) {
   }
   return []
 }
+
+function sanitizeProfileShare(entry) {
+  if (!entry || typeof entry !== 'object') return null
+  const token = sanitizeText(entry.token)
+  const createdAt = safeToISOString(entry.createdAt, '')
+  const updatedAt = safeToISOString(entry.updatedAt, '')
+  const grantsRaw =
+    entry.grants && typeof entry.grants === 'object' ? entry.grants : {}
+  const grants = {}
+
+  Object.entries(grantsRaw).forEach(([key, value]) => {
+    const phoneKey = normalizePhoneNumber(key || value?.phone || '')
+    const sanitizedGrant = sanitizeShareGrant(phoneKey, value)
+    if (phoneKey && sanitizedGrant) {
+      grants[phoneKey] = sanitizedGrant
+    }
+  })
+
+  if (!token && !Object.keys(grants).length) {
+    return null
+  }
+
+  const share = {
+    token,
+    createdAt: createdAt || '',
+    updatedAt: updatedAt || '',
+    grants,
+  }
+
+  if (!share.token) delete share.token
+  if (!share.createdAt) delete share.createdAt
+  if (!share.updatedAt) delete share.updatedAt
+  return share
+}
+
+function sanitizeShareGrant(phoneKey, grant) {
+  if (!phoneKey || !grant || typeof grant !== 'object') return null
+  const grantedAt = safeToISOString(grant.grantedAt, null)
+  const expiresAt = safeToISOString(grant.expiresAt, null)
+  if (!grantedAt || !expiresAt) return null
+  const lastVerifiedAt = safeToISOString(grant.lastVerifiedAt, grantedAt)
+  return {
+    phoneKey,
+    phone: sanitizeText(grant.phone),
+    grantedAt,
+    expiresAt,
+    lastVerifiedAt,
+  }
+}
+
+function ensureProfileShare(record) {
+  const existing = sanitizeProfileShare(record?.profileShare)
+  const nowIso = new Date().toISOString()
+  const grants = existing?.grants ? { ...existing.grants } : {}
+  return {
+    token: existing?.token || nanoid(32),
+    createdAt: existing?.createdAt || nowIso,
+    updatedAt: nowIso,
+    grants,
+  }
+}
+
+function buildProfileShareUrl(req, token) {
+  const encodedToken = encodeURIComponent(token)
+  const base =
+    getProfileShareBaseUrl(req) ||
+    sanitizeEnvValue(process.env.API_BASE_URL) ||
+    `${req.protocol || 'https'}://${req.get('host') || ''}`.replace(/\/+$/, '')
+
+  if (base) {
+    return `${base}/${PROFILE_SHARE_PAGE}?token=${encodedToken}`
+  }
+  return `${PROFILE_SHARE_PAGE}?token=${encodedToken}`
+}
+
+function getProfileShareBaseUrl(req) {
+  const override = sanitizeEnvValue(process.env.PROFILE_SHARE_BASE_URL)
+  if (override) {
+    return override.replace(/\/+$/, '')
+  }
+  const host = req.get('host') || ''
+  if (!host) return ''
+  const forwarded = req.get('x-forwarded-proto')
+  const protocol =
+    (forwarded && forwarded.split(',')[0]) || req.protocol || 'https'
+  return `${protocol}://${host}`.replace(/\/+$/, '')
+}
+
+function phoneExistsInConsultations(list, phoneKey) {
+  if (!phoneKey) return false
+  return list.some((item) => normalizePhoneNumber(item.phone) === phoneKey)
+}
+
+function buildSharedProfilePayload(record) {
+  if (!record || typeof record !== 'object') return {}
+  return {
+    id: record.id || '',
+    name: record.name || '',
+    gender: record.gender || '',
+    birth: record.birth || '',
+    height: record.height || '',
+    job: record.job || '',
+    jobDetail: record.jobDetail || '',
+    district: record.district || '',
+    phone: record.phone || '',
+    email: record.email || '',
+    mbti: record.mbti || '',
+    education: record.education || '',
+    university: record.university || '',
+    salaryRange: record.salaryRange || '',
+    profileAppeal: record.profileAppeal || '',
+    aboutMe: record.aboutMe || '',
+    sufficientCondition: record.sufficientCondition || '',
+    necessaryCondition: record.necessaryCondition || '',
+    likesDislikes: record.likesDislikes || '',
+    smoking: record.smoking || '',
+    religion: record.religion || '',
+    longDistance: record.longDistance || '',
+    dink: record.dink || '',
+    carOwnership: record.carOwnership || '',
+    tattoo: record.tattoo || '',
+    divorceStatus: record.divorceStatus || '',
+    lastRelationship: record.lastRelationship || '',
+    marriageTiming: record.marriageTiming || '',
+    relationshipCount: record.relationshipCount || '',
+    preferredHeights: Array.isArray(record.preferredHeights)
+      ? record.preferredHeights
+      : [],
+    preferredAges: Array.isArray(record.preferredAges)
+      ? record.preferredAges
+      : [],
+    values: Array.isArray(record.values) ? record.values : [],
+    valuesCustom: record.valuesCustom || '',
+    photos: Array.isArray(record.photos) ? record.photos : [],
+  }
+}
+
 
 function validatePayload(payload) {
   const errors = []

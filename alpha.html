@@ -140,6 +140,88 @@
         letter-spacing: 0.04em;
         text-transform: uppercase;
       }
+      #alpha-profile-root .badge-match {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        padding: 2px 10px;
+        border-radius: 999px;
+        background: rgba(250, 214, 230, 0.6);
+        color: #e45e9d;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      #alpha-profile-root .badge-verify {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        padding: 2px 10px;
+        border-radius: 999px;
+        background: rgba(187, 247, 208, 0.55);
+        color: #047857;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      #alpha-profile-root .badge-preference {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+        padding: 2px 10px;
+        border-radius: 999px;
+        background: rgba(251, 191, 36, 0.25);
+        color: #c2410c;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      #alpha-profile-root .info-badge {
+        cursor: pointer;
+      }
+      #alpha-profile-root .info-badge:focus-visible {
+        outline: 2px solid rgba(83, 119, 246, 0.45);
+        outline-offset: 2px;
+      }
+      #alpha-profile-root .info-bubble {
+        position: fixed;
+        bottom: 22px;
+        left: 50%;
+        transform: translate(-50%, 18px);
+        background: rgba(255, 255, 255, 0.95);
+        color: #374151;
+        border-radius: 999px;
+        padding: 10px 18px;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 18px 36px rgba(83, 119, 246, 0.25);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+        z-index: 1000;
+      }
+      #alpha-profile-root .info-bubble::after {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 -12px 28px rgba(83, 119, 246, 0.2);
+      }
+      #alpha-profile-root .info-bubble.is-visible {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
       #alpha-profile-root .sr-only {
         position: absolute;
         width: 1px;
@@ -327,6 +409,90 @@
       #alpha-profile-root .multi-checkbox-item input[type='checkbox'] {
         width: 18px;
         height: 18px;
+        accent-color: #5377f6;
+        flex-shrink: 0;
+      }
+      #alpha-profile-root .multi-dropdown {
+        position: relative;
+      }
+      #alpha-profile-root .multi-dropdown-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+        border: 1px solid #d5dbea;
+        background: #f9fbff;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 16px;
+        font-weight: 500;
+        color: #7e7e7e;
+        cursor: pointer;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease;
+      }
+      #alpha-profile-root .multi-dropdown.has-selection .multi-dropdown-trigger {
+        background: #ffffff;
+        border-color: #b9c4de;
+        color: #4f4f4f;
+        font-weight: 600;
+      }
+      #alpha-profile-root .multi-dropdown-trigger:focus-visible {
+        outline: 2px solid #5a67d8;
+        outline-offset: 2px;
+      }
+      #alpha-profile-root .multi-dropdown-trigger::after {
+        content: '▾';
+        font-size: 12px;
+        color: inherit;
+      }
+      #alpha-profile-root .multi-dropdown.is-open .multi-dropdown-trigger::after {
+        content: '▴';
+      }
+      #alpha-profile-root .multi-dropdown-label {
+        flex: 1;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #alpha-profile-root .multi-dropdown-panel {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border: 1px solid #d5dbea;
+        border-radius: 12px;
+        box-shadow: 0 18px 40px rgba(73, 89, 245, 0.18);
+        padding: 12px 10px;
+        display: grid;
+        gap: 6px;
+        max-height: 264px;
+        overflow-y: auto;
+        z-index: 60;
+      }
+      #alpha-profile-root .multi-dropdown-panel[hidden] {
+        display: none;
+      }
+      #alpha-profile-root .multi-dropdown-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        font-size: 15px;
+        color: #4f4f4f;
+        cursor: pointer;
+        transition: background 0.2s ease, color 0.2s ease;
+      }
+      #alpha-profile-root .multi-dropdown-option:hover {
+        background: rgba(83, 119, 246, 0.12);
+        color: #2f49c8;
+      }
+      #alpha-profile-root .multi-dropdown-option input[type='checkbox'] {
+        width: 16px;
+        height: 16px;
         accent-color: #5377f6;
         flex-shrink: 0;
       }
@@ -581,6 +747,7 @@
   <body>
     <div id="alpha-profile-root">
       <form id="profileForm" novalidate>
+        <div id="infoBubble" class="info-bubble" role="status" aria-live="polite" hidden></div>
         <fieldset>
           <legend>
             <span class="legend-title">기본 정보</span>
@@ -636,15 +803,24 @@
               />
             </div>
             <div class="field">
-              <label for="profileUniversity">
-                대학교 (캠퍼스)
+              <label for="profileSmoking">
+                흡연
                 <span class="badge-public" aria-hidden="true">공개</span>
                 <span class="sr-only">상대방에게 공개되는 정보</span>
               </label>
-              <input id="profileUniversity" type="text" placeholder="예: 서울대학교 (관악캠퍼스)" />
+              <select id="profileSmoking">
+                <option value="">선택</option>
+                <option value="비흡연">비흡연</option>
+                <option value="사회적 흡연">사회적 흡연</option>
+                <option value="흡연">흡연</option>
+              </select>
             </div>
             <div class="field">
-              <label for="profileSalaryRange">연봉 (세전 기준 / 프로필 미공개)</label>
+              <label for="profileSalaryRange">
+                연봉 (세후 기준)
+                <span class="badge-match" aria-hidden="true">매칭 후 공개</span>
+                <span class="sr-only">매칭 이후에 공개되는 정보</span>
+              </label>
               <select id="profileSalaryRange">
                 <option value="">선택</option>
                 <option value="1">1) 3000만원 미만</option>
@@ -658,16 +834,19 @@
               </select>
             </div>
             <div class="field">
-              <label for="profileSmoking">흡연</label>
-              <select id="profileSmoking">
-                <option value="">선택</option>
-                <option value="비흡연">비흡연</option>
-                <option value="사회적 흡연">사회적 흡연</option>
-                <option value="흡연">흡연</option>
-              </select>
+              <label for="profileUniversity">
+                대학교 및 학과
+                <span class="badge-match" aria-hidden="true">매칭 후 공개</span>
+                <span class="sr-only">매칭 이후에 공개되는 정보</span>
+              </label>
+              <input id="profileUniversity" type="text" placeholder="예: 연세대학교 기계공학과" />
             </div>
             <div class="field">
-              <label for="profileReligion">종교</label>
+              <label for="profileReligion">
+                종교
+                <span class="badge-match" aria-hidden="true">매칭 후 공개</span>
+                <span class="sr-only">매칭 이후에 공개되는 정보</span>
+              </label>
               <select id="profileReligion">
                 <option value="">선택</option>
                 <option value="무교">무교</option>
@@ -696,15 +875,15 @@
               ></textarea>
             </div>
             <div class="field">
-              <label for="profileLikesDislikes">
-                좋아하는 것 / 싫어하는 것
+              <label for="profileAboutMe">
+                '저는 이런 사람입니다'
                 <span class="badge-public" aria-hidden="true">공개</span>
                 <span class="sr-only">상대방에게 공개되는 정보</span>
               </label>
               <textarea
-                id="profileLikesDislikes"
+                id="profileAboutMe"
                 class="textarea-small"
-                placeholder="예: 캠핑과 등산을 즐기며, 인스턴트 음식은 잘 먹지 않습니다."
+                placeholder="나를 표현할 수 있는 매력 포인트, 성격, 장점 등을 작성해주세요."
               ></textarea>
             </div>
             <div class="field">
@@ -736,15 +915,15 @@
               ></textarea>
             </div>
             <div class="field">
-              <label for="profileAboutMe">
-                '저는 이런 사람입니다'
-                <span class="badge-public" aria-hidden="true">공개</span>
-                <span class="sr-only">상대방에게 공개되는 정보</span>
+              <label for="profileLikesDislikes">
+                좋아하는 것 / 싫어하는 것
+                <span class="badge-match" aria-hidden="true">매칭 후 공개</span>
+                <span class="sr-only">매칭 이후에 공개되는 정보</span>
               </label>
               <textarea
-                id="profileAboutMe"
+                id="profileLikesDislikes"
                 class="textarea-small"
-                placeholder="나를 표현할 수 있는 매력 포인트, 성격, 장점 등을 작성해주세요."
+                placeholder="예: 캠핑과 등산을 즐기며, 인스턴트 음식은 잘 먹지 않습니다."
               ></textarea>
             </div>
           </div>
@@ -754,23 +933,295 @@
           <legend>관계 및 라이프스타일</legend>
           <div class="field-grid">
             <div class="field">
-              <label for="profileLongDistance">
-                장거리 연애 가능 여부
+              <label for="profileTattoo">
+                문신 여부
                 <span class="badge-public" aria-hidden="true">공개</span>
                 <span class="sr-only">상대방에게 공개되는 정보</span>
               </label>
-              <select id="profileLongDistance">
+              <select id="profileTattoo">
                 <option value="">선택</option>
-                <option value="가능">가능</option>
-                <option value="불가능">불가능</option>
-                <option value="상황에 따라">상황에 따라</option>
+                <option value="문신 없음">문신 없음</option>
+                <option value="문신 있음">문신 있음</option>
+                <option value="비공개">비공개</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileCarOwnership">
+                자차 유무
+                <span class="badge-public" aria-hidden="true">공개</span>
+                <span class="sr-only">상대방에게 공개되는 정보</span>
+              </label>
+              <select id="profileCarOwnership">
+                <option value="">선택</option>
+                <option value="있음">있음</option>
+                <option value="없음">없음</option>
+                <option value="구입 계획 있음">구입 계획 있음</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profileLastRelationship">
+                마지막 연애 시기
+                <span class="badge-match" aria-hidden="true">매칭 후 공개</span>
+                <span class="sr-only">매칭 이후에 공개되는 정보</span>
+              </label>
+              <input
+                id="profileLastRelationship"
+                type="text"
+                placeholder="예: 2024년 5쯤 이별"
+              />
+            </div>
+            <div class="field">
+              <label for="profileRelationshipCount">
+                성인 후 연애 횟수
+                <span class="badge-match" aria-hidden="true">매칭 후 공개</span>
+                <span class="sr-only">매칭 이후에 공개되는 정보</span>
+              </label>
+              <select id="profileRelationshipCount">
+                <option value="">선택</option>
+                <option value="0회">0회</option>
+                <option value="1~3회">1~3회</option>
+                <option value="4~6회">4~6회</option>
+                <option value="7~9회">7~9회</option>
+                <option value="10~12회">10~12회</option>
+                <option value="13~15회">13~15회</option>
+                <option value="16~19회">16~19회</option>
+                <option value="20회 이상">20회 이상</option>
+              </select>
+            </div>
+            <div class="field">
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>선호 조건</legend>
+          <div class="field-grid">
+            <div class="field">
+              <label for="profilePreferredHeights" id="profilePreferredHeightsLabel">
+                선호하는 키
+                <span class="badge-preference" aria-hidden="true">매칭용</span>
+                <span class="sr-only">매칭을 위해 참고되는 정보</span>
+              </label>
+              <div class="multi-dropdown" data-select-id="profilePreferredHeights">
+                <button
+                  type="button"
+                  class="multi-dropdown-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-controls="profilePreferredHeightsPanel"
+                >
+                  <span class="multi-dropdown-label">선택 없음</span>
+                </button>
+                <div
+                  id="profilePreferredHeightsPanel"
+                  class="multi-dropdown-panel"
+                  data-multi-select="profilePreferredHeights"
+                  role="listbox"
+                  aria-multiselectable="true"
+                  hidden
+                >
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="160cm 이하" />
+                    <span>160cm 이하</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="161-165cm" />
+                    <span>161-165cm</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="166-170cm" />
+                    <span>166-170cm</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="171-175cm" />
+                    <span>171-175cm</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="176-180cm" />
+                    <span>176-180cm</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="181cm 이상" />
+                    <span>181cm 이상</span>
+                  </label>
+                </div>
+              </div>
+              <select
+                id="profilePreferredHeights"
+                multiple
+                class="multi-select-hidden"
+                aria-hidden="true"
+                tabindex="-1"
+              >
+                <option value="160cm 이하">160cm 이하</option>
+                <option value="161-165cm">161-165cm</option>
+                <option value="166-170cm">166-170cm</option>
+                <option value="171-175cm">171-175cm</option>
+                <option value="176-180cm">176-180cm</option>
+                <option value="181cm 이상">181cm 이상</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profilePreferredAges" id="profilePreferredAgesLabel">
+                선호 나이
+                <span class="badge-preference" aria-hidden="true">매칭용</span>
+                <span class="sr-only">매칭을 위해 참고되는 정보</span>
+              </label>
+              <div class="multi-dropdown" data-select-id="profilePreferredAges">
+                <button
+                  type="button"
+                  class="multi-dropdown-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-controls="profilePreferredAgesPanel"
+                >
+                  <span class="multi-dropdown-label">선택 없음</span>
+                </button>
+                <div
+                  id="profilePreferredAgesPanel"
+                  class="multi-dropdown-panel"
+                  data-multi-select="profilePreferredAges"
+                  role="listbox"
+                  aria-multiselectable="true"
+                  hidden
+                >
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="20대 초반" />
+                    <span>20대 초반</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="20대 중반" />
+                    <span>20대 중반</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="20대 후반" />
+                    <span>20대 후반</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="30대 초반" />
+                    <span>30대 초반</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="30대 중반" />
+                    <span>30대 중반</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="30대 후반 이상" />
+                    <span>30대 후반 이상</span>
+                  </label>
+                </div>
+              </div>
+              <select
+                id="profilePreferredAges"
+                multiple
+                class="multi-select-hidden"
+                aria-hidden="true"
+                tabindex="-1"
+              >
+                <option value="20대 초반">20대 초반</option>
+                <option value="20대 중반">20대 중반</option>
+                <option value="20대 후반">20대 후반</option>
+                <option value="30대 초반">30대 초반</option>
+                <option value="30대 중반">30대 중반</option>
+                <option value="30대 후반 이상">30대 후반 이상</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profilePreferredLifestyle" id="profilePreferredLifestyleLabel">
+                선호 라이프스타일
+                <span class="badge-preference" aria-hidden="true">매칭용</span>
+                <span class="sr-only">매칭을 위해 참고되는 정보</span>
+              </label>
+              <div class="multi-dropdown" data-select-id="profilePreferredLifestyle">
+                <button
+                  type="button"
+                  class="multi-dropdown-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                  aria-controls="profilePreferredLifestylePanel"
+                >
+                  <span class="multi-dropdown-label">선택 없음</span>
+                </button>
+                <div
+                  id="profilePreferredLifestylePanel"
+                  class="multi-dropdown-panel"
+                  data-multi-select="profilePreferredLifestyle"
+                  role="listbox"
+                  aria-multiselectable="true"
+                  hidden
+                >
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="활동적인 야외 취미" />
+                    <span>활동적인 야외 취미</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="집중적인 자기계발" />
+                    <span>집중적인 자기계발</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="집에서 휴식하기" />
+                    <span>집에서 휴식하기</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="여행과 새로운 경험" />
+                    <span>여행과 새로운 경험</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="문화·예술 감상" />
+                    <span>문화·예술 감상</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="운동·건강 관리" />
+                    <span>운동·건강 관리</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="미식·카페 탐방" />
+                    <span>미식·카페 탐방</span>
+                  </label>
+                  <label class="multi-dropdown-option">
+                    <input type="checkbox" value="반려동물과 함께" />
+                    <span>반려동물과 함께</span>
+                  </label>
+                </div>
+              </div>
+              <select
+                id="profilePreferredLifestyle"
+                multiple
+                class="multi-select-hidden"
+                aria-hidden="true"
+                tabindex="-1"
+              >
+                <option value="활동적인 야외 취미">활동적인 야외 취미</option>
+                <option value="집중적인 자기계발">집중적인 자기계발</option>
+                <option value="집에서 휴식하기">집에서 휴식하기</option>
+                <option value="여행과 새로운 경험">여행과 새로운 경험</option>
+                <option value="문화·예술 감상">문화·예술 감상</option>
+                <option value="운동·건강 관리">운동·건강 관리</option>
+                <option value="미식·카페 탐방">미식·카페 탐방</option>
+                <option value="반려동물과 함께">반려동물과 함께</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="profilePreferredAppearance">
+                선호하는 외적 이상형
+                <span class="badge-preference" aria-hidden="true">매칭용</span>
+                <span class="sr-only">매칭을 위해 참고되는 정보</span>
+              </label>
+              <select id="profilePreferredAppearance">
+                <option value="">선택</option>
+                <option value="깔끔하고 단정한 스타일">깔끔하고 단정한 스타일</option>
+                <option value="세련된 도시 감성">세련된 도시 감성</option>
+                <option value="스포티하고 건강한 스타일">스포티하고 건강한 스타일</option>
+                <option value="캐주얼하고 편안한 분위기">캐주얼하고 편안한 분위기</option>
+                <option value="러블리하고 부드러운 인상">러블리하고 부드러운 인상</option>
+                <option value="개성 있는 패션 감각">개성 있는 패션 감각</option>
+                <option value="상관없음">상관없음</option>
               </select>
             </div>
             <div class="field">
               <label for="profileDink">
                 딩크 여부
-                <span class="badge-public" aria-hidden="true">공개</span>
-                <span class="sr-only">상대방에게 공개되는 정보</span>
+                <span class="badge-preference" aria-hidden="true">매칭용</span>
+                <span class="sr-only">매칭을 위해 참고되는 정보</span>
               </label>
               <select id="profileDink">
                 <option value="">선택</option>
@@ -780,25 +1231,14 @@
               </select>
             </div>
             <div class="field">
-              <label for="profileLastRelationship">
-                마지막 연애 시기
-                <span class="badge-public" aria-hidden="true">공개</span>
-                <span class="sr-only">상대방에게 공개되는 정보</span>
-              </label>
-              <input
-                id="profileLastRelationship"
-                type="text"
-                placeholder="예: 2024년 5쯤 이별"
-              />
-            </div>
-            <div class="field">
               <label for="profileMarriageTiming">
                 결혼을 생각하는 시기
-                <span class="badge-public" aria-hidden="true">공개</span>
-                <span class="sr-only">상대방에게 공개되는 정보</span>
+                <span class="badge-preference" aria-hidden="true">매칭용</span>
+                <span class="sr-only">매칭을 위해 참고되는 정보</span>
               </label>
               <select id="profileMarriageTiming">
                 <option value="">선택</option>
+                <option value="상대방에 따라 다름">상대방에 따라 다름</option>
                 <option value="결혼생각 없음">결혼생각 없음</option>
                 <option value="연애 시작 후 3개월 안에 결혼준비 시작">
                   연애 시작 후 3개월 안에 결혼준비 시작
@@ -820,177 +1260,6 @@
                 </option>
               </select>
             </div>
-            <div class="field">
-              <label for="profileRelationshipCount">
-                성인 후 연애 횟수
-                <span class="badge-public" aria-hidden="true">공개</span>
-                <span class="sr-only">상대방에게 공개되는 정보</span>
-              </label>
-              <select id="profileRelationshipCount">
-                <option value="">선택</option>
-                <option value="0회">0회</option>
-                <option value="1~3회">1~3회</option>
-                <option value="4~6회">4~6회</option>
-                <option value="7~9회">7~9회</option>
-                <option value="10~12회">10~12회</option>
-                <option value="13~15회">13~15회</option>
-                <option value="16~19회">16~19회</option>
-                <option value="20회 이상">20회 이상</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="profileCarOwnership">
-                자차 유무
-                <span class="badge-public" aria-hidden="true">공개</span>
-                <span class="sr-only">상대방에게 공개되는 정보</span>
-              </label>
-              <select id="profileCarOwnership">
-                <option value="">선택</option>
-                <option value="있음">있음</option>
-                <option value="없음">없음</option>
-                <option value="구입 계획 있음">구입 계획 있음</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="profileTattoo">
-                문신 여부
-                <span class="badge-public" aria-hidden="true">공개</span>
-                <span class="sr-only">상대방에게 공개되는 정보</span>
-              </label>
-              <select id="profileTattoo">
-                <option value="">선택</option>
-                <option value="문신 없음">문신 없음</option>
-                <option value="문신 있음">문신 있음</option>
-                <option value="비공개">비공개</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="profileDivorceStatus">
-                돌싱 여부
-                <span class="badge-public" aria-hidden="true">공개</span>
-                <span class="sr-only">상대방에게 공개되는 정보</span>
-              </label>
-              <select id="profileDivorceStatus">
-                <option value="">선택</option>
-                <option value="돌싱입니다(자녀o)">돌싱입니다(자녀o)</option>
-                <option value="돌싱입니다(자녀x)">돌싱입니다(자녀x)</option>
-                <option value="돌싱이 아닙니다">돌싱이 아닙니다</option>
-              </select>
-            </div>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>선호 조건</legend>
-          <div class="field-grid">
-            <div class="field">
-              <label for="profilePreferredHeights" id="profilePreferredHeightsLabel">
-                선호하는 키
-                <span class="badge-public" aria-hidden="true">공개</span>
-                <span class="sr-only">상대방에게 공개되는 정보</span>
-                <span class="helper">여러 항목을 선택할 수 있습니다.</span>
-              </label>
-              <div
-                class="multi-checkbox-list"
-                data-multi-select="profilePreferredHeights"
-                role="group"
-                aria-labelledby="profilePreferredHeightsLabel"
-              >
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="160cm 이하" />
-                  <span>160cm 이하</span>
-                </label>
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="161-165cm" />
-                  <span>161-165cm</span>
-                </label>
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="166-170cm" />
-                  <span>166-170cm</span>
-                </label>
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="171-175cm" />
-                  <span>171-175cm</span>
-                </label>
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="176-180cm" />
-                  <span>176-180cm</span>
-                </label>
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="181cm 이상" />
-                  <span>181cm 이상</span>
-                </label>
-              </div>
-              <select
-                id="profilePreferredHeights"
-                multiple
-                size="6"
-                class="multi-select-hidden"
-                aria-hidden="true"
-                tabindex="-1"
-              >
-                <option value="160cm 이하">160cm 이하</option>
-                <option value="161-165cm">161-165cm</option>
-                <option value="166-170cm">166-170cm</option>
-                <option value="171-175cm">171-175cm</option>
-                <option value="176-180cm">176-180cm</option>
-                <option value="181cm 이상">181cm 이상</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="profilePreferredAges" id="profilePreferredAgesLabel">
-                선호 나이
-                <span class="badge-public" aria-hidden="true">공개</span>
-                <span class="sr-only">상대방에게 공개되는 정보</span>
-                <span class="helper">여러 항목을 선택할 수 있습니다.</span>
-              </label>
-              <div
-                class="multi-checkbox-list"
-                data-multi-select="profilePreferredAges"
-                role="group"
-                aria-labelledby="profilePreferredAgesLabel"
-              >
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="20대 초반" />
-                  <span>20대 초반</span>
-                </label>
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="20대 중반" />
-                  <span>20대 중반</span>
-                </label>
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="20대 후반" />
-                  <span>20대 후반</span>
-                </label>
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="30대 초반" />
-                  <span>30대 초반</span>
-                </label>
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="30대 중반" />
-                  <span>30대 중반</span>
-                </label>
-                <label class="multi-checkbox-item">
-                  <input type="checkbox" value="30대 후반 이상" />
-                  <span>30대 후반 이상</span>
-                </label>
-              </div>
-              <select
-                id="profilePreferredAges"
-                multiple
-                size="6"
-                class="multi-select-hidden"
-                aria-hidden="true"
-                tabindex="-1"
-              >
-                <option value="20대 초반">20대 초반</option>
-                <option value="20대 중반">20대 중반</option>
-                <option value="20대 후반">20대 후반</option>
-                <option value="30대 초반">30대 초반</option>
-                <option value="30대 중반">30대 중반</option>
-                <option value="30대 후반 이상">30대 후반 이상</option>
-              </select>
-            </div>
           </div>
         </fieldset>
 
@@ -1000,7 +1269,7 @@
             <div class="field">
               <label for="profileIdCard">
                 신분증 업로드
-                <span class="badge-public" aria-hidden="true">확인용</span>
+                <span class="badge-verify" aria-hidden="true">확인용</span>
                 <span class="sr-only">매칭 매니저 확인용 비공개 정보</span>
               </label>
               <input
@@ -1030,7 +1299,7 @@
             <div class="field">
               <label for="profileEmploymentProof">
                 재직 증명서 / 명함 업로드
-                <span class="badge-public" aria-hidden="true">확인용</span>
+                <span class="badge-verify" aria-hidden="true">확인용</span>
                 <span class="sr-only">매칭 매니저 확인용 비공개 정보</span>
               </label>
               <input
@@ -1242,20 +1511,20 @@
       const appealInput = document.getElementById('profileAppeal')
       const smokingSelect = document.getElementById('profileSmoking')
       const religionSelect = document.getElementById('profileReligion')
-      const longDistanceSelect = document.getElementById('profileLongDistance')
       const dinkSelect = document.getElementById('profileDink')
       const lastRelationshipInput = document.getElementById('profileLastRelationship')
       const marriageTimingSelect = document.getElementById('profileMarriageTiming')
       const relationshipCountSelect = document.getElementById('profileRelationshipCount')
       const carOwnershipSelect = document.getElementById('profileCarOwnership')
       const tattooSelect = document.getElementById('profileTattoo')
-      const divorceStatusSelect = document.getElementById('profileDivorceStatus')
       const sufficientInput = document.getElementById('profileSufficientCondition')
       const necessaryInput = document.getElementById('profileNecessaryCondition')
       const likesDislikesInput = document.getElementById('profileLikesDislikes')
       const aboutMeInput = document.getElementById('profileAboutMe')
       const preferredHeightsSelect = document.getElementById('profilePreferredHeights')
       const preferredAgesSelect = document.getElementById('profilePreferredAges')
+      const preferredLifestyleSelect = document.getElementById('profilePreferredLifestyle')
+      const preferredAppearanceSelect = document.getElementById('profilePreferredAppearance')
       const valuesSelect = document.getElementById('profileValues')
       const idCardInput = document.getElementById('profileIdCard')
       const employmentProofInput = document.getElementById('profileEmploymentProof')
@@ -1269,6 +1538,18 @@
       const fileDropZones = Array.from(document.querySelectorAll('.file-drop-zone'))
       const submissionModal = document.getElementById('submissionModal')
       const submissionModalCloseBtn = document.getElementById('submissionModalClose')
+
+      const infoBubbleEl = document.getElementById('infoBubble')
+      const INFO_BADGE_MESSAGES = {
+        public: '매칭 전 상대방에게 보여지는 정보에요.',
+        match: '개인정보 보호를 위해 매칭 후 공개를 하고 있어요.',
+        verify: '매칭 매니저 확인용 자료로만 사용돼요.',
+        preference: '매칭을 위해 참고되는 정보에요.',
+      }
+      let infoBubbleAutoHideTimer = null
+      let infoBubbleCleanupTimer = null
+      const dropdownBySelectId = new Map()
+      const openDropdowns = new Set()
 
       let selectedValues = []
       const uploadSessionId = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
@@ -1346,7 +1627,12 @@
         )
         Array.from(group.querySelectorAll('input[type="checkbox"]')).forEach((checkbox) => {
           checkbox.checked = selectedValues.has(checkbox.value)
+          const optionLabel = checkbox.closest('.multi-dropdown-option')
+          if (optionLabel) {
+            optionLabel.setAttribute('aria-selected', checkbox.checked ? 'true' : 'false')
+          }
         })
+        updateDropdownSummaryForSelect(selectEl)
       }
 
       function handleMultiSelectCheckboxChange(event) {
@@ -1364,6 +1650,11 @@
           }
         })
         selectEl.dispatchEvent(new Event('change', { bubbles: true }))
+        const optionLabel = checkbox.closest('.multi-dropdown-option')
+        if (optionLabel) {
+          optionLabel.setAttribute('aria-selected', checkbox.checked ? 'true' : 'false')
+        }
+        updateDropdownSummaryForSelect(selectEl)
       }
 
       const multiSelectCheckboxGroups = Array.from(document.querySelectorAll('[data-multi-select]'))
@@ -1615,10 +1906,215 @@
       }
       if (preferredHeightsSelect) setMultiSelectValues(preferredHeightsSelect, [])
       if (preferredAgesSelect) setMultiSelectValues(preferredAgesSelect, [])
+      if (preferredLifestyleSelect) setMultiSelectValues(preferredLifestyleSelect, [])
 
       cleanupStoredPendingUploads().catch((error) => {
         console.warn('[firebase] 임시 업로드 정리 실패', error)
       })
+
+      function updateDropdownSummaryForSelect(selectEl) {
+        if (!selectEl || !selectEl.id) return
+        const dropdown = dropdownBySelectId.get(selectEl.id)
+        if (!dropdown) return
+        const labelEl = dropdown.querySelector('.multi-dropdown-label')
+        if (!labelEl) return
+        const selections = getMultiSelectValues(selectEl)
+        if (!selections.length) {
+          labelEl.textContent = '선택 없음'
+          dropdown.classList.remove('has-selection')
+          return
+        }
+        const preview = selections.slice(0, 2).join(', ')
+        const extraCount = selections.length - 2
+        labelEl.textContent = extraCount > 0 ? `${preview} 외 ${extraCount}개` : preview
+        dropdown.classList.add('has-selection')
+      }
+
+      function closeDropdown(dropdown) {
+        if (!dropdown) return
+        dropdown.classList.remove('is-open')
+        const trigger = dropdown.querySelector('.multi-dropdown-trigger')
+        const panel = dropdown.querySelector('.multi-dropdown-panel')
+        trigger?.setAttribute('aria-expanded', 'false')
+        panel?.setAttribute('hidden', '')
+        openDropdowns.delete(dropdown)
+      }
+
+      function openDropdown(dropdown) {
+        if (!dropdown) return
+        const trigger = dropdown.querySelector('.multi-dropdown-trigger')
+        const panel = dropdown.querySelector('.multi-dropdown-panel')
+        trigger?.setAttribute('aria-expanded', 'true')
+        panel?.removeAttribute('hidden')
+        dropdown.classList.add('is-open')
+        openDropdowns.add(dropdown)
+      }
+
+      function closeAllDropdowns(exceptDropdown = null) {
+        Array.from(openDropdowns).forEach((dropdown) => {
+          if (dropdown !== exceptDropdown) {
+            closeDropdown(dropdown)
+          }
+        })
+      }
+
+      function setupMultiDropdowns() {
+        const dropdowns = Array.from(document.querySelectorAll('.multi-dropdown[data-select-id]'))
+        dropdowns.forEach((dropdown) => {
+          const selectId = dropdown.dataset.selectId
+          const selectEl = selectId ? document.getElementById(selectId) : null
+          if (!selectEl) return
+          dropdownBySelectId.set(selectId, dropdown)
+          const trigger = dropdown.querySelector('.multi-dropdown-trigger')
+          const panel = dropdown.querySelector('.multi-dropdown-panel')
+          const checkboxes = Array.from(panel?.querySelectorAll('input[type="checkbox"]') || [])
+
+          checkboxes.forEach((checkbox) => {
+            const optionLabel = checkbox.closest('.multi-dropdown-option')
+            if (optionLabel) {
+              optionLabel.setAttribute('role', 'option')
+            }
+          })
+
+          const syncCheckboxesFromSelect = () => {
+            const selectedSet = new Set(getMultiSelectValues(selectEl))
+            checkboxes.forEach((checkbox) => {
+              checkbox.checked = selectedSet.has(checkbox.value)
+              const optionLabel = checkbox.closest('.multi-dropdown-option')
+              if (optionLabel) {
+                optionLabel.setAttribute('aria-selected', checkbox.checked ? 'true' : 'false')
+              }
+            })
+          }
+
+          syncCheckboxesFromSelect()
+          updateDropdownSummaryForSelect(selectEl)
+
+          trigger?.addEventListener('click', (event) => {
+            event.preventDefault()
+            const isOpen = dropdown.classList.contains('is-open')
+            if (isOpen) {
+              closeDropdown(dropdown)
+            } else {
+              closeAllDropdowns(dropdown)
+              openDropdown(dropdown)
+            }
+          })
+
+          checkboxes.forEach((checkbox) => {
+            checkbox.addEventListener('change', () => {
+              const option = Array.from(selectEl.options).find((opt) => opt.value === checkbox.value)
+              if (option) option.selected = checkbox.checked
+              selectEl.dispatchEvent(new Event('change', { bubbles: true }))
+              updateDropdownSummaryForSelect(selectEl)
+            })
+          })
+
+          selectEl.addEventListener('change', () => {
+            syncCheckboxesFromSelect()
+            updateDropdownSummaryForSelect(selectEl)
+          })
+        })
+      }
+
+      setupMultiDropdowns()
+
+      document.addEventListener('click', (event) => {
+        if (!event.target.closest('.multi-dropdown')) {
+          closeAllDropdowns()
+        }
+      })
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeAllDropdowns()
+        }
+      })
+
+      function showInfoBubble(message) {
+        if (!infoBubbleEl || !message) return
+        window.clearTimeout(infoBubbleAutoHideTimer)
+        window.clearTimeout(infoBubbleCleanupTimer)
+        infoBubbleEl.textContent = message
+        infoBubbleEl.hidden = false
+        window.requestAnimationFrame(() => {
+          infoBubbleEl.classList.add('is-visible')
+        })
+        infoBubbleAutoHideTimer = window.setTimeout(() => {
+          hideInfoBubble()
+        }, 3200)
+      }
+
+      function hideInfoBubble() {
+        if (!infoBubbleEl) return
+        infoBubbleEl.classList.remove('is-visible')
+        window.clearTimeout(infoBubbleAutoHideTimer)
+        window.clearTimeout(infoBubbleCleanupTimer)
+        infoBubbleCleanupTimer = window.setTimeout(() => {
+          infoBubbleEl.hidden = true
+          infoBubbleEl.textContent = ''
+        }, 220)
+      }
+
+      function setupInfoBadges() {
+        const badges = Array.from(
+          document.querySelectorAll(
+            '#alpha-profile-root .badge-public, #alpha-profile-root .badge-match, #alpha-profile-root .badge-verify, #alpha-profile-root .badge-preference',
+          ),
+        )
+        badges.forEach((badge) => {
+          if (!badge) return
+          const labelText = (badge.textContent || '').trim()
+          let messageKey = 'public'
+          if (badge.classList.contains('badge-match')) {
+            messageKey = 'match'
+          } else if (badge.classList.contains('badge-verify') || labelText === '확인용') {
+            messageKey = 'verify'
+          } else if (badge.classList.contains('badge-preference')) {
+            messageKey = 'preference'
+          }
+          const message = INFO_BADGE_MESSAGES[messageKey]
+          if (!message) return
+          badge.classList.add('info-badge')
+          badge.dataset.info = message
+          badge.setAttribute('role', 'button')
+          badge.setAttribute('tabindex', '0')
+          if (badge.hasAttribute('aria-hidden')) {
+            badge.removeAttribute('aria-hidden')
+          }
+          badge.addEventListener('click', () => showInfoBubble(message))
+          badge.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              showInfoBubble(message)
+            }
+          })
+        })
+      }
+
+      setupInfoBadges()
+
+      document.addEventListener('click', (event) => {
+        if (!infoBubbleEl || !infoBubbleEl.classList.contains('is-visible')) return
+        if (event.target.closest('.info-badge')) return
+        hideInfoBubble()
+      })
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          hideInfoBubble()
+        }
+      })
+
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (infoBubbleEl && infoBubbleEl.classList.contains('is-visible')) {
+            hideInfoBubble()
+          }
+        },
+        { passive: true },
+      )
 
       if (phoneInput) {
         const applyPhoneFormatting = () => {
@@ -2185,14 +2681,12 @@
           salaryRange: salaryRangeSelect?.value || '',
           smoking: smokingSelect?.value || '',
           religion: religionSelect?.value || '',
-          longDistance: longDistanceSelect?.value || '',
           dink: dinkSelect?.value || '',
           lastRelationship: lastRelationshipInput?.value?.trim() || '',
           marriageTiming: marriageTimingSelect?.value || '',
           relationshipCount: relationshipCountSelect?.value || '',
           carOwnership: carOwnershipSelect?.value || '',
           tattoo: tattooSelect?.value || '',
-          divorceStatus: divorceStatusSelect?.value || '',
           profileAppeal: appealInput?.value || '',
           likesDislikes: likesDislikesInput?.value || '',
           sufficientCondition: sufficientInput?.value || '',
@@ -2200,6 +2694,8 @@
           aboutMe: aboutMeInput?.value || '',
           preferredHeights: getMultiSelectValues(preferredHeightsSelect),
           preferredAges: getMultiSelectValues(preferredAgesSelect),
+          preferredLifestyle: getMultiSelectValues(preferredLifestyleSelect),
+          preferredAppearance: preferredAppearanceSelect?.value || '',
           values,
           agreements: {
             info: agreementInfo?.checked || false,
@@ -2226,14 +2722,12 @@
         if (salaryRangeSelect) salaryRangeSelect.value = draft.salaryRange || ''
         if (smokingSelect) smokingSelect.value = draft.smoking || ''
         if (religionSelect) religionSelect.value = draft.religion || ''
-        if (longDistanceSelect) longDistanceSelect.value = draft.longDistance || ''
         if (dinkSelect) dinkSelect.value = draft.dink || ''
         if (lastRelationshipInput) lastRelationshipInput.value = draft.lastRelationship || ''
         if (marriageTimingSelect) marriageTimingSelect.value = draft.marriageTiming || ''
         if (relationshipCountSelect) relationshipCountSelect.value = draft.relationshipCount || ''
         if (carOwnershipSelect) carOwnershipSelect.value = draft.carOwnership || ''
         if (tattooSelect) tattooSelect.value = draft.tattoo || ''
-        if (divorceStatusSelect) divorceStatusSelect.value = draft.divorceStatus || ''
         if (appealInput) appealInput.value = draft.profileAppeal || ''
         if (likesDislikesInput) likesDislikesInput.value = draft.likesDislikes || ''
         if (sufficientInput) sufficientInput.value = draft.sufficientCondition || ''
@@ -2243,6 +2737,9 @@
           setMultiSelectValues(preferredHeightsSelect, ensureArray(draft.preferredHeights))
         if (preferredAgesSelect)
           setMultiSelectValues(preferredAgesSelect, ensureArray(draft.preferredAges))
+        if (preferredLifestyleSelect)
+          setMultiSelectValues(preferredLifestyleSelect, ensureArray(draft.preferredLifestyle))
+        if (preferredAppearanceSelect) preferredAppearanceSelect.value = draft.preferredAppearance || ''
 
         const draftValues = Array.isArray(draft.values) ? draft.values.slice(0, 1) : []
         if (valuesSelect) {
@@ -2426,20 +2923,20 @@
           profileAppeal: appealInput?.value?.trim() || '',
           smoking: smokingSelect?.value || '',
           religion: religionSelect?.value || '',
-          longDistance: longDistanceSelect?.value || '',
           dink: dinkSelect?.value || '',
           lastRelationship: lastRelationshipInput?.value?.trim() || '',
           marriageTiming: marriageTimingSelect?.value || '',
           relationshipCount: relationshipCountSelect?.value || '',
           carOwnership: carOwnershipSelect?.value || '',
           tattoo: tattooSelect?.value || '',
-          divorceStatus: divorceStatusSelect?.value || '',
           sufficientCondition: sufficientInput?.value?.trim() || '',
           necessaryCondition: necessaryInput?.value?.trim() || '',
           likesDislikes: likesDislikesInput?.value?.trim() || '',
           aboutMe: aboutMeInput?.value?.trim() || '',
           preferredHeights: getMultiSelectValues(preferredHeightsSelect),
           preferredAges: getMultiSelectValues(preferredAgesSelect),
+          preferredLifestyle: getMultiSelectValues(preferredLifestyleSelect),
+          preferredAppearance: preferredAppearanceSelect?.value || '',
           values,
           valuesCustom: '',
           agreements: {
@@ -2479,6 +2976,8 @@
           setMultiSelectValues(valuesSelect, [])
           setMultiSelectValues(preferredHeightsSelect, [])
           setMultiSelectValues(preferredAgesSelect, [])
+          setMultiSelectValues(preferredLifestyleSelect, [])
+          if (preferredAppearanceSelect) preferredAppearanceSelect.value = ''
           uploadStateByInput.clear()
           pendingTempUploads.clear()
           persistPendingUploadPaths()
