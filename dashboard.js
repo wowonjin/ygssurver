@@ -271,7 +271,6 @@
       const detailModal = document.getElementById('detailModal')
       const detailForm = document.getElementById('detailForm')
       const detailCancelBtn = document.getElementById('detailCancelBtn')
-      const detailExportBtn = document.getElementById('detailExportBtn')
       const detailTitleEl = document.getElementById('detailTitle')
       const detailSubtitleEl = document.getElementById('detailSubtitle')
       const detailNameInput = document.getElementById('detailName')
@@ -322,31 +321,13 @@
       const detailPhotosItem = document.getElementById('detailPhotosItem')
       const detailPhotosGrid = document.getElementById('detailPhotosGrid')
       const detailDraftLoadBtn = document.getElementById('detailDraftLoadBtn')
-      const pdfRoot = document.getElementById('pdfExportRoot')
-      const pdfPage = document.getElementById('pdfProfilePage')
-      const pdfPhoto = document.getElementById('pdfPhoto')
-      const pdfPhotoFallback = document.getElementById('pdfPhotoFallback')
-      const pdfNameLabel = document.getElementById('pdfNameLabel')
-      const pdfHeaderTitle = document.getElementById('pdfHeaderTitle')
-      const pdfContactName = document.getElementById('pdfContactName')
-      const pdfContactTagline = document.getElementById('pdfContactTagline')
-      const pdfBirth = document.getElementById('pdfBirth')
-      const pdfPhone = document.getElementById('pdfPhone')
-      const pdfEmail = document.getElementById('pdfEmail')
-      const pdfHeight = document.getElementById('pdfHeight')
-      const pdfAddress = document.getElementById('pdfAddress')
-      const pdfProfileSummary = document.getElementById('pdfProfileSummary')
-      const pdfCharacterText = document.getElementById('pdfCharacterText')
-      const pdfExperienceList = document.getElementById('pdfExperienceList')
-      const pdfToolsText = document.getElementById('pdfToolsText')
-      const pdfEducationList = document.getElementById('pdfEducationList')
-      if (pdfPhoto) {
-        try {
-          pdfPhoto.crossOrigin = 'anonymous'
-        } catch (error) {
-          console.warn('[pdf] crossOrigin 설정 실패', error)
-        }
-      }
+      const detailSectionButtons = Array.from(
+        document.querySelectorAll('[data-detail-section-target]')
+      )
+      const detailSections = Array.from(document.querySelectorAll('[data-detail-section]'))
+      const attachmentsTabButton = document.querySelector(
+        '[data-detail-section-target="attachments"]'
+      )
       const DRAFT_STORAGE_KEY = 'alphaProfileDraft_v1'
       const DRAFT_STORAGE_PREFIX = `${DRAFT_STORAGE_KEY}:`
       let currentDraftData = null
@@ -357,6 +338,7 @@
       let suppressUpdateToast = false
       let detailRecordId = null
       let depositStatusUpdating = false
+      let activeDetailSectionId = null
       const viewState = {
         search: '',
         gender: 'all',
@@ -374,6 +356,7 @@
           weekFilterLabel.hidden = true
         }
       }
+      initializeDetailSectionTabs()
       const calendarState = {
         current: new Date(),
         selectedDate: '',
@@ -501,7 +484,6 @@
       detailDateInput.addEventListener('change', handleDetailDateChange)
       detailTimeSelect.addEventListener('change', handleDetailTimeChange)
       detailClearScheduleBtn.addEventListener('click', handleClearSchedule)
-      detailExportBtn?.addEventListener('click', handleDetailExport)
       if (detailValuesSelect) {
         detailValuesSelect.addEventListener('change', () =>
           enforceMultiSelectLimit(detailValuesSelect, 1),
@@ -1225,6 +1207,53 @@
         moimDetailView.hidden = false
       }
 
+      function getFirstAvailableDetailSection() {
+        const targetButton = detailSectionButtons.find((button) => !button.disabled)
+        return targetButton ? targetButton.dataset.detailSectionTarget : null
+      }
+
+      function setActiveDetailSection(sectionId) {
+        if (!sectionId || !detailSections.length) return
+        activeDetailSectionId = sectionId
+        detailSections.forEach((section) => {
+          const isMatch = section.dataset.detailSection === sectionId
+          section.hidden = !isMatch
+        })
+        detailSectionButtons.forEach((button) => {
+          const isActive = button.dataset.detailSectionTarget === sectionId
+          button.classList.toggle('is-active', isActive)
+          button.setAttribute('aria-selected', isActive ? 'true' : 'false')
+        })
+      }
+
+      function resetDetailSectionTabs() {
+        const fallback = getFirstAvailableDetailSection()
+        if (fallback) {
+          setActiveDetailSection(fallback)
+        }
+      }
+
+      function toggleAttachmentsTab(hasAttachments) {
+        if (!attachmentsTabButton) return
+        attachmentsTabButton.disabled = !hasAttachments
+        attachmentsTabButton.setAttribute('aria-disabled', hasAttachments ? 'false' : 'true')
+        if (!hasAttachments && activeDetailSectionId === 'attachments') {
+          resetDetailSectionTabs()
+        }
+      }
+
+      function initializeDetailSectionTabs() {
+        if (!detailSectionButtons.length || !detailSections.length) return
+        detailSectionButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            if (button.disabled) return
+            setActiveDetailSection(button.dataset.detailSectionTarget)
+            if (detailForm) detailForm.scrollTop = 0
+          })
+        })
+        resetDetailSectionTabs()
+      }
+
       function openDetailModal(id) {
         const record = items.find((item) => item.id === id)
         if (!record) {
@@ -1380,6 +1409,7 @@
         if (detailEmploymentItem) detailEmploymentItem.hidden = true
         if (detailPhotosItem) detailPhotosItem.hidden = true
         if (detailPhotosGrid) detailPhotosGrid.innerHTML = ''
+        toggleAttachmentsTab(false)
         if (moimDetailView) {
           moimDetailView.innerHTML = ''
           moimDetailView.hidden = true
@@ -1593,6 +1623,7 @@
 
         const hasAny = hasIdCard || hasEmployment || photoCount > 0
         detailAttachmentsSection.hidden = !hasAny
+        toggleAttachmentsTab(hasAny)
       }
 
       function getDraftForPhone(phone) {
@@ -1766,229 +1797,6 @@
         detailScheduleInfo.textContent = '대면 상담 일정이 아직 없습니다.'
       }
 
-      async function handleDetailExport() {
-        if (!detailRecordId) {
-          showToast('먼저 상세 정보를 열어주세요.')
-          return
-        }
-        const record = items.find((item) => item.id === detailRecordId)
-        if (!record) {
-          showToast('프로필 정보를 찾지 못했습니다.')
-          return
-        }
-        if (!(await ensurePdfLibraries())) {
-          showToast('PDF 라이브러리를 불러오지 못했습니다.')
-          return
-        }
-        detailExportBtn.disabled = true
-        try {
-          await exportProfilePdf(record)
-          showToast('PDF 파일을 다운로드했습니다.')
-        } catch (error) {
-          console.error('[pdf:export]', error)
-          showToast('PDF 내보내기에 실패했습니다.')
-        } finally {
-          detailExportBtn.disabled = false
-        }
-      }
-
-      async function exportProfilePdf(record) {
-        if (!pdfRoot || !pdfPage) {
-          throw new Error('PDF 템플릿을 찾지 못했습니다.')
-        }
-        populateProfilePdf(record)
-        pdfRoot.hidden = false
-        let canvas
-        try {
-          const capture = window.html2canvas
-          if (typeof capture !== 'function') {
-            throw new Error('html2canvas가 준비되지 않았습니다.')
-          }
-          await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
-          canvas = await capture(pdfPage, { scale: 2, backgroundColor: '#0a0d13', useCORS: true })
-        } finally {
-          pdfRoot.hidden = true
-        }
-        if (!canvas) {
-          throw new Error('PDF 이미지를 생성하지 못했습니다.')
-        }
-        const { jsPDF } = window.jspdf || {}
-        if (!jsPDF) {
-          throw new Error('PDF 라이브러리를 불러오지 못했습니다.')
-        }
-        const pdf = new jsPDF('landscape', 'pt', 'a4')
-        const pdfWidth = pdf.internal.pageSize.getWidth()
-        const pdfHeight = pdf.internal.pageSize.getHeight()
-        const ratio = Math.min(pdfWidth / canvas.width, pdfHeight / canvas.height)
-        const imgWidth = canvas.width * ratio
-        const imgHeight = canvas.height * ratio
-        const offsetX = (pdfWidth - imgWidth) / 2
-        const offsetY = (pdfHeight - imgHeight) / 2
-        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', offsetX, offsetY, imgWidth, imgHeight)
-        const fileName = `${String(record.name || 'profile').replace(/\s+/g, '_')}_profile.pdf`
-        pdf.save(fileName)
-      }
-
-      function populateProfilePdf(record) {
-        const name = safeText(record.name, '프로필')
-        const phone = formatPhoneNumber(record.phone)
-        const height = normalizeHeightValue(record.height)
-        const birth = safeText(record.birth, '미입력')
-        const email = safeText(record.email, '미입력')
-        const address = safeText(record.district || record.address, '미입력')
-        const profileText =
-          buildMultilineText(record.aboutMe, record.profileAppeal) ||
-          '프로필 소개가 아직 등록되지 않았습니다.'
-        const characterText =
-          buildMultilineText(record.sufficientCondition, record.necessaryCondition, record.likesDislikes) ||
-          '추가 특성 정보가 아직 없습니다.'
-        const experienceSource = buildMultilineText(record.jobDetail, record.notes)
-        const educationEntries = buildEducationEntries(record)
-        const toolParts = [
-          record.mbti && `MBTI ${record.mbti}`,
-          record.salaryRange && `연봉 ${formatSalaryRange(record.salaryRange) || record.salaryRange}`,
-          Array.isArray(record.values) && record.values.length ? `가치관 ${record.values.join(', ')}` : '',
-          record.valuesCustom,
-          record.preferredHeights && record.preferredHeights.length
-            ? `선호 키 ${record.preferredHeights.join(', ')}`
-            : '',
-          record.preferredAges && record.preferredAges.length
-            ? `선호 나이 ${record.preferredAges.join(', ')}`
-            : '',
-          record.smoking && `흡연 ${record.smoking}`,
-          record.religion && `종교 ${record.religion}`,
-        ]
-          .map((entry) => (entry ? entry.trim() : ''))
-          .filter(Boolean)
-          .join('\n')
-
-        pdfNameLabel.textContent = name.toUpperCase()
-        if (pdfHeaderTitle) {
-          pdfHeaderTitle.textContent = record.job ? record.job : 'MATCHING PORTFOLIO'
-        }
-        pdfContactName.textContent = name
-        pdfContactTagline.textContent = record.job ? record.job : 'Matching Profile'
-        pdfBirth.textContent = birth
-        pdfPhone.textContent = safeText(phone, '미입력')
-        pdfEmail.textContent = email
-        pdfHeight.textContent = safeText(height, '미입력')
-        pdfAddress.textContent = address
-        pdfProfileSummary.textContent = profileText
-        pdfCharacterText.textContent = characterText
-        pdfToolsText.textContent = toolParts || '등록된 역량 정보가 없습니다.'
-        setPdfList(pdfExperienceList, experienceSource, '경력 정보가 없습니다.')
-        setPdfList(pdfEducationList, educationEntries, '학력 정보가 없습니다.')
-
-        const photoUrl = getPrimaryPhotoUrl(record)
-        if (photoUrl) {
-          pdfPhoto.src = photoUrl
-          pdfPhoto.hidden = false
-          pdfPhotoFallback.hidden = true
-        } else {
-          pdfPhoto.hidden = true
-          pdfPhotoFallback.hidden = false
-          pdfPhotoFallback.textContent = name.slice(0, 2).toUpperCase()
-        }
-      }
-
-      function getPrimaryPhotoUrl(record) {
-        if (!record) return ''
-        if (typeof record.photoUrl === 'string' && record.photoUrl.trim()) {
-          return record.photoUrl.trim()
-        }
-        if (Array.isArray(record.photoUploads) && record.photoUploads.length) {
-          return String(record.photoUploads[0] || '').trim()
-        }
-        return ''
-      }
-
-      function buildEducationEntries(record) {
-        const entries = []
-        if (record.education) entries.push(String(record.education))
-        if (record.university) entries.push(String(record.university))
-        if (record.school) entries.push(String(record.school))
-        return entries
-      }
-
-      async function ensurePdfLibraries() {
-        const needsHtml2Canvas = typeof window.html2canvas !== 'function'
-        const needsJsPdf = !(window.jspdf && window.jspdf.jsPDF)
-        try {
-          const tasks = []
-          if (needsHtml2Canvas) {
-            tasks.push(loadScriptOnce(
-              'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
-              'html2canvas'
-            ))
-          }
-          if (needsJsPdf) {
-            tasks.push(loadScriptOnce(
-              'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-              'jspdf'
-            ))
-          }
-          if (tasks.length) {
-            await Promise.all(tasks)
-          }
-          return typeof window.html2canvas === 'function' && window.jspdf && window.jspdf.jsPDF
-        } catch (error) {
-          console.error('[pdf:libs]', error)
-          return false
-        }
-      }
-
-      const loadedScripts = new Set()
-      function loadScriptOnce(src, key) {
-        if (loadedScripts.has(key)) return Promise.resolve()
-        return new Promise((resolve, reject) => {
-          const script = document.createElement('script')
-          script.src = src
-          script.async = true
-          script.onload = () => {
-            loadedScripts.add(key)
-            resolve()
-          }
-          script.onerror = () => reject(new Error(`script load failed: ${src}`))
-          document.head.appendChild(script)
-        })
-      }
-
-      function setPdfList(container, source, fallback) {
-        if (!container) return
-        container.innerHTML = ''
-        let entries = []
-        if (Array.isArray(source)) {
-          entries = source.map((item) => String(item || '').trim()).filter(Boolean)
-        } else if (typeof source === 'string') {
-          entries = source
-            .split(/[\r\n]+|,|·|•/)
-            .map((item) => item.trim())
-            .filter(Boolean)
-        }
-        if (!entries.length) {
-          const li = document.createElement('li')
-          li.textContent = fallback
-          container.appendChild(li)
-          return
-        }
-        entries.forEach((entry) => {
-          const li = document.createElement('li')
-          li.textContent = entry
-          container.appendChild(li)
-        })
-      }
-
-      function buildMultilineText(...values) {
-        return values
-          .map((value) => (value ? String(value).trim() : ''))
-          .filter(Boolean)
-          .join('\n')
-      }
-
-      function safeText(value, fallback = '미입력') {
-        const result = typeof value === 'string' ? value.trim() : value != null ? String(value) : ''
-        return result ? result : fallback
-      }
 
       async function handleDetailSubmit(event) {
         event.preventDefault()

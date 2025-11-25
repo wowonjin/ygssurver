@@ -133,7 +133,6 @@
             </div>
             <div class="modal-actions">
               <button type="button" class="secondary" id="detailDraftLoadBtn" hidden>임시 데이터 불러오기</button>
-              <button type="button" class="ghost" id="detailExportBtn">PDF 내보내기</button>
               <button type="button" class="secondary" id="detailCancelBtn">취소</button>
               <button type="submit" class="primary">저장</button>
             </div>
@@ -159,8 +158,77 @@
               <p class="modal-subtitle" id="detailScheduleInfo"></p>
             </div>
           </div>
+          <div class="detail-section-tabs" role="tablist" aria-label="상세 정보 카테고리">
+            <button
+              type="button"
+              class="detail-section-tab"
+              data-detail-section-target="basic"
+              aria-controls="detailSectionBasic"
+              role="tab"
+              aria-selected="false"
+            >
+              기본 정보
+            </button>
+            <button
+              type="button"
+              class="detail-section-tab"
+              data-detail-section-target="profile"
+              aria-controls="detailSectionProfile"
+              role="tab"
+              aria-selected="false"
+            >
+              세부 프로필
+            </button>
+            <button
+              type="button"
+              class="detail-section-tab"
+              data-detail-section-target="lifestyle"
+              aria-controls="detailSectionLifestyle"
+              role="tab"
+              aria-selected="false"
+            >
+              라이프스타일
+            </button>
+            <button
+              type="button"
+              class="detail-section-tab"
+              data-detail-section-target="preference"
+              aria-controls="detailSectionPreference"
+              role="tab"
+              aria-selected="false"
+            >
+              선호 조건
+            </button>
+            <button
+              type="button"
+              class="detail-section-tab"
+              data-detail-section-target="notes"
+              aria-controls="detailSectionNotes"
+              role="tab"
+              aria-selected="false"
+            >
+              관리자 메모
+            </button>
+            <button
+              type="button"
+              class="detail-section-tab"
+              data-detail-section-target="attachments"
+              aria-controls="detailAttachmentsSection"
+              role="tab"
+              aria-selected="false"
+              aria-disabled="true"
+              disabled
+            >
+              증빙 자료
+            </button>
+          </div>
           <div class="detail-section-group" aria-live="polite">
-            <fieldset class="detail-section detail-section-basic">
+            <fieldset
+              class="detail-section detail-section-basic"
+              id="detailSectionBasic"
+              data-detail-section="basic"
+              hidden
+            >
               <legend>기본 정보</legend>
               <div class="detail-field-grid columns-3">
                 <div class="field">
@@ -323,7 +391,12 @@
               </div>
             </fieldset>
 
-            <fieldset class="detail-section detail-section-profile">
+            <fieldset
+              class="detail-section detail-section-profile"
+              id="detailSectionProfile"
+              data-detail-section="profile"
+              hidden
+            >
               <legend>세부 프로필</legend>
               <div class="detail-field-grid columns-2">
                 <div class="field full-width">
@@ -379,7 +452,12 @@
               </div>
             </fieldset>
 
-            <fieldset class="detail-section detail-section-lifestyle">
+            <fieldset
+              class="detail-section detail-section-lifestyle"
+              id="detailSectionLifestyle"
+              data-detail-section="lifestyle"
+              hidden
+            >
               <legend>관계 및 라이프스타일</legend>
               <div class="detail-field-grid columns-3">
                 <div class="field">
@@ -455,7 +533,12 @@
               </div>
             </fieldset>
 
-            <fieldset class="detail-section detail-section-preference">
+            <fieldset
+              class="detail-section detail-section-preference"
+              id="detailSectionPreference"
+              data-detail-section="preference"
+              hidden
+            >
               <legend>선호 조건</legend>
               <div class="detail-field-grid columns-3">
                 <div class="field">
@@ -687,7 +770,12 @@
               </div>
             </fieldset>
 
-            <fieldset class="detail-section detail-section-notes">
+            <fieldset
+              class="detail-section detail-section-notes"
+              id="detailSectionNotes"
+              data-detail-section="notes"
+              hidden
+            >
               <legend>관리자 메모</legend>
               <div class="detail-field-grid">
                 <div class="field full-width detail-notes">
@@ -697,7 +785,12 @@
               </div>
             </fieldset>
           </div>
-          <section class="detail-attachments" id="detailAttachmentsSection" hidden>
+          <section
+            class="detail-attachments"
+            id="detailAttachmentsSection"
+            data-detail-section="attachments"
+            hidden
+          >
             <h3>증빙 자료 및 사진</h3>
             <div class="attachment-items">
               <div class="attachment-item" id="detailIdCardItem" hidden>
@@ -721,61 +814,6 @@
       <span id="selectionInfo"></span>
       <button type="button" id="deleteSelectedBtn">정보 삭제하기</button>
     </div>
-    <div id="pdfExportRoot" hidden>
-      <div class="pdf-page" id="pdfProfilePage">
-        <div class="pdf-header">
-          <span id="pdfNameLabel">PROFILE</span>
-          <span id="pdfHeaderTitle">MATCHING PORTFOLIO</span>
-        </div>
-        <div class="pdf-body">
-          <div class="pdf-left">
-            <div class="pdf-photo-frame">
-              <img id="pdfPhoto" alt="프로필 사진" hidden />
-              <div id="pdfPhotoFallback">PHOTO</div>
-            </div>
-            <div class="pdf-contact-card">
-              <div class="pdf-contact-name" id="pdfContactName">이름</div>
-              <div class="pdf-contact-meta" id="pdfContactTagline">MATCHING PROFILE</div>
-              <ul class="pdf-contact-list">
-                <li><span class="label">Birth</span><span id="pdfBirth">-</span></li>
-                <li><span class="label">Phone</span><span id="pdfPhone">-</span></li>
-                <li><span class="label">Email</span><span id="pdfEmail">-</span></li>
-                <li><span class="label">Height</span><span id="pdfHeight">-</span></li>
-                <li><span class="label">Address</span><span id="pdfAddress">-</span></li>
-              </ul>
-            </div>
-          </div>
-          <div class="pdf-right">
-            <section class="pdf-card span-2">
-              <h3>Profile</h3>
-              <p id="pdfProfileSummary">
-                연결사 회원님의 주요 프로필 소개가 여기에 표시됩니다.
-              </p>
-            </section>
-            <section class="pdf-card">
-              <h3>Character</h3>
-              <p id="pdfCharacterText">추가 특성 정보가 입력됩니다.</p>
-            </section>
-            <section class="pdf-card">
-              <h3>Experience</h3>
-              <ul id="pdfExperienceList">
-                <li>경력 정보가 표시됩니다.</li>
-              </ul>
-            </section>
-            <section class="pdf-card">
-              <h3>Tools</h3>
-              <p id="pdfToolsText">입력된 역량/선호 정보가 표시됩니다.</p>
-            </section>
-            <section class="pdf-card">
-              <h3>Education</h3>
-              <ul id="pdfEducationList">
-                <li>학력 정보가 표시됩니다.</li>
-              </ul>
-            </section>
-          </div>
-        </div>
-      </div>
-    </div>
     <button type="button" class="note-toggle" id="noteToggleBtn" aria-controls="stickyNote" aria-expanded="false">메모</button>
     <div class="sticky-note" id="stickyNote" hidden>
         <button type="button" class="sticky-note-close" id="stickyNoteCloseBtn" aria-label="메모 닫기">×</button>
@@ -790,8 +828,6 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNa5lmsXtO0mGlzYJkU+qHi9CFuRgxN6E466+vWXTjhBMWrMUR3pvN8MPmMXxMvmP0xSg6u40wP3sp8I4N3K0w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-YcsIPn1ytY1/6Yr2vNh+lX6YsJhBKt3vnDnN/SUXOc6Bx/6CkXbkqVKgf/mBlC9ZwTe74MkRUYw35vj0POnC1w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="dashboard.js"></script>
     </div>
   </body>
